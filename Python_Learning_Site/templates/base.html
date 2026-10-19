@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Python оқу сайты</title>
-    <!-- Исправленный путь: убрана папка css, так как файл лежит прямо в static -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Прямой путь к стилям для стабильной работы дизайна на Vercel -->
+    <link rel="stylesheet" href="/static/style.css">
     <style>
         /* Дополнительные стили для управления логикой сайдбара и ИИ-окна */
         .sidebar.closed {
@@ -252,3 +252,6 @@
         function handleAIKeyPress(event) {
             if (event.key === 'Enter') {
                 sendAIMessage();
+            }
+        }
+

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python оқу сайты</title>
+    <!-- Подключаем ваш новый красивый файл стилей -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Дополнительные стили для управления логикой сайдбара и ИИ-окна */
+        .sidebar.closed {
+            transform: translateX(-100%);
+        }
+        .content.full {
+            margin-left: 0;
+            max-width: 100%;
+        }
+        #ai-chat-window.hidden {
+            display: none !important;
+        }
+        .menu-toggle {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: var(--transition);
+        }
+        .menu-toggle:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+        #ai-toggle-btn {
+            position: fixed;
+            top: 15px;
+            right: 20px;
+            z-index: 1001;
+            background: var(--primary-2);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 10px 16px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #ai-toggle-btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+        #ai-chat-window {
+            position: fixed;
+            top: 75px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background: var(--surface-strong);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        #ai-chat-header {
+            background: var(--sidebar-bg);
+            color: white;
+            padding: 14px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #ai-chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: var(--bg-soft);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        #ai-chat-input-area {
+            display: flex;
+            padding: 12px;
+            background: var(--surface-strong);
+            border-top: 1px solid var(--border);
+            gap: 8px;
+        }
+        #ai-user-input {
+            flex: 1;
+            padding: 10px;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+        }
+        #ai-user-input:focus {
+            border-color: var(--primary);
+        }
+        #ai-send-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+        #ai-send-btn:hover {
+            background: #16a34a;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+
+    <!-- ИИ Көмекші батырмасы -->
+    <button id="ai-toggle-btn" onclick="toggleAIChat()">🤖 AI Көмекші</button>
+
+    <!-- ИИ Чат терезесі -->
+    <div id="ai-chat-window" class="hidden">
+        <div id="ai-chat-header">
+            <span>🐍 Python AI Көмекші</span>
+            <span onclick="toggleAIChat()" style="cursor:pointer; color: var(--text-light); font-size: 18px;">✖</span>
+        </div>
+        <div id="ai-chat-messages">
+            <div style="background: var(--primary); color: white; padding: 10px 14px; border-radius: 14px 14px 14px 0; max-width: 85%; align-self: flex-start; font-size: 14px; box-shadow: var(--shadow-sm);">
+                Сәлем! Python бойынша сұрағың болса, қоя бер! 🚀
+            </div>
+        </div>
+        <div id="ai-chat-input-area">
+            <input type="text" id="ai-user-input" placeholder="Сұрағыңызды жазыңыз..." onkeypress="handleAIKeyPress(event)">
+            <button id="ai-send-btn" onclick="sendAIMessage()">▶</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Сайдбар навигациясы -->
+        <aside class="sidebar" id="sidebar">
+            <h3>🐍 Python Курсы</h3>
+            <ul>
+                <li><a href="/" id="menu-home">Python деген не?</a></li>
+                <li><a href="/print" id="menu-print">🖨 Print командасы</a></li>
+                <li><a href="/variables" id="menu-variables">📦 Айнымалылар</a></li>
+                <li><a href="/conditions" id="menu-conditions">🔀 Шарттар</a></li>
+                <li><a href="/loops" id="menu-loops">🔁 Циклдер</a></li>
+                <li><a href="/functions" id="menu-functions">🧩 Функциялар</a></li>
+                <li><a href="/sorting" id="menu-sorting">📊 Сұрыптау</a></li>
+                <li><a href="/arrays1" id="menu-arrays1">📉 Бірөлшемді массив</a></li>
+                <li><a href="/arrays2" id="menu-arrays2">🧩 Екіөлшемді массив</a></li>
+                <li><a href="/add_remove" id="menu-add-remove">➕ Элемент қосу/жою</a></li>
+            </ul>
+        </aside>
+
+        <!-- Негізгі контент аймағы -->
+        <main class="content" id="content-area">
+            {% block content %}
+            <!-- Сюда Flask будет автоматически подставлять код ваших уроков -->
+            {% endblock %}
+        </main>
+    </div>
+
+    <!-- СКРИПТТЕР: Сайттың интерактивті қызметі -->
+    <script>
+        // Сайдбарды ашу/жабу логикасы
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const content = document.getElementById('content-area');
+            sidebar.classList.toggle('closed');
+            content.classList.toggle('full');
+        }
+
+        // ИИ Чат терезесін ашу/жабу
+        function toggleAIChat() {
+            const chatWindow = document.getElementById('ai-chat-window');
+            chatWindow.classList.toggle('hidden');
+        }
+
+        // ИИ-ге хабарлама жіберу және жауап алу (OpenRouter интеграциясы)
+        async function sendAIMessage() {
+            const inputElement = document.getElementById('ai-user-input');
+            const messageText = inputElement.value.trim();
+            if (!messageText) return;
+
+            const chatMessages = document.getElementById('ai-chat-messages');
+
+            // Пайдаланушының хабарламасын чатқа қосу
+            const userDiv = document.createElement('div');
+            userDiv.style = "background: var(--surface-strong); color: var(--text-main); padding: 10px 14px; border-radius: 14px 14px 0 14px; max-width: 85%; align-self: flex-end; font-size: 14px; box-shadow: var(--shadow-sm); border: 1px solid var(--border);";
+            userDiv.textContent = messageText;
+            chatMessages.appendChild(userDiv);
+            
+            inputElement.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Жауап күту анимациясы
+            const loadingDiv = document.createElement('div');
+            loadingDiv.style = "background: var(--primary); color: white; padding: 10px 14px; border-radius: 14px 14px 14px 0; max-width: 85%; align-self: flex-start; font-size: 14px; opacity: 0.7;";
+            loadingDiv.textContent = "Ойланып жатырмын... 🧠";
+            chatMessages.appendChild(loadingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                // Flask бэкендіне (app.py) сұраныс жіберу
+                const response = await fetch('/ask-ai', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    json: true,
+                    body: JSON.stringify({ message: messageText })
+                });
+                const data = await response.json();
+                
+                chatMessages.removeChild(loadingDiv);
+
+                // ИИ жауабын чатқа шығару
+                const aiDiv = document.createElement('div');
+                aiDiv.style = "background: var(--primary); color: white; padding: 10px 14px; border-radius: 14px 14px 14px 0; max-width: 85%; align-self: flex-start; font-size: 14px; box-shadow: var(--shadow-sm);";
+                aiDiv.innerHTML = data.reply ? data.reply.replace(/\n/g, '<br>') : "Қате орын алды.";
+                chatMessages.appendChild(aiDiv);
+
+            } catch (error) {
+                chatMessages.removeChild(loadingDiv);
+                const errorDiv = document.createElement('div');
+                errorDiv.style = "background: var(--danger); color: white; padding: 10px 14px; border-radius: 14px 14px 14px 0; max-width: 85%; align-self: flex-start; font-size: 14px;";
+                errorDiv.textContent = "Байланыс қатесі орын алды.";
+                chatMessages.appendChild(errorDiv);
+            }
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function handleAIKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendAIMessage();
+            }
+        }

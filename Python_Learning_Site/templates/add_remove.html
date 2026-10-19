@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>➕➖ Элемент қосу және жою</h1>
+
+<div class="video-wrapper">
+    <iframe 
+        src="https://www.youtube.com/embed/cFJfbB80S3k" 
+        allowfullscreen>
+    </iframe>
+</div>
+
+<p>
+    Python-да тізімдер <b>динамикалық</b> болып табылады. Бұл дегеніміз — бағдарлама жұмыс істеп тұрған кезде тізімге жаңа мән қосуға немесе барын өшіріп тастауға болады.
+</p>
+
+<hr>
+
+<h2>🛠 Негізгі әдістер (Methods)</h2>
+
+<div class="feature-grid">
+    <div class="feature-card" style="border-left: 5px solid var(--success); background: linear-gradient(180deg, rgba(22, 163, 74, 0.08) 0%, var(--surface) 100%);">
+        <h4 style="color: var(--success); font-size: 20px; font-weight: 800; margin-bottom: 10px;">Қосу (Adding)</h4>
+        <ul>
+            <li><code>append(x)</code> — соңына қосады.</li>
+            <li><code>insert(i, x)</code> — i-ші индекске қосады.</li>
+        </ul>
+    </div>
+    <div class="feature-card" style="border-left: 5px solid var(--danger); background: linear-gradient(180deg, rgba(239, 68, 68, 0.08) 0%, var(--surface) 100%);">
+        <h4 style="color: var(--danger); font-size: 20px; font-weight: 800; margin-bottom: 10px;">Жою (Removing)</h4>
+        <ul>
+            <li><code>remove(x)</code> — мәні х-ке тең бірінші элементті өшіреді.</li>
+            <li><code>pop(i)</code> — i-ші индекстегі элементті өшіріп, оны қайтарады.</li>
+        </ul>
+    </div>
+</div>
+
+<hr>
+
+<h2>🧪 Тәжірибелік алаң (Sandbox)</h2>
+<p>Тізімді қалай өзгертуге болатынын тексеріп көр:</p>
+
+<div class="editor-container">
+    <textarea id="code" rows="12">
+# Бастапқы тізім
+оқушылар = ["Али", "Сара", "Марат"]
+print("Бастапқы:", оқушылар)
+
+# Жаңа оқушы қосу
+оқушылар.append("Айша")
+print("append кейін:", оқушылар)
+
+# Маратты тізімнен өшіру
+оқушылар.remove("Марат")
+print("remove кейін:", оқушылар)
+
+# Бірінші тұрған оқушыны өшіру
+өшті = оқушылар.pop(0)
+print("Өшірілген оқушы:", өшті)
+print("Қорытынды тізім:", оқушылар)
+    </textarea>
+</div>
+
+<button class="btn-run" onclick="runCode()">▶ Run Code</button>
+
+<div style="margin-top: 15px; color: var(--text-soft); font-size: 14px;">Нәтиже (Output):</div>
+<pre id="output">Нәтиже осында шығады...</pre>
+
+<div class="feature-card" style="margin-top: 30px; border-left: 5px solid var(--primary-2); background: linear-gradient(180deg, rgba(0, 166, 251, 0.08) 0%, var(--surface) 100%);">
+    <h4 style="color: var(--primary-2); font-size: 20px; font-weight: 800; margin-bottom: 10px;">💡 Есіңде сақта:</h4>
+    <p style="margin-bottom: 0;"><code>remove()</code> мән бойынша іздеп өшіреді, ал <code>pop()</code> индекс бойынша (орны бойынша) өшіреді.</p>
+</div>
+
+{% endblock %}

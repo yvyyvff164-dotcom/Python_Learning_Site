@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>📊 Деректерді сұрыптау (Sorting)</h1>
+
+<div class="video-wrapper">
+    <iframe 
+        src="https://www.youtube.com/embed/Qi5HEyla4_U" 
+        title="Python Sorting"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+    </iframe>
+</div>
+
+<p>
+    <strong>Сұрыптау</strong> — бұл элементтерді белгілі бір реттілікпен (өсу немесе кему ретімен) орналастыру процесі. Python-да тізімдерді сұрыптаудың екі негізгі жолы бар: <code>sort()</code> әдісі және <code>sorted()</code> функциясы.
+</p>
+
+<hr>
+
+<h2>🛠 Сұрыптаудың негізгі түрлері</h2>
+
+<!-- Переключено на ваш глобальный класс .feature-grid -->
+<div class="feature-grid" style="margin-bottom: 30px;">
+    <div class="feature-card" style="border-left: 5px solid var(--primary-2); background: linear-gradient(180deg, rgba(0, 166, 251, 0.05) 0%, var(--surface) 100%);">
+        <h4 style="color: var(--primary-2); font-size: 20px; font-weight: 800; margin-bottom: 10px;">1. Өсу ретімен (Ascending)</h4>
+        <p style="color: var(--text-main);">Кіші саннан үлкенге қарай реттеу. Әдепкі бойынша осылай істейді.</p>
+        <code style="background: rgba(0, 0, 0, 0.05); padding: 4px 8px; border-radius: 6px; color: var(--primary-dark);">sandar.sort()</code>
+    </div>
+    <div class="feature-card" style="border-left: 5px solid var(--danger); background: linear-gradient(180deg, rgba(239, 68, 68, 0.05) 0%, var(--surface) 100%);">
+        <h4 style="color: var(--danger); font-size: 20px; font-weight: 800; margin-bottom: 10px;">2. Кему ретімен (Descending)</h4>
+        <p style="color: var(--text-main);">Үлкен саннан кішіге қарай кері реттеу.</p>
+        <code style="background: rgba(0, 0, 0, 0.05); padding: 4px 8px; border-radius: 6px; color: var(--danger);">sandar.sort(reverse=True)</code>
+    </div>
+</div>
+
+<hr>
+
+<h2>🧪 Тәжірибе: Кодты тексеру</h2>
+<p>Төмендегі тізімдегі сандарды немесе сөздерді өзгертіп, сұрыптап көр:</p>
+
+<div class="editor-container">
+    <textarea id="code" rows="12">
+# 1. Сандар тізімі
+sandar = [42, 7, 100, 23, 1]
+sandar.sort()
+print("Өсу ретімен:", sandar)
+
+# 2. Кері сұрыптау
+sandar.sort(reverse=True)
+print("Keму ретімен:", sandar)
+
+# 3. Мәтіндерді сұрыптау (әліпби бойынша)
+esimder = ["Sanzhar", "Arman", "Zere", "Bolat"]
+print("Әліпбимен:", sorted(esimder))
+    </textarea>
+</div>
+
+<button class="btn-run" onclick="runCode()">▶ Run Code</button>
+
+<div style="margin-top: 15px; color: var(--text-soft); font-size: 14px;">Нәтиже:</div>
+<pre id="output">Нәтиже осында шығады...</pre>
+
+<div class="feature-card" style="margin-top: 30px; border-left: 5px solid var(--warning); background: linear-gradient(180deg, rgba(245, 158, 11, 0.05) 0%, var(--surface) 100%);">
+    <h4 style="color: var(--warning); font-size: 20px; font-weight: 800; margin-bottom: 10px;">⚠️ Назар аударыңыз:</h4>
+    <p style="color: var(--text-main); margin-bottom: 0;"><code>sort()</code> әдісі тізімнің өзін өзгертеді, ал <code>sorted()</code> функциясы жаңа сұрыпталған тізімді қайтарады (түпнұсқа тізім өзгеріссіз қалады).</p>
+</div>
+
+<a href="https://codepen.io/zlreibuh-the-sasster/pen/ogzvzje" 
+   target="_blank" 
+   class="btn-primary" 
+   style="text-decoration: none; display: inline-block; margin-top: 20px;">
+    🔀 CodePen-дегі сұрыптау тапсырмалары
+</a>
+
+{% endblock %}

@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>🔁 Циклдер (for, while)</h1>
+
+<div class="video-wrapper">
+    <iframe width="100%" height="360"
+    src="https://www.youtube.com/embed/6iF8Xb7Z3wQ"
+    allowfullscreen></iframe>
+</div>
+
+<p>
+    <b>Цикл</b> дегеніміз бір әрекетті бірнеше рет орындауға арналған код құрылымы.
+    Егер бір команданы немесе бірдей логиканы қайта-қайта жазу керек болса, онда цикл қолдану өте ыңғайлы.
+    Бұл кодты қысқартады, түсінікті етеді және көп есептерді автоматты түрде шешуге көмектеседі.
+</p>
+
+<p>
+    Мысалы, сен 1-ден 10-ға дейінгі сандарды экранға шығарғың келсе, әр санды жеке-жеке жазудың орнына цикл қолданасың.
+    Сол сияқты тізімдегі барлық элементтерді шығару, бірнеше рет есептеу жүргізу, шарт орындалғанша әрекет жасау сияқты жұмыстарда цикл өте пайдалы.
+</p>
+
+<p>
+    Python тілінде циклдердің негезігі екі түрі бар: <b>for</b> және <b>while</b>. Екеуінің мақсаты ұқсас болғанымен, қолданылу жағдайы әртүрлі.
+</p>
+
+<hr>
+
+<h2>📘 for циклі</h2>
+
+<p>
+    <b>for</b> циклі белгілі бір элементтер жиынын қайталап шығу үшін қолданылады.
+    Ол тізіммен, жолмен, range() функциясымен және басқа да iterable объектілермен жұмыс іштеді.
+</p>
+
+<p>
+    Егер қайталану саны алдын ала белгілі болса, көбіне <b>for</b> циклі қолданылады.
+    Мысалы, 5 рет орындау керек болса немесе тізімдегі барлық сөздерді шығару керек болса, бұл өте қолайлы әдіс.
+</p>
+
+<div class="feature-card" style="margin-top: 20px; border-left: 5px solid var(--primary);">
+    <h4>for циклінің құрылымы</h4>
+    <p style="margin-bottom: 0;">
+        <code>for айнымалы in элементтер:</code><br>
+        осы жолдан кейінгі кодтар шегініспен жазылады және әр элемент үшін бір рет орындалады.
+    </p>
+</div>
+
+<p style="margin-top: 20px;">
+    Мысалы, <code>range(1, 6)</code> дегеніміз 1-ден бастап 5-ке дейінгі сандар. Назар аудар: соңғы сан есепке алынбайды.
+</p>
+
+<div class="editor-container">
+    <textarea id="code" rows="18">
+print("for циклі мысалы:")
+for i in range(1, 6):
+    print("Сан:", i)
+
+print("\nТізіммен жұмыс:")
+fruits = ["алма", "банан", "шие"]
+
+for fruit in fruits:
+    print("Жеміс:", fruit)
+
+print("\nwhile циклі мысалы:")
+n = 1
+while n <= 5:
+    print("Қадам:", n)
+    n += 1
+    </textarea>
+</div>
+
+<button class="btn-run" onclick="runCode()">▶ Run Code</button>
+
+<div style="margin-top: 15px; color: var(--text-soft); font-size: 14px;">Нәтиже (Output):</div>
+<pre id="output">Нәтиже осында шығады...</pre>
+
+<hr>
+
+<h2>📗 while циклі</h2>
+
+<p>
+    <b>while</b> циклі белгілі бір шарт <b>ақиқат</b> болып тұрғанша жұмыс іштеді.
+    Яғни, шарт тексеріледі, егер шарт дұрыс болса, циклдің ішіндеги код орындалады.
+    Шарт жалған болған кезде цикл тоқтайды.
+</p>
+
+<p>
+    Бұл цикл көбінесе қайталану саны нақты белгісіз болған жағдайда қолданылады.
+    Мысалы, пайдаланушы дұрыс жауап бергенше сұрау, сан белгілі бір мәнге жеткенше есептеу немесе шарт өзгергенше әрекетті жалғастыру сияқты жағдайларда ыңғайлы.
+</p>
+
+<div class="feature-card" style="margin-top: 20px; border-left: 5px solid var(--success);">
+    <h4>while циклінің құрылымы</h4>
+    <p style="margin-bottom: 0;">
+        <code>while шарт:</code><br>
+        шарт ақиқат болғанша, ішіндегі код орындала береді.
+    </p>
+</div>
+
+<p style="margin-top: 20px;">
+    Мысалы, <code>n &lt;= 5</code> шарты орындалып тұрғанша, программа 1, 2, 3, 4, 5 сандарын біртындеп шығара береді.
+</p>
+
+<p>
+    <b>Маңызды:</b> while циклінде шарт өзгеріп отыруы керек. Егер шарт ешқашан жалғанға айналмаса, цикл тоқтамайды. Мұндай цикл <b>шексіз цикл</b> деп аталады.
+</p>
+
+<hr>
+
+<h2>🔍 for және while айырмашылығы</h2>
+
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; background: var(--surface); border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+    <tr style="background: var(--sidebar-bg); color: white;">
+        <th style="padding: 14px; font-weight: 800; text-align: center;">Цикл түрі</th>
+        <th style="padding: 14px; font-weight: 800; text-align: left;">Қашан қолданылады?</th>
+        <th style="padding: 14px; font-weight: 800; text-align: left;">Мысал</th>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 12px; text-align: center;"><code>for</code></td>
+        <td style="padding: 12px; color: var(--text-main);">Қайталау саны белгілі болғанда</td>
+        <td style="padding: 12px;"><code>for i in range(5)</code></td>
+    </tr>
+    <tr>
+        <td style="padding: 12px; text-align: center;"><code>while</code></td>
+        <td style="padding: 12px; color: var(--text-main);">Шарт орындалып тұрғанша</td>
+        <td style="padding: 12px;"><code>while n &lt; 10</code></td>
+    </tr>
+</table>
+
+<hr>
+
+<h2>💡 Интерактивті орта</h2>
+<p>
+    Бұл беттегі Python кодтары серверге жіберілмей-ақ, тікелей браузердің ішінде орындалады. Соның арқасында кодты өзгертіп, <b>Run Code</b> батырмасын басып, қателерді түзетіп, Python-ды компьютерге орнатпай-ақ тәжірибе жасай аласыз.
+</p>
+
+<hr>
+
+<h2>📊 Циклдер қай жерде қолданылады?</h2>
+<ul>
+    <li>Сандарды ретімен шығару және тізімдегі барлық элементтерді қарау үшін</li>
+    <li>Бір әрекетті бірнеше рет қайталап, күрделі математикалық есептеулер жүргізу үшін</li>
+    <li>Пайдаланушы жүйеге дұрыс құпия сөзді енгізгенше ақпаратты қайталап сұрау үшін</li>
+</ul>
+
+<hr>
+
+<h2>⚠️ Жиі кездесетін қателер</h2>
+<div class="feature-grid">
+    <div class="feature-card" style="border-left: 5px solid var(--danger); background: linear-gradient(180deg, rgba(239, 68, 68, 0.05) 0%, var(--surface) 100%);">
+        <h4 style="color: var(--danger);">1. Қос нүкте ұмытып кету</h4>
+        <p style="margin-bottom: 0; color: var(--text-main);">Python-да <code>for</code> және <code>while</code> жолының соңына міндетті түрде <b>:</b> қойылады. Болмаса, синтаксистік қате шығады.</p>
+    </div>
+    <div class="feature-card" style="border-left: 5px solid var(--warning); background: linear-gradient(180deg, rgba(245, 158, 11, 0.05) 0%, var(--surface) 100%);">
+        <h4 style="color: var(--warning);">2. Отступ (шегініс) қатесі</h4>
+        <p style="margin-bottom: 0; color: var(--text-main);">Циклдің ішіндегі код блогы міндетті түрде шегініспен (4 бос орын) жазылуы тиіс. Python шегініске өте сезімтал.</p>
+    </div>
+</div>
+
+<hr>
+
+<h2>🧠 Тәжірибелік тапсырмалар</h2>
+<p>Бекемдеу үшін Sandbox-та мына есептерді шығарып көр:</p>
+<ul>
+    <li><code>for</code> циклімен 1-ден 20-ға дейінгі тек жұп сандарды консольге шығар.</li>
+    <li><code>while</code> циклін пайдаланып, 10-нан 1-ге дейін кері санайтын бағдарлама жаз.</li>
+</ul>
+
+{% endblock %}

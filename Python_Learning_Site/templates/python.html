@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>🚀 Python бағдарламалау тіліне кіріспе</h1>
+
+<div class="video-wrapper">
+    <iframe 
+        src="https://www.youtube.com/embed/SqrVSgATmrU" 
+        title="Python деген не?"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+    </iframe>
+</div>
+
+<p>
+    <strong>Python</strong> — бұл әлемдегі ең танымал, жоғары деңгейлі бағдарламалау тілі. 
+    Оның синтаксисі адам тіліне (ағылшын тіліне) өте жақын, сондықтан оны үйрену жаңа бастағандар үшін өте жеңіл.
+</p>
+
+<!-- Переключено на ваш глобальный класс .feature-grid -->
+<div class="feature-grid" style="margin-top: 30px;">
+    <div class="feature-card" style="border-left: 5px solid var(--primary-2); background: linear-gradient(180deg, rgba(0, 166, 251, 0.05) 0%, var(--surface) 100%);">
+        <h3 style="color: var(--primary-2); margin-top: 0; font-weight: 800;">🌐 Веб-әзірлеу</h3>
+        <p style="color: var(--text-main); margin-bottom: 0;">Instagram, Pinterest және Dropbox сияқты ірі сервистер Python (Django/Flask) арқылы жасалған.</p>
+    </div>
+    <div class="feature-card" style="border-left: 5px solid var(--success); background: linear-gradient(180deg, rgba(22, 163, 74, 0.05) 0%, var(--surface) 100%);">
+        <h3 style="color: var(--success); margin-top: 0; font-weight: 800;">🤖 Жасанды интеллект</h3>
+        <p style="color: var(--text-main); margin-bottom: 0;">ChatGPT, Tesla автопилоты және бетті тану жүйелері Python-ның көмегімен жұмыс істейді.</p>
+    </div>
+    <div class="feature-card" style="border-left: 5px solid var(--warning); background: linear-gradient(180deg, rgba(245, 158, 11, 0.05) 0%, var(--surface) 100%);">
+        <h3 style="color: var(--warning); margin-top: 0; font-weight: 800;">🎮 Ойындар жасау</h3>
+        <p style="color: var(--text-main); margin-bottom: 0;">PyGame кітапханасы арқылы қарапайым әрі қызықты 2D ойындарды тез құрастыруға болады.</p>
+    </div>
+</div>
+
+<hr>
+
+<h2>💻 Алғашқы қадам: Hello World</h2>
+<p>Python-да жұмыс істеудің қаншалықты оңай екенін тексеріп көр. Төмендегі кодты іске қос:</p>
+
+<div class="editor-container">
+    <textarea id="code" rows="5">
+# Бұл сенің алғашқы кодың!
+print("Сәлем, Әлем!")
+print("Мен Python үйреніп жатырмын 🚀")
+    </textarea>
+</div>
+
+<button class="btn-run" onclick="runCode()">▶ Кодты жіберу</button>
+
+<div style="margin-top: 15px; color: var(--text-soft); font-size: 14px;">Консоль нәтижесі:</div>
+<pre id="output">Нәтиже осында шығады...</pre>
+
+<div class="feature-card" style="margin-top: 30px; border-left: 5px solid var(--primary); background: linear-gradient(180deg, rgba(15, 98, 254, 0.05) 0%, var(--surface) 100%);">
+    <h4 style="color: var(--primary); font-size: 20px; font-weight: 800; margin-bottom: 10px;">📘 Неден бастау керек?</h4>
+    <p style="margin-bottom: 0; color: var(--text-main);">Сол жақтағы мәзірден (Sidebar) <b>Print</b> сабағына өтіп, Python-ның негізгі командаларын үйренуді баста!</p>
+</div>
+
+{% endblock %}

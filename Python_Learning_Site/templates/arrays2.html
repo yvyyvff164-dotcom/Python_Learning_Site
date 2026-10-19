@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>🧩 Екіөлшемді массивтер (2D Lists)</h1>
+
+<div class="video-wrapper">
+    <iframe 
+        src="https://www.youtube.com/embed/snP9qFu9tbo" 
+        title="Екіөлшемді массив Python"
+        allowfullscreen>
+    </iframe>
+</div>
+
+<p>
+    <b>Екіөлшемді массив</b> — бұл тізімдердің ішіндегі тізім. Оны жолдар мен бағандардан тұратын <b>кесте</b> (матрица) ретінде елестетуге болады. Ойындардағы карталар, Excel кестелері және шахмат тақтасы осы құрылыммен жасалады.
+</p>
+
+<hr>
+
+<h2>📍 Элементке қалай қол жеткіземіз?</h2>
+<p>Екіөлшемді массивтегі белгілі бір мәнді алу үшін бізге екі индекс қажет:</p>
+
+<div class="feature-grid">
+    <div class="feature-card" style="border-left: 5px solid var(--primary-2); background: linear-gradient(180deg, rgba(0, 166, 251, 0.08) 0%, var(--surface) 100%);">
+        <h4 style="color: var(--primary-2); font-size: 20px; font-weight: 800; margin-bottom: 10px;">Бірінші индекс [i]</h4>
+        <p style="color: var(--text-main); margin-bottom: 0;">Қай <b>жолды</b> таңдайтыныңызды көрсетеді.</p>
+    </div>
+    <div class="feature-card" style="border-left: 5px solid var(--success); background: linear-gradient(180deg, rgba(22, 163, 74, 0.08) 0%, var(--surface) 100%);">
+        <h4 style="color: var(--success); font-size: 20px; font-weight: 800; margin-bottom: 10px;">Екінші индекс [j]</h4>
+        <p style="color: var(--text-main); margin-bottom: 0;">Сол жолдың ішіндегі қай <b>бағанды</b> (элементті) алатыныңызды көрсетеді.</p>
+    </div>
+</div>
+
+<hr>
+
+<h2>🧪 Тәжірибелік алаң (Sandbox)</h2>
+<p>Матрицадағы сандарды өзгертіп, олардың қалай шақырылатынын тексер:</p>
+
+<div class="editor-container">
+    <textarea id="code" rows="12">
+# 3x3 матрица құру
+matrix = [,  # 0-жол,  # 1-жол
+    [70, 80, 90]   # 2-жол
+]
+
+# 50 санын қалай аламыз? (1-жол, 1-баған)
+print("Ортадағы сан:", matrix[1][1])
+
+# 90 санын алу (2-жол, 2-баған)
+print("Соңғы сан:", matrix[2][2])
+
+# Барлық массивті шығару
+print("Толық матрица:")
+for row in matrix:
+    print(row)
+    </textarea>
+</div>
+
+<button class="btn-run" onclick="runCode()">▶ Run Code</button>
+
+<div style="margin-top: 15px; color: var(--text-soft); font-size: 14px;">Нәтиже (Output):</div>
+<pre id="output">Нәтиже осында шығады...</pre>
+
+<div class="feature-card" style="margin-top: 30px; border-left: 5px solid var(--warning); background: linear-gradient(180deg, rgba(245, 158, 11, 0.08) 0%, var(--surface) 100%);">
+    <h4 style="color: var(--warning); font-size: 20px; font-weight: 800; margin-bottom: 10px;">💡 Есіңде сақта:</h4>
+    <p style="color: var(--text-main); margin-bottom: 0;"><code>matrix[0]</code> деп жазсаңыз, ол бірінші санды емес, <b>тұтас бірінші жолды</b> қайтарады.</p>
+</div>
+
+<a href="https://codepen.io/zlreibuh-the-sasster/pen/RNGbGQY" 
+   target="_blank" 
+   class="btn-primary" 
+   style="text-decoration: none; display: inline-block; margin-top: 20px;">
+    🚀 Екіөлшемді массив тапсырмаларын орындау
+</a>
+
+{% endblock %}

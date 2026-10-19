@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>📦 Бірөлшемді массивтер (Lists)</h1>
+
+<div class="video-wrapper">
+    <iframe 
+        src="https://www.youtube.com/embed/Zg_gXzHFNlI" 
+        title="Бірөлшемді массив Python"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+    </iframe>
+</div>
+
+<p>
+    Python-да массивтерді <b>Тізімдер (Lists)</b> деп атайды. Бұл — бір айнымалының ішінде көптеген мәндерді (сандарды, мәтіндерді) сақтауға мүмкіндік беретін деректер құрылымы.
+</p>
+
+<hr>
+
+<h2>🔢 Индекстеу: Элементтерге қалай қол жеткізуге болады?</h2>
+<p>Тізімдегі әрбір элементтің өз орны (нөмірі) болады. Назар аударыңыз: <b>санау 0-ден басталады!</b></p>
+
+<div class="feature-grid">
+    <div class="feature-card" style="border-left: 5px solid var(--primary); background: linear-gradient(180deg, rgba(15, 98, 254, 0.08) 0%, var(--surface) 100%);">
+        <h4 style="color: var(--primary); font-size: 20px; font-weight: 800; margin-bottom: 10px;">Оң индекс (0, 1, 2...)</h4>
+        <p style="color: var(--text-main); margin-bottom: 0;">Солдан оңға қарай санау. Бірінші элемент — <code>[0]</code>.</p>
+    </div>
+    <div class="feature-card" style="border-left: 5px solid var(--warning); background: linear-gradient(180deg, rgba(245, 158, 11 0.08) 0%, var(--surface) 100%);">
+        <h4 style="color: var(--warning); font-size: 20px; font-weight: 800; margin-bottom: 10px;">Теріс индекс (-1, -2...)</h4>
+        <p style="color: var(--text-main); margin-bottom: 0;">Оңнан солға қарай (соңынан бастап) санау. Соңғы элемент — <code>[-1]</code>.</p>
+    </div>
+</div>
+
+<hr>
+
+<h2>🧪 Тәжірибелік алаң (Sandbox)</h2>
+<p>Тізімді өзгертіп, индекстермен жұмыс істеп көр:</p>
+
+<div class="editor-container">
+    <textarea id="code" rows="12">
+# Тізім құру
+жемістер = ["Алма", "Алмұрт", "Банан", "Шие"]
+
+print("Толық тізім:", жемістер)
+
+# Индекс арқылы оқу
+print("Бірінші жеміс (0):", жемістер[0])
+print("Екінші жеміс (1):", жемістер[1])
+print("Ең соңғы жеміс (-1):", жемістер[-1])
+
+# Тізімдегі элементті өзгерту
+жемістер[2] = "Қауын"
+print("Жаңартылған тізім:", жемістер)
+    </textarea>
+</div>
+
+<button class="btn-run" onclick="runCode()">▶ Run Code</button>
+
+<div style="margin-top: 15px; color: var(--text-soft); font-size: 14px;">Нәтиже (Output):</div>
+<pre id="output">Нәтиже осында шығады...</pre>
+
+<div class="feature-card" style="margin-top: 30px; border-left: 5px solid var(--danger); background: linear-gradient(180deg, rgba(239, 68, 68, 0.08) 0%, var(--surface) 100%);">
+    <h4 style="color: var(--danger); font-size: 20px; font-weight: 800; margin-bottom: 10px;">⚠️ Жиі кездесетін қате:</h4>
+    <p style="color: var(--text-main); margin-bottom: 0;">Егер сіз тізімде жоқ индексті шақырсаңыз (мысалы, 3 элементі бар тізімнен 10-шыны сұрасаңыз), Python <code>IndexError</code> қатесін береді.</p>
+</div>
+
+<a href="https://codepen.io/zlreibuh-the-sasster/pen/PwGYGNd" 
+   target="_blank" 
+   class="btn-primary" 
+   style="text-decoration: none; display: inline-block; margin-top: 20px;">
+    🚀 Бірөлшемді массив тапсырмаларын орындау
+</a>
+
+{% endblock %}

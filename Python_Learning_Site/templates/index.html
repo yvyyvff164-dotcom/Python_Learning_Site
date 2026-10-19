@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <title>Python оқу сайты</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <aside class="sidebar">
+        <h3>Сабақтар</h3>
+        <ul>
+            <li><a href="/">Python деген не?</a></li>
+            <li><a href="/print">Print</a></li>
+            <li><a href="/variables">Айнымалылар</a></li>
+            <li><a href="/conditions">Шарттар</a></li>
+            <li><a href="/functions">Функциялар</a></li>
+            <li><a href="/loops">Циклдер</a></li>
+            <li><a href="/sorting">Сұрыптау</a></li>
+            <li><a href="/arrays1">Бірөлшемді массив</a></li>
+            <li><a href="/arrays2">Екіөлшемді массив</a></li>
+            <li><a href="/add_remove">Элемент қосу және жою</a></li>
+        </ul>
+    </aside>
+
+    <main class="content">
+        {% block content %}{% endblock %}
+    </main>
+</div>
+
+</body>
+</html>

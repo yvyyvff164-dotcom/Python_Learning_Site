@@ -224,7 +224,6 @@
                 const response = await fetch('/ask-ai', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    json: true,
                     body: JSON.stringify({ message: messageText })
                 });
                 const data = await response.json();
@@ -238,7 +237,9 @@
                 chatMessages.appendChild(aiDiv);
 
             } catch (error) {
-                chatMessages.removeChild(loadingDiv);
+                if (chatMessages.contains(loadingDiv)) {
+                    chatMessages.removeChild(loadingDiv);
+                }
                 const errorDiv = document.createElement('div');
                 errorDiv.style = "background: var(--danger); color: white; padding: 10px 14px; border-radius: 14px 14px 14px 0; max-width: 85%; align-self: flex-start; font-size: 14px;";
                 errorDiv.textContent = "Байланыс қатесі орын алды.";
@@ -253,3 +254,4 @@
                 sendAIMessage();
             }
         }
+

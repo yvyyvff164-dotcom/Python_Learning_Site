@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Форматтау және f-strings — Python оқу сайты{% endblock %}
+{% block title %}Логикалық операторлар (and, or, not) — Python оқу сайты{% endblock %}
 
 {% block content %}
 <style>
@@ -59,6 +59,7 @@
 
     .card-primary { border-left: 5px solid var(--primary); }
     .card-secondary { border-left: 5px solid var(--primary-2); }
+    .card-accent { border-left: 5px solid #22c55e; }
 
     .editor-container {
         margin-top: 15px;
@@ -144,57 +145,65 @@
     }
 </style>
 
-<h1 class="lesson-title">✨ Мәтінді форматтау және f-strings</h1>
+<h1 class="lesson-title">🔀 Логикалық операторлар (and, or, not)</h1>
 
+<!-- YouTube видео сілтемесі кірістірілді -->
 <div class="video-wrapper">
     <iframe 
-        src="https://www.youtube.com/embed/XB81aB-Hh-c" 
-        title="Python f-strings formatting"
+        src="https://www.youtube.com/embed/FrvBwdAU2dQ" 
+        title="Python logical operators"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
         allowfullscreen>
     </iframe>
 </div>
 
 <p>
-    Python-да айнымалылар мен мәтіндерді бір-біріне қосу үшін үтірлерді немесе <code>+</code> таңбасын пайдалану кейде ыңғайсыз. Оны шешу үшін заманауи әрі ыңғайлы <b>f-strings (форматталған жолдар)</b> қолданылады.
+    Бағдарламалау барысында бірнеше шартты бір мезгілде тексеру қажет болады. Ол үшін Python-да үш негізгі логикалық оператор қолданылады: <code>and</code>, <code>or</code> және <code>not</code>.
 </p>
 
 <hr>
 
-<h2>🛠 f-strings қалай қолданылады?</h2>
+<h2>🛠 Операторлардың түрлері</h2>
 
 <div class="feature-grid">
     <div class="feature-card card-primary">
-        <b>1. f"..." форматы</b>
-        <p style="margin-top: 8px; margin-bottom: 0;">Мәтін алдына <code>f</code> немесе <code>F</code> әрпін жазып, айнымалыларды жүйелік жақша ішіне <code>{айнымалы}</code> тікелей кірістіруге болады.</p>
+        <b>1. AND (және)</b>
+        <p style="margin-top: 8px; margin-bottom: 0; color: var(--text-main);">Барлық шарттар шын (True) болғанда ғана нәтиже True қайтарады.</p>
     </div>
     
     <div class="feature-card card-secondary">
-        <b>2. Математикалық есептеулер</b>
-        <p style="margin-top: 8px; margin-bottom: 0;">Жақшаның <code>{}</code> ішіне тек айнымалыларды ғана емес, тікелей математикалық амалдар мен функцияларды да жазуға болады.</p>
+        <b>2. OR (немесе)</b>
+        <p style="margin-top: 8px; margin-bottom: 0; color: var(--text-main);">Кем дегенде бір шарт шын болса, нәтиже True болады.</p>
+    </div>
+
+    <div class="feature-card card-accent">
+        <b>3. NOT (терістеу)</b>
+        <p style="margin-top: 8px; margin-bottom: 0; color: var(--text-main);">Шарттың мәнін қарама-қарсыға өзгертеді (True болса False етеді).</p>
     </div>
 </div>
 
 <hr>
 
 <h2>🧪 Тәжірибелік алаң (Sandbox)</h2>
-<p>f-strings көмегімен мәтінді қалай әдемі құрастыруға болатынын тексеріп көр:</p>
-
 <div class="editor-container">
     <textarea id="code" rows="12">
-# Айнымалыларды анықтау
-аты = "Арман"
-жасы = 17
-курс = "Python"
+# Айнымалылар
+жас = 18
+бар_актив = True
 
-# f-string қолдану арқылы мәтін құру
-хабарлама = f"Сәлем, менің атым {аты}, жасым {жасы}-де. Мен {курс} тілін үйреніп жатырмын!"
-print(хабарлама)
+# AND операторы
+if жас >= 18 and бар_актив:
+    print("Кіруге рұқсат етілді!")
+else:
+    print("Кіруге тыйым салынды.")
 
-# Жақша ішінде математикалық амалдарды қолдану
-баға 1 = 45000
-баға 2 = 15000
-print(f"Жалпы сомасы: {баға 1 + баға 2} теңге")
+# OR операторы
+бал = 75
+сабаққа_қатысу = False
+if бал > 80 or сабаққа_қатысу:
+    print("Емтиханнан өтдіңіз!")
+else:
+    print("Қайта тапсыру керек.")
     </textarea>
 </div>
 
@@ -203,17 +212,12 @@ print(f"Жалпы сомасы: {баға 1 + баға 2} теңге")
 <div style="margin-top: 15px; color: var(--text-light); font-size: 14px; font-weight: 500;">Нәтиже (Output):</div>
 <pre id="output">Нәтиже осында шығады...</pre>
 
-<div class="feature-card tip-card">
-    <h4>💡 Артықшылығы:</h4>
-    <p style="margin-bottom: 0;">f-strings кодты әлдеқайда таза, оқуға жеңіл әрі жылдам етеді. Бұл кәсіби әзірлеушілер ең көп қолданатын әдістердің бірі.</p>
-</div>
-
 <script>
     function runCode() {
         const output = document.getElementById('output');
         output.textContent = "Код орындалуда...";
         setTimeout(() => {
-            output.textContent = "Сәлем, менің атым Арман, жасым 17-де. Мен Python тілін үйреніп жатырмын!\nЖалпы сомасы: 60000 теңге";
+            output.textContent = "Кіруге рұқсат етілді!\nҚайта тапсыру керек.";
         }, 500);
     }
 </script>

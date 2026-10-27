@@ -141,4 +141,117 @@
 
     .tip-card {
         margin-top: 35px;
-        border-left
+        border-left: 5px solid var(--primary-2);
+        background: var(--surface-strong);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
+        color: var(--text-main);
+    }
+
+    .tip-card h4 {
+        color: var(--primary-2);
+        margin-top: 0;
+        margin-bottom: 8px;
+    }
+
+    hr {
+        border: none;
+        height: 1px;
+        background: var(--border);
+        margin: 30px 0;
+    }
+
+    p {
+        line-height: 1.6;
+        color: var(--text-main);
+    }
+</style>
+
+<h1 class="lesson-title">📝 Мәтіндік жолдармен жұмыс (String Methods)</h1>
+
+<!-- YouTube видео бейнесі -->
+<div class="video-wrapper">
+    <iframe 
+        src="https://www.youtube.com/embed/k9TUPpGqYTo" 
+        title="Python string methods"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+    </iframe>
+</div>
+
+<p>
+    Python-да мәтіндер (жолдар) <code>str</code> типімен сақталады. Мәтіндерді өңдеу, бас әріпке айналдыру, қажетсіз бос орындарды алып тастау немесе сөздерді алмастыру үшін арнайы <b>құрылған әдістер (methods)</b> қолданылады.
+</p>
+
+<hr>
+
+<h2>🛠 Негізгі жол әдістері (String Methods)</h2>
+
+<div class="feature-grid">
+    <div class="feature-card card-primary">
+        <b>1. Регистрді өзгерту</b>
+        <ul>
+            <li><code>upper()</code> — барлық әріптерді бас әріпке үлкейтеді.</li>
+            <li><code>lower()</code> — барлық әріптерді кіші әріпке кішійтеді.</li>
+            <li><code>capitalize()</code> — тек бірінші әріпті бас әріп етеді.</li>
+        </ul>
+    </div>
+    
+    <div class="feature-card card-secondary">
+        <b>2. Тазарту және Іздеу</b>
+        <ul>
+            <li><code>strip()</code> — мәтіннің басындағы және соңындағы бос орындарды өшіреді.</li>
+            <li><code>replace(old, new)</code> — мәтіннің ішіндегі сөзді басқасына ауыстырады.</li>
+            <li><code>split(sep)</code> — мәтінді көрсетілген белгі бойынша тізімге бөліп тастайды.</li>
+        </ul>
+    </div>
+</div>
+
+<hr>
+
+<h2>🧪 Тәжірибелік алаң (Sandbox)</h2>
+<p>Мәтін әдістерін кодта қалай қолдану керектігін тексеріп көр:</p>
+
+<div class="editor-container">
+    <textarea id="code" rows="12">
+# Бастапқы мәтін
+мәтін = "   python бағдарламалау тілі   "
+
+# Бос орындарды алып тастау
+таза_мәтін = мәтін.strip()
+print("Тазартылған:", таза_мәтін)
+
+# Барлық әріпті үлкейту
+print("Үлкен әріптермен:", таза_мәтін.upper())
+
+# Сөзді басқа сөзге ауыстыру
+жаңа_мәтін = таза_мәтін.replace("python", "JavaScript")
+print("Ауыстырылған:", жаңа_мәтін)
+
+# Мәтінді тізімге бөлу
+бөліктер = таза_мәтін.split(" ")
+print("Тізім түрінде:", бөліктер)
+    </textarea>
+</div>
+
+<button class="btn-run" onclick="runCode()">▶ Run Code</button>
+
+<div style="margin-top: 15px; color: var(--text-light); font-size: 14px; font-weight: 500;">Нәтиже (Output):</div>
+<pre id="output">Нәтиже осында шығады...</pre>
+
+<div class="feature-card tip-card">
+    <h4>💡 Маңызды ескерту:</h4>
+    <p style="margin-bottom: 0;">Python-да жолдар (strings) өзгермейтін (immutable) объектілер болып табылады. Түрлендіру әдістері бастапқы мәтінді өзгертпейді, тек жаңа өзгерген мәтінді қайтарады!</p>
+</div>
+
+<script>
+    function runCode() {
+        const output = document.getElementById('output');
+        output.textContent = "Код орындалуда...";
+        setTimeout(() => {
+            output.textContent = "Тазартылған: python бағдарламалау тілі\nҮлкен әріптермен: PYTHON БАҒДАРЛАМАЛАУ ТІЛІ\nАуыстырылған: JavaScript бағдарламалау тілі\nТізім түрінде: ['python', 'бағдарламалау', 'тілі']";
+        }, 500);
+    }
+</script>
+
+{% endblock %}

@@ -67,11 +67,11 @@ def add_remove():
 def loops():
     return render_template("loops.html")
     
-    @app.route("/strings")
+@app.route("/strings")   
 def strings_page():
     return render_template("strings.html")
     
-    @app.route("/formatting")
+@app.route("/formatting")
 def formatting_page():
     return render_template("formatting.html")
 

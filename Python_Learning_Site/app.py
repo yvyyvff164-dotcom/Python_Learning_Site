@@ -66,6 +66,14 @@ def add_remove():
 @app.route("/loops")
 def loops():
     return render_template("loops.html")
+    
+    @app.route("/strings")
+def strings_page():
+    return render_template("strings.html")
+    
+    @app.route("/formatting")
+def formatting_page():
+    return render_template("formatting.html")
 
 # --- МАРШРУТ: Прием вопросов к ИИ ( /api/chat фронтендке сәйкестендірілді ) ---
 @app.route("/api/chat", methods=["POST"])

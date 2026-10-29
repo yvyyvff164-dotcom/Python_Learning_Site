@@ -1,7 +1,137 @@
 {% extends "base.html" %}
-{% block content %}
 
-<h1>📊 Деректерді сұрыптау (Sorting)</h1>
+{% block title %}Деректерді сұрыптау (Sorting) — Python оқу сайты{% endblock %}
+
+{% block content %}
+<style>
+    .lesson-title {
+        font-size: 2rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+    }
+
+    .video-wrapper {
+        position: relative;
+        width: 100%;
+        padding-bottom: 56.25%;
+        height: 0;
+        background: #000;
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+        margin-bottom: 30px;
+    }
+
+    .video-wrapper iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    .editor-container {
+        margin-top: 15px;
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
+    }
+
+    #code {
+        width: 100%;
+        background: #0f172a;
+        color: #38bdf8;
+        font-family: 'Fira Code', Consolas, Monaco, monospace;
+        font-size: 14px;
+        padding: 16px;
+        border: none;
+        outline: none;
+        resize: vertical;
+        line-height: 1.5;
+    }
+
+    .btn-run {
+        margin-top: 15px;
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
+        transition: var(--transition-smooth);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-run:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
+    }
+
+    #output {
+        background: #0f172a;
+        color: #22c55e;
+        padding: 16px;
+        border-radius: var(--radius-md);
+        font-family: 'Fira Code', Consolas, monospace;
+        font-size: 14px;
+        min-height: 60px;
+        margin-top: 8px;
+        border: 1px solid #334155;
+        white-space: pre-wrap;
+    }
+
+    .feature-card {
+        background: var(--surface-strong);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 20px;
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition-smooth);
+        color: var(--text-main);
+    }
+
+    .btn-primary-custom {
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        color: white;
+        padding: 12px 20px;
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+        box-shadow: var(--shadow-md);
+        transition: var(--transition-smooth);
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 20px;
+    }
+
+    .btn-primary-custom:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+
+    hr {
+        border: none;
+        height: 1px;
+        background: var(--border);
+        margin: 30px 0;
+    }
+
+    p {
+        line-height: 1.6;
+        color: var(--text-main);
+    }
+</style>
+
+<h1 class="lesson-title">📊 Деректерді сұрыптау (Sorting)</h1>
 
 <div class="video-wrapper">
     <iframe 
@@ -12,7 +142,7 @@
     </iframe>
 </div>
 
-<p>
+<p style="color: var(--text-main);">
     <strong>Сұрыптау</strong> — бұл элементтерді белгілі бір реттілікпен (өсу немесе кему ретімен) орналастыру процесі. Python-да тізімдерді сұрыптаудың екі негізгі жолы бар: <code>sort()</code> әдісі және <code>sorted()</code> функциясы.
 </p>
 
@@ -20,24 +150,23 @@
 
 <h2>🛠 Сұрыптаудың негізгі түрлері</h2>
 
-<!-- Переключено на ваш глобальный класс .feature-grid -->
-<div class="feature-grid" style="margin-bottom: 30px;">
-    <div class="feature-card" style="border-left: 5px solid var(--primary-2); background: linear-gradient(180deg, rgba(0, 166, 251, 0.05) 0%, var(--surface) 100%);">
-        <h4 style="color: var(--primary-2); font-size: 20px; font-weight: 800; margin-bottom: 10px;">1. Өсу ретімен (Ascending)</h4>
-        <p style="color: var(--text-main);">Кіші саннан үлкенге қарай реттеу. Әдепкі бойынша осылай істейді.</p>
-        <code style="background: rgba(0, 0, 0, 0.05); padding: 4px 8px; border-radius: 6px; color: var(--primary-dark);">sandar.sort()</code>
+<div class="feature-grid" style="margin-bottom: 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+    <div class="feature-card" style="border-left: 5px solid var(--primary-2);">
+        <h4 style="color: var(--primary-2); font-size: 18px; font-weight: 800; margin-bottom: 10px;">1. Өсу ретімен (Ascending)</h4>
+        <p style="color: var(--text-main); margin-bottom: 10px;">Кіші саннан үлкенге қарай реттеу. Әдепкі бойынша осылай істейді.</p>
+        <code style="background: rgba(0, 0, 0, 0.2); padding: 4px 8px; border-radius: 6px; color: #38bdf8;">sandar.sort()</code>
     </div>
-    <div class="feature-card" style="border-left: 5px solid var(--danger); background: linear-gradient(180deg, rgba(239, 68, 68, 0.05) 0%, var(--surface) 100%);">
-        <h4 style="color: var(--danger); font-size: 20px; font-weight: 800; margin-bottom: 10px;">2. Кему ретімен (Descending)</h4>
-        <p style="color: var(--text-main);">Үлкен саннан кішіге қарай кері реттеу.</p>
-        <code style="background: rgba(0, 0, 0, 0.05); padding: 4px 8px; border-radius: 6px; color: var(--danger);">sandar.sort(reverse=True)</code>
+    <div class="feature-card" style="border-left: 5px solid var(--danger);">
+        <h4 style="color: var(--danger); font-size: 18px; font-weight: 800; margin-bottom: 10px;">2. Кему ретімен (Descending)</h4>
+        <p style="color: var(--text-main); margin-bottom: 10px;">Үлкен саннан кішіге қарай кері реттеу.</p>
+        <code style="background: rgba(0, 0, 0, 0.2); padding: 4px 8px; border-radius: 6px; color: var(--danger);">sandar.sort(reverse=True)</code>
     </div>
 </div>
 
 <hr>
 
 <h2>🧪 Тәжірибе: Кодты тексеру</h2>
-<p>Төмендегі тізімдегі сандарды немесе сөздерді өзгертіп, сұрыптап көр:</p>
+<p style="color: var(--text-main);">Төмендегі тізімдегі сандарды немесе сөздерді өзгертіп, сұрыптап көр:</p>
 
 <div class="editor-container">
     <textarea id="code" rows="12">
@@ -48,7 +177,7 @@ print("Өсу ретімен:", sandar)
 
 # 2. Кері сұрыптау
 sandar.sort(reverse=True)
-print("Keму ретімен:", sandar)
+print("Кему ретімен:", sandar)
 
 # 3. Мәтіндерді сұрыптау (әліпби бойынша)
 esimder = ["Sanzhar", "Arman", "Zere", "Bolat"]
@@ -61,16 +190,25 @@ print("Әліпбимен:", sorted(esimder))
 <div style="margin-top: 15px; color: var(--text-soft); font-size: 14px;">Нәтиже:</div>
 <pre id="output">Нәтиже осында шығады...</pre>
 
-<div class="feature-card" style="margin-top: 30px; border-left: 5px solid var(--warning); background: linear-gradient(180deg, rgba(245, 158, 11, 0.05) 0%, var(--surface) 100%);">
-    <h4 style="color: var(--warning); font-size: 20px; font-weight: 800; margin-bottom: 10px;">⚠️ Назар аударыңыз:</h4>
+<div class="feature-card" style="margin-top: 30px; border-left: 5px solid var(--warning);">
+    <h4 style="color: var(--warning); font-size: 18px; font-weight: 800; margin-bottom: 10px;">⚠️ Назар аударыңыз:</h4>
     <p style="color: var(--text-main); margin-bottom: 0;"><code>sort()</code> әдісі тізімнің өзін өзгертеді, ал <code>sorted()</code> функциясы жаңа сұрыпталған тізімді қайтарады (түпнұсқа тізім өзгеріссіз қалады).</p>
 </div>
 
 <a href="https://codepen.io/zlreibuh-the-sasster/pen/ogzvzje" 
    target="_blank" 
-   class="btn-primary" 
-   style="text-decoration: none; display: inline-block; margin-top: 20px;">
+   class="btn-primary-custom">
     🔀 CodePen-дегі сұрыптау тапсырмалары
 </a>
+
+<script>
+    function runCode() {
+        const output = document.getElementById('output');
+        output.textContent = "Код орындалуда...";
+        setTimeout(() => {
+            output.textContent = "Өсу ретімен: [1, 7, 23, 42, 100]\nКему ретімен: [100, 42, 23, 7, 1]\nӘліпбимен: ['Arman', 'Bolat', 'Sanzhar', 'Zere']";
+        }, 500);
+    }
+</script>
 
 {% endblock %}

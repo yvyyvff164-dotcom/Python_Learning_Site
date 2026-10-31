@@ -5,23 +5,122 @@
 {% block content %}
 <style>
     /* ==========================================
-       Басты бетке арналған ерекше стилизация
+        Басты бетке арналған стилизация
     ========================================== */
+    .hero {
+        position: relative;
+        padding: 40px 36px;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border);
+        background:
+            radial-gradient(circle at 90% 10%, rgba(139, 92, 246, 0.16), transparent 45%),
+            radial-gradient(circle at 5% 95%, rgba(59, 130, 246, 0.16), transparent 45%),
+            var(--surface-strong);
+        box-shadow: var(--shadow-lg);
+        margin-bottom: 35px;
+        overflow: hidden;
+    }
+
+    .hero-badge {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(59, 130, 246, 0.12);
+        color: var(--primary);
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+    }
+
     .hero-title {
-        font-size: 2.5rem;
+        font-size: clamp(1.9rem, 4vw, 2.8rem);
         font-weight: 800;
         background: linear-gradient(135deg, var(--primary), var(--primary-2));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        margin-bottom: 15px;
+        margin: 0 0 15px 0;
         line-height: 1.2;
     }
 
     .hero-subtitle {
-        font-size: 1.15rem;
+        font-size: 1.12rem;
+        color: var(--text-main);
+        margin: 0 0 24px 0;
+        line-height: 1.7;
+        max-width: 780px;
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .btn-primary-action {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: white;
+        padding: 13px 24px;
+        border-radius: var(--radius-sm);
+        font-weight: 700;
+        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+        transition: var(--transition-smooth);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-primary-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+        color: white;
+    }
+
+    .btn-secondary-action {
+        background: transparent;
+        color: var(--text-main);
+        padding: 13px 24px;
+        border-radius: var(--radius-sm);
+        font-weight: 700;
+        border: 1px solid var(--border);
+        text-decoration: none;
+        display: inline-block;
+        transition: var(--transition-smooth);
+    }
+
+    .btn-secondary-action:hover {
+        border-color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    /* Статистика */
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 16px;
+        margin: 0 0 35px 0;
+    }
+
+    .stat-box {
+        background: var(--surface-strong);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 18px;
+        text-align: center;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .stat-number {
+        font-size: 1.9rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1.2;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
         color: var(--text-light);
-        margin-bottom: 25px;
-        line-height: 1.6;
+        margin-top: 4px;
     }
 
     /* YouTube видеосын бейімдеу */
@@ -70,24 +169,217 @@
         border-color: var(--primary);
     }
 
-    /* Әр бағытқа арналған ерекше жиектер (Borders) */
     .card-primary { border-left: 5px solid var(--primary-2); }
     .card-success { border-left: 5px solid var(--success); }
     .card-warning { border-left: 5px solid #f59e0b; }
     .card-info    { border-left: 5px solid var(--primary); }
+    .card-danger  { border-left: 5px solid #ef4444; }
 
     .feature-card h3 {
         margin-top: 0;
         margin-bottom: 10px;
-        font-size: 1.2rem;
-        font-weight: 700;
+        font-size: 1.15rem;
+        font-weight: 800;
     }
 
     .feature-card p {
         color: var(--text-main);
         margin-bottom: 0;
         font-size: 0.95rem;
-        line-height: 1.5;
+        line-height: 1.6;
+    }
+
+    /* Тарих (Timeline) */
+    .timeline {
+        position: relative;
+        margin: 25px 0;
+        padding-left: 28px;
+        border-left: 3px solid var(--border);
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 22px;
+    }
+
+    .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -37px;
+        top: 4px;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        border: 3px solid var(--bg-main);
+    }
+
+    .timeline-year {
+        font-weight: 800;
+        color: var(--primary);
+        font-size: 1.05rem;
+    }
+
+    .timeline-item p {
+        margin: 4px 0 0 0;
+    }
+
+    /* Python пен басқа тіл салыстыруы */
+    .compare-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin: 25px 0;
+    }
+
+    .code-block {
+        background: #0f172a;
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        border: 1px solid #334155;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .code-block-title {
+        padding: 10px 16px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #ffffff;
+        background: #1e293b;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .code-block pre {
+        margin: 0;
+        padding: 16px;
+        color: #38bdf8;
+        font-family: 'Fira Code', Consolas, Monaco, monospace;
+        font-size: 13px;
+        line-height: 1.6;
+        overflow-x: auto;
+    }
+
+    .tag-good { color: #22c55e; }
+    .tag-bad  { color: #f87171; }
+
+    /* Сабақтар картасы */
+    .lesson-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        gap: 16px;
+        margin: 25px 0;
+    }
+
+    .lesson-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px;
+        background: var(--surface-strong);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+        text-decoration: none;
+        color: var(--text-main);
+        transition: var(--transition-smooth);
+    }
+
+    .lesson-link:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary);
+    }
+
+    .lesson-num {
+        flex: 0 0 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        color: #ffffff;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .lesson-link b {
+        display: block;
+        font-size: 0.98rem;
+    }
+
+    .lesson-link span {
+        font-size: 0.82rem;
+        color: var(--text-light);
+    }
+
+    /* Қадамдар */
+    .steps {
+        counter-reset: step;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 18px;
+        margin: 25px 0;
+    }
+
+    .step {
+        counter-increment: step;
+        background: var(--surface-strong);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 20px;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .step::before {
+        content: counter(step);
+        display: inline-flex;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        color: #ffffff;
+        font-weight: 800;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .step h4 {
+        margin: 0 0 6px 0;
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--text-main);
+    }
+
+    .step p {
+        margin: 0;
+        font-size: 0.93rem;
+    }
+
+    /* FAQ */
+    .faq details {
+        background: var(--surface-strong);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 14px 18px;
+        margin-bottom: 12px;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .faq summary {
+        cursor: pointer;
+        font-weight: 700;
+        color: var(--text-main);
+    }
+
+    .faq details[open] {
+        border-color: var(--primary);
+    }
+
+    .faq details p {
+        margin: 10px 0 0 0;
     }
 
     /* Код редакторы мен Sandbox */
@@ -101,6 +393,7 @@
 
     #code {
         width: 100%;
+        box-sizing: border-box;
         background: #0f172a;
         color: #38bdf8;
         font-family: 'Fira Code', Consolas, Monaco, monospace;
@@ -110,6 +403,38 @@
         outline: none;
         resize: vertical;
         line-height: 1.5;
+        tab-size: 4;
+    }
+
+    .example-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+    }
+
+    .chip {
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--primary);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+    }
+
+    .chip:hover {
+        background: var(--primary);
+        color: #ffffff;
+    }
+
+    .btn-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
     }
 
     .btn-run {
@@ -134,6 +459,35 @@
         box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
     }
 
+    .btn-run:disabled {
+        opacity: .6;
+        cursor: wait;
+        transform: none;
+    }
+
+    .btn-clear {
+        margin-top: 15px;
+        background: transparent;
+        color: var(--text-main);
+        border: 1px solid var(--border);
+        padding: 12px 20px;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: var(--transition-smooth);
+    }
+
+    .btn-clear:hover {
+        border-color: var(--primary);
+    }
+
+    .hint {
+        font-size: 13px;
+        opacity: .7;
+        margin-top: 8px;
+    }
+
     #output {
         background: #0f172a;
         color: #22c55e;
@@ -147,6 +501,45 @@
         white-space: pre-wrap;
     }
 
+    #output.error {
+        color: #f87171;
+    }
+
+    .cta {
+        text-align: center;
+        padding: 36px 24px;
+        border-radius: var(--radius-md);
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        box-shadow: var(--shadow-lg);
+        margin-top: 40px;
+    }
+
+    .cta h2 {
+        color: #ffffff;
+        margin: 0 0 10px 0;
+    }
+
+    .cta p {
+        color: rgba(255, 255, 255, 0.92);
+        margin: 0 0 20px 0;
+    }
+
+    .cta a {
+        display: inline-block;
+        background: #ffffff;
+        color: var(--primary-dark);
+        padding: 13px 28px;
+        border-radius: var(--radius-sm);
+        font-weight: 800;
+        text-decoration: none;
+        transition: var(--transition-smooth);
+    }
+
+    .cta a:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
     hr {
         border: none;
         height: 1px;
@@ -156,96 +549,466 @@
 
     h2 {
         font-size: 1.5rem;
-        font-weight: 700;
+        font-weight: 800;
         color: var(--text-main);
         margin-top: 30px;
         margin-bottom: 15px;
     }
+
+    p {
+        line-height: 1.7;
+        color: var(--text-main);
+    }
+
+    @media (max-width: 600px) {
+        .hero { padding: 26px 20px; }
+    }
 </style>
 
-<!-- Герой секция -->
-<h1 class="hero-title">🚀 Python бағдарламалау тіліне қош келдіңіз!</h1>
-<p class="hero-subtitle">
-    <strong>Python</strong> — әлемдегі ең танымал, қуатты әрі үйренуге ең оңай бағдарламалау тілі. Оның көмегімен қарапайым есептеулерден бастап күрделі жасанды интеллект жүйелерін және ойындарды жасауға болады.
-</p>
+<!-- ============ HERO ============ -->
+<section class="hero">
+    <span class="hero-badge">🐍 Бастаушыларға арналған тегін курс</span>
+    <h1 class="hero-title">Python бағдарламалау тіліне қош келдіңіз!</h1>
+    <p class="hero-subtitle">
+        <b>Python</b> — әлемдегі ең танымал, қуатты әрі үйренуге ең оңай бағдарламалау тілі.
+        Оның көмегімен қарапайым есептеулерден бастап веб-сайттарды, ойындарды және жасанды интеллект жүйелерін жасауға болады.
+        Бұл сайтта сен нөлден бастап, қадам-қадаммен, тікелей браузерде кодты жазып, іске қосып үйренесің.
+    </p>
+    <div class="hero-actions">
+        <a href="/print" class="btn-primary-action">🚀 Оқуды бастау</a>
+        <a href="#sandbox" class="btn-secondary-action">💻 Кодты қазір байқап көру</a>
+    </div>
+</section>
 
-<!-- Бейне сабақ -->
+<!-- ============ СТАТИСТИКА ============ -->
+<div class="stats-row">
+    <div class="stat-box">
+        <div class="stat-number">1991</div>
+        <div class="stat-label">Python пайда болған жыл</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-number">13</div>
+        <div class="stat-label">Практикалық сабақ</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-number">0</div>
+        <div class="stat-label">Орнату қажет емес</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-number">100%</div>
+        <div class="stat-label">Браузерде жұмыс істейді</div>
+    </div>
+</div>
+
+<!-- ============ БЕЙНЕ ============ -->
 <div class="video-wrapper">
-    <iframe 
-        src="https://www.youtube.com/embed/SqrVSgATmrU" 
+    <iframe
+        src="https://www.youtube.com/embed/SqrVSgATmrU"
         title="Python деген не?"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen>
     </iframe>
 </div>
 
-<!-- Негізгі бағыттар торы -->
+<!-- ============ PYTHON ДЕГЕН НЕ ============ -->
+<h2>🧠 Python деген не?</h2>
+<p>
+    Бағдарламалау тілі — бұл компьютерге не істеу керектігін түсіндіретін арнайы тіл. Компьютер біздің сөзімізді түсінбейді, сондықтан біз оған нақты, қадамдық нұсқаулар (<b>код</b>) жазамыз. Python — осындай тілдердің бірі, бірақ ол ерекше: коды кәдімгі ағылшын тіліне ұқсайды және оқуға өте жеңіл.
+</p>
+<p>
+    Python — <b>жоғары деңгейлі</b> (адамға түсінікті), <b>интерпретацияланатын</b> (код жолма-жол бірден орындалады) және <b>әмбебап</b> (кез келген салада қолданылады) тіл.
+</p>
+
+<div class="feature-grid">
+    <div class="feature-card card-info">
+        <h3 style="color: var(--primary);">📖 Жоғары деңгейлі</h3>
+        <p>Компьютердің ішкі күрделі құрылымын білудің қажеті жоқ. Ойыңды қарапайым сөздермен жазасың.</p>
+    </div>
+    <div class="feature-card card-primary">
+        <h3 style="color: var(--primary-2);">⚡ Интерпретацияланатын</h3>
+        <p>Кодты жазып, бірден іске қосуға болады. Қате болса, Python қай жолда екенін өзі айтады.</p>
+    </div>
+    <div class="feature-card card-success">
+        <h3 style="color: var(--success);">🌍 Әмбебап</h3>
+        <p>Веб, ойын, деректер талдауы, автоматтандыру, жасанды интеллект — бәріне бір тіл жетеді.</p>
+    </div>
+</div>
+
+<hr>
+
+<!-- ============ ТАРИХ ============ -->
+<h2>📜 Python қалай пайда болды?</h2>
+<div class="timeline">
+    <div class="timeline-item">
+        <div class="timeline-year">Желтоқсан, 1989</div>
+        <p>Нидерландтық бағдарламашы <b>Гвидо ван Россум</b> демалыс күндері жаңа бағдарламалау тілін жасауды бастады.</p>
+    </div>
+    <div class="timeline-item">
+        <div class="timeline-year">1991</div>
+        <p>Python-ның алғашқы ресми нұсқасы жарық көрді.</p>
+    </div>
+    <div class="timeline-item">
+        <div class="timeline-year">2000 және 2008</div>
+        <p>Python 2.0 және Python 3.0 шықты. Қазір барлық жерде <b>Python 3</b> қолданылады — сайттағы кодтар да сол нұсқада жұмыс істейді.</p>
+    </div>
+    <div class="timeline-item">
+        <div class="timeline-year">Бүгін</div>
+        <p>Python — оқу орындарында, стартаптарда және үлкен компанияларда ең жиі қолданылатын тілдердің бірі.</p>
+    </div>
+</div>
+
+<div class="feature-card card-warning">
+    <h3 style="color: #f59e0b;">🐍 Атауы қайдан шыққан?</h3>
+    <p>Көпшілік жылан деп ойлайды, бірақ тіл «Монти Пайтонның ұшатын цирккі» атты британдық комедиялық шоудың құрметіне аталған. Сондықтан Python қауымдастығында әзіл мен жеңіл көңіл-күй жиі кездеседі.</p>
+</div>
+
+<hr>
+
+<!-- ============ ҚОЛДАНЫЛУ САЛАЛАРЫ ============ -->
 <h2>🎯 Python қай салаларда қолданылады?</h2>
 <div class="feature-grid">
     <div class="feature-card card-primary">
-        <h3 style="color: var(--primary-2);">🌐 Веб-әзірлеу (Web Development)</h3>
-        <p>Instagram, Pinterest, Spotify және Dropbox сияқты әлемдік сервистердің серверлік бөлігі Python (Django/Flask) арқылы жасалған.</p>
+        <h3 style="color: var(--primary-2);">🌐 Веб-әзірлеу</h3>
+        <p>Instagram, Spotify және Dropbox сияқты танымал сервистер өз жүйелерінің бір бөлігінде Python қолданады. Django және Flask — ең белгілі фреймворктер. Осы сайттың өзі де Flask-та жасалған!</p>
     </div>
-    
     <div class="feature-card card-success">
-        <h3 style="color: var(--success);">🤖 Жасанды интеллект (AI & Machine Learning)</h3>
-        <p>ChatGPT, Tesla автопилоты, Google Translate және бетті тану жүйелері толығымен Python-ның деректерді өңдеу алгоритмдеріне сүйенеді.</p>
+        <h3 style="color: var(--success);">🤖 Жасанды интеллект</h3>
+        <p>TensorFlow, PyTorch және scikit-learn кітапханалары арқылы нейрондық желілер жасалады. Жасанды интеллект әзірлеудің басты тілі — Python.</p>
     </div>
-    
     <div class="feature-card card-warning">
-        <h3 style="color: var(--warning);">🎮 Ойындар мен Қолданбалар</h3>
-        <p>PyGame кітапханасы арқылы 2D ойындарды жасауға, ал автоматтандыру скрипттері арқылы күнделікті рутинды жұмыстарды жеңілдетуге болады.</p>
+        <h3 style="color: #f59e0b;">📊 Деректер талдауы</h3>
+        <p>Pandas, NumPy және Matplotlib көмегімен үлкен кестелерді өңдеп, графиктер салуға болады. Ғалымдар мен талдаушылар үшін таптырмас құрал.</p>
+    </div>
+    <div class="feature-card card-info">
+        <h3 style="color: var(--primary);">🎮 Ойындар</h3>
+        <p>PyGame кітапханасы арқылы 2D ойындар жасауға болады. Алғашқы ойыныңды жазу — бағдарламалауды үйренудің ең қызықты жолы.</p>
+    </div>
+    <div class="feature-card card-danger">
+        <h3 style="color: #ef4444;">⚙️ Автоматтандыру</h3>
+        <p>Файлдарды реттеу, хабарламалар жіберу, сайттардан ақпарат жинау сияқты күнделікті рутинаны бірнеше жол кодпен орындатуға болады.</p>
+    </div>
+    <div class="feature-card card-primary">
+        <h3 style="color: var(--primary-2);">🔌 Робототехника және IoT</h3>
+        <p>Raspberry Pi және MicroPython арқылы датчиктер мен роботтарды басқаруға болады.</p>
     </div>
 </div>
 
 <hr>
 
-<!-- Python ерекшеліктері -->
-<h2>💡 Неліктен дәл Python таңдау керек?</h2>
+<!-- ============ ПЫТОН VS БАСҚА ТІЛ ============ -->
+<h2>⚖️ Неліктен дәл Python?</h2>
+<p>Екі бағдарлама да экранға бір ғана жазу шығарады. Айырмашылықты өзің көр:</p>
+
+<div class="compare-grid">
+    <div class="code-block">
+        <div class="code-block-title"><span>🐍 Python</span><span class="tag-good">1 жол</span></div>
+<pre>print("Сәлем, Әлем!")</pre>
+    </div>
+
+    <div class="code-block">
+        <div class="code-block-title"><span>☕ Java</span><span class="tag-bad">5 жол</span></div>
+<pre>public class Main {
+    public static void main(String[] args) {
+        System.out.println("Сәлем, Әлем!");
+    }
+}</pre>
+    </div>
+</div>
+
 <div class="feature-grid">
     <div class="feature-card card-info">
-        <h3 style="color: var(--primary);">📖 Оқылуы оңай (Human-like)</h3>
-        <p>Код кәдімгі ағылшын тіліне ұқсайды. Басқа тілдердегідей артық жақшалар мен нүктелі үтірлерді (<code>;</code>) жазу міндетті емес.</p>
+        <h3 style="color: var(--primary);">✍️ Қысқа әрі түсінікті</h3>
+        <p>Артық жақшалар мен нүктелі үтірлерді (<code>;</code>) жазудың қажеті жоқ. Бір ойды аз кодпен жазасың.</p>
     </div>
-    
     <div class="feature-card card-info">
-        <h3 style="color: var(--primary);">🌍 Үлкен қауымдастық (Community)</h3>
-        <p>Әлем бойынша миллиондаған әзірлеушілер қолданады. Кез келген сұраққа немесе қатеге Интернеттен бірден шешім таба аласыз.</p>
+        <h3 style="color: var(--primary);">🌍 Үлкен қауымдастық</h3>
+        <p>Миллиондаған әзірлеушілер қолданады. Кез келген қателіктің шешімін интернеттен бірден табасың.</p>
+    </div>
+    <div class="feature-card card-info">
+        <h3 style="color: var(--primary);">📚 Дайын кітапханалар</h3>
+        <p>Көп жұмысты сен үшін басқалар жазып қойған. Тек шақырып, пайдалану жеткілікті.</p>
     </div>
 </div>
 
 <hr>
 
-<h2>💻 Алғашқы қадам: Hello World</h2>
-<p>Python-да бағдарлама жазудың қаншалықты оңай екенін қазір көріңіз. Төмендегі кодты іске қосып көріңіз:</p>
+<!-- ============ ӘЛІ ДЕ ============ -->
+<h2>💻 Алғашқы қадам: Кодты байқап көр</h2>
+<p id="sandbox">Төмендегі кодты іске қосып көр. Мәтінді өзгертіп, нәтиже қалай ауысатынын тексер немесе дайын мысалдардың бірін таңда:</p>
 
 <div class="editor-container">
-    <textarea id="code" rows="5">
+    <textarea id="code" rows="10" spellcheck="false">
 # Бұл сенің алғашқы кодың!
 print("Сәлем, Әлем!")
 print("Мен Python бағдарламалау тілін үйреніп жатырмын! 🚀")
-    </textarea>
+</textarea>
 </div>
 
-<button class="btn-run" onclick="runCode()">▶ Кодты жіберу</button>
+<div class="example-row">
+    <button class="chip" type="button" data-example="hello">👋 Сәлем, Әлем</button>
+    <button class="chip" type="button" data-example="calc">🧮 Есептеу</button>
+    <button class="chip" type="button" data-example="vars">📦 Айнымалылар</button>
+    <button class="chip" type="button" data-example="loop">🔁 Цикл</button>
+</div>
+
+<div class="btn-row">
+    <button class="btn-run" id="run-btn" type="button">▶ Кодты жіберу</button>
+    <button class="btn-clear" id="clear-btn" type="button">🗑 Тазалау</button>
+</div>
+<div class="hint">Ctrl + Enter — кодты іске қосу</div>
 
 <div style="margin-top: 15px; color: var(--text-light); font-size: 14px; font-weight: 500;">Консоль нәтижесі:</div>
 <pre id="output">Нәтиже осында шығады...</pre>
 
-<!-- Нұсқаулық блок -->
-<div class="feature-card card-info" style="margin-top: 35px;">
-    <h4 style="color: var(--primary); font-size: 1.15rem; font-weight: 800; margin-top: 0; margin-bottom: 8px;">📘 Оқуды неден бастау керек?</h4>
-    <p style="margin-bottom: 0;">Сол жақтағы сайдбар мәзірінен <b>🖨 Print командасы</b> бөліміне өтіп, Python-ның алғашқы командаларын үйренуді кезең-кезеңімен бастаңыз!</p>
+<hr>
+
+<!-- ============ КУРС ЖОСПАРЫ ============ -->
+<h2>🗺 Курс жоспары</h2>
+<p>Сабақтар қарапайымнан күрделіге қарай жүреді. Әр сабақта бейне, түсіндірме, тәжірибелік алаң және қосымша тапсырмалар бар.</p>
+
+<div class="lesson-grid">
+    <a class="lesson-link" href="/print"><div class="lesson-num">1</div><div><b>🖨 Print командасы</b><span>Экранға шығару</span></div></a>
+    <a class="lesson-link" href="/variables"><div class="lesson-num">2</div><div><b>📦 Айнымалылар</b><span>Деректер типтері</span></div></a>
+    <a class="lesson-link" href="/conditions"><div class="lesson-num">3</div><div><b>🔀 Шарттар</b><span>if, elif, else</span></div></a>
+    <a class="lesson-link" href="/loops"><div class="lesson-num">4</div><div><b>🔁 Циклдер</b><span>for және while</span></div></a>
+    <a class="lesson-link" href="/functions"><div class="lesson-num">5</div><div><b>🧩 Функциялар</b><span>Дайын функциялар</span></div></a>
+    <a class="lesson-link" href="/custom-functions"><div class="lesson-num">6</div><div><b>🛠️ Өз функцияларың</b><span>def командасы</span></div></a>
+    <a class="lesson-link" href="/sorting"><div class="lesson-num">7</div><div><b>📊 Сұрыптау</b><span>sort және sorted</span></div></a>
+    <a class="lesson-link" href="/arrays1"><div class="lesson-num">8</div><div><b>📉 Бірөлшемді массив</b><span>Тізімдер</span></div></a>
+    <a class="lesson-link" href="/arrays2"><div class="lesson-num">9</div><div><b>🧩 Екіөлшемді массив</b><span>Матрицалар</span></div></a>
+    <a class="lesson-link" href="/add_remove"><div class="lesson-num">10</div><div><b>➕ Қосу/жою</b><span>append, remove, pop</span></div></a>
+    <a class="lesson-link" href="/strings"><div class="lesson-num">11</div><div><b>📝 Мәтіндік жолдар</b><span>Жолдармен жұмыс</span></div></a>
+    <a class="lesson-link" href="/formatting"><div class="lesson-num">12</div><div><b>✨ Форматтау</b><span>f-strings</span></div></a>
+</div>
+
+<hr>
+
+<!-- ============ ҚАЛАЙ ОҚУ КЕРЕК ============ -->
+<h2>🎓 Қалай оқу керек?</h2>
+<div class="steps">
+    <div class="step">
+        <h4>Бейнені көр</h4>
+        <p>Әр сабақтың басындағы қысқа бейнеден тақырыптың мәнін түсін.</p>
+    </div>
+    <div class="step">
+        <h4>Мәтінді оқы</h4>
+        <p>Негізгі ережелер мен мысалдарды назар аудара отырып оқы.</p>
+    </div>
+    <div class="step">
+        <h4>Кодты өзің жаз</h4>
+        <p>Тәжірибелік алаңда кодты өзгертіп, нәтижесін бірден көр.</p>
+    </div>
+    <div class="step">
+        <h4>Тапсырманы орында</h4>
+        <p>CodePen-дегі қосымша тапсырмалармен білімді бекіт.</p>
+    </div>
+</div>
+
+<div class="feature-card card-warning">
+    <h3 style="color: #f59e0b;">💡 Басты кеңес</h3>
+    <p>Бағдарламалауды тек оқумен үйрену мүмкін емес. Кодты көшіріп қана қоймай, өз қолыңмен жаз, қателесіп көр және оны түзет. Қате — үйренудің ең жақсы жолы!</p>
+</div>
+
+<hr>
+
+<!-- ============ FAQ ============ -->
+<h2>❓ Жиі қойылатын сұрақтар</h2>
+<div class="faq">
+    <details>
+        <summary>Бағдарламалауды ешқашан үйренбегенмін. Бастауға бола ма?</summary>
+        <p>Әрине! Курс нөлден басталады. Алдын ала ештеңе білудің қажеті жоқ, тек қызығушылық пен тәжірибе жасауға ниет жеткілікті.</p>
+    </details>
+    <details>
+        <summary>Python-ды компьютерге орнату керек пе?</summary>
+        <p>Бұл сайтта жоқ. Барлық кодтар тікелей браузерде орындалады. Кейін өз компьютеріңде жұмыс істегің келсе, python.org сайтынан тегін жүктеп алуға болады.</p>
+    </details>
+    <details>
+        <summary>Python 2 мен Python 3 арасында айырмашылық бар ма?</summary>
+        <p>Иә. Python 2 ескірген, ол енді қолдау таппайды. Біз тек заманауи <b>Python 3</b> нұсқасын қолданамыз.</p>
+    </details>
+    <details>
+        <summary>Python-ды үйреніп, қандай мамандық алуға болады?</summary>
+        <p>Веб-әзірлеуші, деректер талдаушысы, жасанды интеллект инженері, тестілеуші, автоматтандыру маманы және басқа да көптеген бағыттар бар.</p>
+    </details>
+    <details>
+        <summary>Кодым қате шықса не істеймін?</summary>
+        <p>Қорықпа, бұл қалыпты жағдай. Қызыл түсті хабарламаны оқы: онда қай жолда және қандай қате болғаны жазылған. Сонымен қатар, сайттың жоғарғы оң жағындағы <b>🤖 AI Көмекші</b> батырмасын басып, сұрақ қоюға болады.</p>
+    </details>
+</div>
+
+<!-- ============ CTA ============ -->
+<div class="cta">
+    <h2>Дайынсың ба? Бастайық! 🚀</h2>
+    <p>Бірінші сабақ сені бес минутта алғашқы бағдарламаңды жазуға жеткізеді.</p>
+    <a href="/print">🖨 Бірінші сабаққа өту</a>
 </div>
 
 <script>
-    function runCode() {
-        const output = document.getElementById('output');
-        output.textContent = "Код орындалуда...";
-        setTimeout(() => {
-            output.textContent = "Сәлем, Әлем!\nМен Python бағдарламалау тілін үйреніп жатырмын! 🚀";
-        }, 400);
+(function () {
+    const codeEl   = document.getElementById("code");
+    const outputEl = document.getElementById("output");
+    const runBtn   = document.getElementById("run-btn");
+    const clearBtn = document.getElementById("clear-btn");
+
+    // Дайын мысалдар
+    const EXAMPLES = {
+        hello: [
+            "# Бұл сенің алғашқы кодың!",
+            "print(\"Сәлем, Әлем!\")",
+            "print(\"Мен Python бағдарламалау тілін үйреніп жатырмын! 🚀\")",
+            ""
+        ].join("\n"),
+        calc: [
+            "# Python — қуатты калькулятор",
+            "print(\"2 + 3 =\", 2 + 3)",
+            "print(\"10 * 5 =\", 10 * 5)",
+            "print(\"2 ** 10 =\", 2 ** 10)",
+            "print(\"17 // 5 =\", 17 // 5)",
+            "print(\"17 % 5 =\", 17 % 5)",
+            ""
+        ].join("\n"),
+        vars: [
+            "# Айнымалы — мәнді сақтайтын қорапша",
+            "name = \"Aruzhan\"",
+            "age = 14",
+            "print(\"Менің атым\", name)",
+            "print(\"Мен\", age, \"жастамын\")",
+            "print(\"5 жылдан кейін\", age + 5, \"жаста боламын\")",
+            ""
+        ].join("\n"),
+        loop: [
+            "# Цикл — әрекетті қайталау",
+            "for i in range(1, 6):",
+            "    print(\"Сабақ нөмірі\", i)",
+            "",
+            "print(\"Дайын!\")",
+            ""
+        ].join("\n")
+    };
+
+    document.querySelectorAll(".chip").forEach(function (chip) {
+        chip.addEventListener("click", function () {
+            const key = chip.getAttribute("data-example");
+            if (EXAMPLES[key]) {
+                codeEl.value = EXAMPLES[key];
+                outputEl.className = "";
+                outputEl.textContent = "Нәтиже осында шығады...";
+            }
+        });
+    });
+
+    // Skulpt-ты бірнеше көзден кезекпен жүктеу
+    const SOURCES = [
+        ["https://skulpt.org/js/skulpt.min.js",
+         "https://skulpt.org/js/skulpt-stdlib.js"],
+        ["https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js",
+         "https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"],
+        ["https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt.min.js",
+         "https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt-stdlib.js"]
+    ];
+
+    function loadScript(src) {
+        return new Promise(function (resolve, reject) {
+            const s = document.createElement("script");
+            s.src = src;
+            s.onload = resolve;
+            s.onerror = function () { reject(new Error(src)); };
+            document.head.appendChild(s);
+        });
     }
+
+    async function loadSkulpt() {
+        if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
+        for (const pair of SOURCES) {
+            try {
+                await loadScript(pair[0]);
+                await loadScript(pair[1]);
+                if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
+            } catch (e) {
+                console.warn("Skulpt жүктелмеді:", e.message);
+            }
+        }
+        throw new Error("Skulpt ешбір көзден жүктелмеді");
+    }
+
+    const skulptReady = loadSkulpt();
+    runBtn.disabled = true;
+    runBtn.textContent = "⏳ Жүктелуде...";
+    function enableBtn() {
+        runBtn.disabled = false;
+        runBtn.textContent = "▶ Кодты жіберу";
+    }
+    skulptReady.then(enableBtn).catch(enableBtn);
+
+    function builtinRead(file) {
+        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][file] === undefined) {
+            throw "Файл табылмады: '" + file + "'";
+        }
+        return Sk.builtinFiles["files"][file];
+    }
+
+    async function runCode() {
+        outputEl.className = "";
+        outputEl.textContent = "";
+        runBtn.disabled = true;
+
+        try {
+            await skulptReady;
+        } catch (e) {
+            outputEl.className = "error";
+            outputEl.textContent = "Skulpt жүктелмеді. Интернетті тексеріп, бетті жаңартыңыз (Ctrl+F5).";
+            runBtn.disabled = false;
+            return;
+        }
+
+        Sk.configure({
+            output: function (text) { outputEl.textContent += text; },
+            read: builtinRead,
+            __future__: Sk.python3,
+            inputfun: function (prompt) {
+                return window.prompt(prompt || "Мәнді енгізіңіз:") || "";
+            },
+            execLimit: 10000
+        });
+
+        Sk.misceval
+            .asyncToPromise(function () {
+                return Sk.importMainWithBody("<stdin>", false, codeEl.value, true);
+            })
+            .then(function () {
+                if (outputEl.textContent === "") {
+                    outputEl.textContent = "Код сәтті орындалды (экранға ештеңе шықпады).";
+                }
+            })
+            .catch(function (err) {
+                outputEl.className = "error";
+                outputEl.textContent += (outputEl.textContent ? "\n" : "") + "Қате (Error): " + err.toString();
+            })
+            .finally(function () {
+                runBtn.disabled = false;
+            });
+    }
+
+    runBtn.addEventListener("click", runCode);
+
+    clearBtn.addEventListener("click", function () {
+        outputEl.className = "";
+        outputEl.textContent = "Нәтиже осында шығады...";
+    });
+
+    // Ctrl+Enter — іске қосу, Tab — шегініс (4 бос орын)
+    codeEl.addEventListener("keydown", function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+            e.preventDefault();
+            runCode();
+        } else if (e.key === "Tab") {
+            e.preventDefault();
+            const s = codeEl.selectionStart, end = codeEl.selectionEnd;
+            codeEl.value = codeEl.value.slice(0, s) + "    " + codeEl.value.slice(end);
+            codeEl.selectionStart = codeEl.selectionEnd = s + 4;
+        }
+    });
+})();
 </script>
 
 {% endblock %}

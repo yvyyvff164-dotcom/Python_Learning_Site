@@ -44,6 +44,7 @@
 
     #code {
         width: 100%;
+        box-sizing: border-box;
         background: #0f172a;
         color: #38bdf8;
         font-family: 'Fira Code', Consolas, Monaco, monospace;
@@ -53,6 +54,14 @@
         outline: none;
         resize: vertical;
         line-height: 1.5;
+        tab-size: 4;
+    }
+
+    .btn-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
     }
 
     .btn-run {
@@ -77,6 +86,35 @@
         box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
     }
 
+    .btn-run:disabled {
+        opacity: .6;
+        cursor: wait;
+        transform: none;
+    }
+
+    .btn-clear {
+        margin-top: 15px;
+        background: transparent;
+        color: var(--text-main);
+        border: 1px solid var(--border);
+        padding: 12px 20px;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: var(--transition-smooth);
+    }
+
+    .btn-clear:hover {
+        border-color: var(--primary);
+    }
+
+    .hint {
+        font-size: 13px;
+        opacity: .7;
+        margin-top: 8px;
+    }
+
     #output {
         background: #0f172a;
         color: #22c55e;
@@ -88,6 +126,10 @@
         margin-top: 8px;
         border: 1px solid #334155;
         white-space: pre-wrap;
+    }
+
+    #output.error {
+        color: #f87171;
     }
 
     .feature-card {
@@ -123,25 +165,25 @@
 <h1 class="lesson-title">🔁 Циклдер (for, while)</h1>
 
 <div class="video-wrapper">
-    <iframe 
+    <iframe
         src="https://www.youtube.com/embed/6iF8Xb7Z3wQ"
         title="Python loops"
         allowfullscreen>
     </iframe>
 </div>
 
-<p style="color: var(--text-main);">
+<p>
     <b>Цикл</b> дегеніміз бір әрекетті бірнеше рет орындауға арналған код құрылымы.
     Егер бір команданы немесе бірдей логиканы қайта-қайта жазу керек болса, онда цикл қолдану өте ыңғайлы.
     Бұл кодты қысқартады, түсінікті етеді және көп есептерді автоматты түрде шешуге көмектеседі.
 </p>
 
-<p style="color: var(--text-main);">
+<p>
     Мысалы, сен 1-ден 10-ға дейінгі сандарды экранға шығарғың келсе, әр санды жеке-жеке жазудың орнына цикл қолданасың.
     Сол сияқты тізімдегі барлық элементтерді шығару, бірнеше рет есептеу жүргізу, шарт орындалғанша әрекет жасау сияқты жұмыстарда цикл өте пайдалы.
 </p>
 
-<p style="color: var(--text-main);">
+<p>
     Python тілінде циклдердің негізгі екі түрі бар: <b>for</b> және <b>while</b>. Екеуінің мақсаты ұқсас болғанымен, қолданылу жағдайы әртүрлі.
 </p>
 
@@ -149,30 +191,30 @@
 
 <h2>📘 for циклі</h2>
 
-<p style="color: var(--text-main);">
+<p>
     <b>for</b> циклі белгілі бір элементтер жиынын қайталап шығу үшін қолданылады.
     Ол тізіммен, жолмен, range() функциясымен және басқа да iterable объектілермен жұмыс істейді.
 </p>
 
-<p style="color: var(--text-main);">
+<p>
     Егер қайталану саны алдын ала белгілі болса, көбіне <b>for</b> циклі қолданылады.
     Мысалы, 5 рет орындау керек болса немесе тізімдегі барлық сөздерді шығару керек болса, бұл өте қолайлы әдіс.
 </p>
 
 <div class="feature-card" style="margin-top: 20px; border-left: 5px solid var(--primary);">
     <h4 style="color: var(--primary); margin-bottom: 8px;">for циклінің құрылымы</h4>
-    <p style="margin-bottom: 0; color: var(--text-main);">
+    <p style="margin-bottom: 0;">
         <code>for айнымалы in элементтер:</code><br>
         осы жолдан кейінгі кодтар шегініспен жазылады және әр элемент үшін бір рет орындалады.
     </p>
 </div>
 
-<p style="margin-top: 20px; color: var(--text-main);">
+<p style="margin-top: 20px;">
     Мысалы, <code>range(1, 6)</code> дегеніміз 1-ден бастап 5-ке дейінгі сандар. Назар аудар: соңғы сан есепке алынбайды.
 </p>
 
 <div class="editor-container">
-    <textarea id="code" rows="18">
+    <textarea id="code" rows="18" spellcheck="false">
 print("for циклі мысалы:")
 for i in range(1, 6):
     print("Сан:", i)
@@ -188,42 +230,46 @@ n = 1
 while n <= 5:
     print("Қадам:", n)
     n += 1
-    </textarea>
+</textarea>
 </div>
 
-<button class="btn-run" onclick="runCode()">▶ Run Code</button>
+<div class="btn-row">
+    <button id="run-btn" class="btn-run" type="button">▶ Run Code</button>
+    <button id="clear-btn" class="btn-clear" type="button">🗑 Тазалау</button>
+</div>
+<div class="hint">Ctrl + Enter — кодты іске қосу</div>
 
-<div style="margin-top: 15px; color: var(--text-soft); font-size: 14px;">Нәтиже (Output):</div>
+<div style="margin-top: 15px; color: var(--text-light, #64748b); font-size: 14px;">Нәтиже (Output):</div>
 <pre id="output">Нәтиже осында шығады...</pre>
 
 <hr>
 
 <h2>📗 while циклі</h2>
 
-<p style="color: var(--text-main);">
+<p>
     <b>while</b> циклі белгілі бір шарт <b>ақиқат</b> болып тұрғанша жұмыс істейді.
     Яғни, шарт тексеріледі, егер шарт дұрыс болса, циклдің ішіндегі код орындалады.
     Шарт жалған болған кезде цикл тоқтайды.
 </p>
 
-<p style="color: var(--text-main);">
+<p>
     Бұл цикл көбінесе қайталану саны нақты белгісіз болған жағдайда қолданылады.
     Мысалы, пайдаланушы дұрыс жауап бергенше сұрау, сан белгілі бір мәнге жеткенше есептеу немесе шарт өзгергенше әрекетті жалғастыру сияқты жағдайларда ыңғайлы.
 </p>
 
 <div class="feature-card" style="margin-top: 20px; border-left: 5px solid var(--success);">
     <h4 style="color: var(--success); margin-bottom: 8px;">while циклінің құрылымы</h4>
-    <p style="margin-bottom: 0; color: var(--text-main);">
+    <p style="margin-bottom: 0;">
         <code>while шарт:</code><br>
         шарт ақиқат болғанша, ішіндегі код орындала береді.
     </p>
 </div>
 
-<p style="margin-top: 20px; color: var(--text-main);">
+<p style="margin-top: 20px;">
     Мысалы, <code>n &lt;= 5</code> шарты орындалып тұрғанша, программа 1, 2, 3, 4, 5 сандарын біртіндеп шығара береді.
 </p>
 
-<p style="color: var(--text-main);">
+<p>
     <b>Маңызды:</b> while циклінде шарт өзгеріп отыруы керек. Егер шарт ешқашан жалғанға айналмаса, цикл тоқтамайды. Мұндай цикл <b>шексіз цикл</b> деп аталады.
 </p>
 
@@ -231,7 +277,7 @@ while n <= 5:
 
 <h2>🔍 for және while айырмашылығы</h2>
 
-<table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; background: var(--surface); border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; background: var(--surface-strong); border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
     <tr style="background: var(--sidebar-bg); color: white;">
         <th style="padding: 14px; font-weight: 800; text-align: center; color: #ffffff;">Цикл түрі</th>
         <th style="padding: 14px; font-weight: 800; text-align: left; color: #ffffff;">Қашан қолданылады?</th>
@@ -252,7 +298,7 @@ while n <= 5:
 <hr>
 
 <h2>💡 Интерактивті орта</h2>
-<p style="color: var(--text-main);">
+<p>
     Бұл беттегі Python кодтары серверге жіберілмей-ақ, тікелей браузердің ішінде орындалады. Соның арқасында кодты өзгертіп, <b>Run Code</b> батырмасын басып, қателерді түзетіп, Python-ды компьютерге орнатпай-ақ тәжірибе жасай аласыз.
 </p>
 
@@ -269,33 +315,144 @@ while n <= 5:
 
 <h2>⚠️ Жиі кездесетін қателер</h2>
 <div class="feature-grid">
-    <div class="feature-card" style="border-left: 5px solid var(--danger);">
-        <h4 style="color: var(--danger); margin-bottom: 8px;">1. Қос нүкте ұмытып кету</h4>
-        <p style="margin-bottom: 0; color: var(--text-main);">Python-да <code>for</code> және <code>while</code> жолының соңына міндетті түрде <b>:</b> қойылады. Болмаса, синтаксистік қате шығады.</p>
+    <div class="feature-card" style="border-left: 5px solid #ef4444;">
+        <h4 style="color: #ef4444; margin-bottom: 8px;">1. Қос нүкте ұмытып кету</h4>
+        <p style="margin-bottom: 0;">Python-да <code>for</code> және <code>while</code> жолының соңына міндетті түрде <b>:</b> қойылады. Болмаса, синтаксистік қате шығады.</p>
     </div>
-    <div class="feature-card" style="border-left: 5px solid var(--warning);">
-        <h4 style="color: var(--warning); margin-bottom: 8px;">2. Отступ (шегініс) қатесі</h4>
-        <p style="margin-bottom: 0; color: var(--text-main);">Циклдің ішіндегі код блогы міндетті түрде шегініспен (4 бос орын) жазылуы тиіс. Python шегініске өте сезімтал.</p>
+    <div class="feature-card" style="border-left: 5px solid #f59e0b;">
+        <h4 style="color: #f59e0b; margin-bottom: 8px;">2. Отступ (шегініс) қатесі</h4>
+        <p style="margin-bottom: 0;">Циклдің ішіндегі код блогы міндетті түрде шегініспен (4 бос орын) жазылуы тиіс. Python шегініске өте сезімтал.</p>
     </div>
 </div>
 
 <hr>
 
 <h2>🧠 Тәжірибелік тапсырмалар</h2>
-<p style="color: var(--text-main);">Бекемдеу үшін Sandbox-та мына есептерді шығарып көр:</p>
+<p>Бекемдеу үшін Sandbox-та мына есептерді шығарып көр:</p>
 <ul style="color: var(--text-main); padding-left: 20px;">
     <li><code>for</code> циклімен 1-ден 20-ға дейінгі тек жұп сандарды консольге шығар.</li>
     <li><code>while</code> циклін пайдаланып, 10-нан 1-ге дейін кері санайтын бағдарлама жаз.</li>
 </ul>
 
 <script>
-    function runCode() {
-        const output = document.getElementById('output');
-        output.textContent = "Код орындалуда...";
-        setTimeout(() => {
-            output.textContent = "for циклі мысалы:\nСан: 1\nСан: 2\nСан: 3\nСан: 4\nСан: 5\n\nТізіммен жұмыс:\nЖеміс: алма\nЖеміс: банан\nЖеміс: шие\n\nwhile циклі мысалы:\nҚадам: 1\nҚадам: 2\nҚадам: 3\nҚадам: 4\nҚадам: 5";
-        }, 500);
+(function () {
+    const codeEl   = document.getElementById("code");
+    const outputEl = document.getElementById("output");
+    const runBtn   = document.getElementById("run-btn");
+    const clearBtn = document.getElementById("clear-btn");
+
+    // Skulpt-ты бірнеше көзден кезекпен жүктеу
+    const SOURCES = [
+        ["https://skulpt.org/js/skulpt.min.js",
+         "https://skulpt.org/js/skulpt-stdlib.js"],
+        ["https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js",
+         "https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"],
+        ["https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt.min.js",
+         "https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt-stdlib.js"]
+    ];
+
+    function loadScript(src) {
+        return new Promise(function (resolve, reject) {
+            const s = document.createElement("script");
+            s.src = src;
+            s.onload = resolve;
+            s.onerror = function () { reject(new Error(src)); };
+            document.head.appendChild(s);
+        });
     }
+
+    async function loadSkulpt() {
+        if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
+        for (const pair of SOURCES) {
+            try {
+                await loadScript(pair[0]);
+                await loadScript(pair[1]);
+                if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
+            } catch (e) {
+                console.warn("Skulpt жүктелмеді:", e.message);
+            }
+        }
+        throw new Error("Skulpt ешбір көзден жүктелмеді");
+    }
+
+    const skulptReady = loadSkulpt();
+    runBtn.disabled = true;
+    runBtn.textContent = "⏳ Жүктелуде...";
+    function enableBtn() {
+        runBtn.disabled = false;
+        runBtn.textContent = "▶ Run Code";
+    }
+    skulptReady.then(enableBtn).catch(enableBtn);
+
+    function builtinRead(file) {
+        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][file] === undefined) {
+            throw "Файл табылмады: '" + file + "'";
+        }
+        return Sk.builtinFiles["files"][file];
+    }
+
+    async function runCode() {
+        outputEl.className = "";
+        outputEl.textContent = "";
+        runBtn.disabled = true;
+
+        try {
+            await skulptReady;
+        } catch (e) {
+            outputEl.className = "error";
+            outputEl.textContent = "Skulpt жүктелмеді. Интернетті тексеріп, бетті жаңартыңыз (Ctrl+F5).";
+            runBtn.disabled = false;
+            return;
+        }
+
+        Sk.configure({
+            output: function (text) { outputEl.textContent += text; },
+            read: builtinRead,
+            __future__: Sk.python3,
+            inputfun: function (prompt) {
+                return window.prompt(prompt || "Мәнді енгізіңіз:") || "";
+            },
+            execLimit: 10000   // шексіз циклден қорғаныс (мс)
+        });
+
+        Sk.misceval
+            .asyncToPromise(function () {
+                return Sk.importMainWithBody("<stdin>", false, codeEl.value, true);
+            })
+            .then(function () {
+                if (outputEl.textContent === "") {
+                    outputEl.textContent = "Код сәтті орындалды (экранға ештеңе шықпады).";
+                }
+            })
+            .catch(function (err) {
+                outputEl.className = "error";
+                outputEl.textContent += (outputEl.textContent ? "\n" : "") + "Қате (Error): " + err.toString();
+            })
+            .finally(function () {
+                runBtn.disabled = false;
+            });
+    }
+
+    runBtn.addEventListener("click", runCode);
+
+    clearBtn.addEventListener("click", function () {
+        outputEl.className = "";
+        outputEl.textContent = "Нәтиже осында шығады...";
+    });
+
+    // Ctrl+Enter — іске қосу, Tab — шегініс (4 бос орын)
+    codeEl.addEventListener("keydown", function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+            e.preventDefault();
+            runCode();
+        } else if (e.key === "Tab") {
+            e.preventDefault();
+            const s = codeEl.selectionStart, end = codeEl.selectionEnd;
+            codeEl.value = codeEl.value.slice(0, s) + "    " + codeEl.value.slice(end);
+            codeEl.selectionStart = codeEl.selectionEnd = s + 4;
+        }
+    });
+})();
 </script>
 
 {% endblock %}

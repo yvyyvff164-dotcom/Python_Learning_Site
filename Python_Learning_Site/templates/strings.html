@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}Мәтіндік жолдармен жұмыс (String Methods) — Python оқу сайты{% endblock %}
+{% block title %}Мәтіндік жолдар (Strings) — Python оқу сайты{% endblock %}
 
 {% block content %}
 <style>
     /* ==========================================
-       Бетке арналған қосымша стилизация
+        Бетке арналған қосымша стилизация
     ========================================== */
     .lesson-title {
         font-size: 2rem;
@@ -16,11 +16,10 @@
         margin-bottom: 20px;
     }
 
-    /* YouTube видеосын бейімдеу (Responsive iframe) */
     .video-wrapper {
         position: relative;
         width: 100%;
-        padding-bottom: 56.25%; /* 16:9 пропорция */
+        padding-bottom: 56.25%;
         height: 0;
         background: #000;
         border-radius: var(--radius-md);
@@ -38,7 +37,6 @@
         border: none;
     }
 
-    /* Карточкалар торы (Feature Grid) */
     .feature-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -62,25 +60,123 @@
         border-color: var(--primary);
     }
 
-    .feature-card b {
-        color: var(--primary);
-        font-size: 1.1rem;
+    .feature-card h4 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 1.2rem;
+        font-weight: 800;
     }
 
-    .feature-card ul {
-        margin: 10px 0 0 0;
-        padding-left: 20px;
+    .card-primary { border-left: 5px solid var(--primary); }
+    .card-primary h4 { color: var(--primary); }
+
+    .card-purple { border-left: 5px solid var(--primary-2); }
+    .card-purple h4 { color: var(--primary-2); }
+
+    .card-success { border-left: 5px solid var(--success); }
+    .card-success h4 { color: var(--success); }
+
+    .card-danger { border-left: 5px solid #ef4444; }
+    .card-danger h4 { color: #ef4444; }
+
+    .card-warning { border-left: 5px solid #f59e0b; }
+    .card-warning h4 { color: #f59e0b; }
+
+    /* Қараңғы код блогы */
+    .code-pre {
+        background: #0f172a;
+        color: #38bdf8;
+        padding: 16px;
+        border-radius: var(--radius-sm);
+        font-family: 'Fira Code', Consolas, Monaco, monospace;
+        font-size: 14px;
+        line-height: 1.55;
+        overflow-x: auto;
+        border: 1px solid #334155;
+        margin: 12px 0 20px;
+    }
+
+    /* Индекстер схемасы */
+    .index-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin: 12px 0 6px;
+    }
+
+    .index-cell {
+        min-width: 44px;
+        text-align: center;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface-strong);
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+    }
+
+    .index-cell .ch {
+        padding: 8px 0;
+        font-family: 'Fira Code', Consolas, monospace;
+        font-weight: 800;
+        font-size: 1.1rem;
         color: var(--text-main);
     }
 
-    .feature-card li {
-        margin-bottom: 6px;
-        line-height: 1.5;
+    .index-cell .pos {
+        padding: 3px 0;
+        font-size: 12px;
+        font-weight: 700;
+        background: rgba(59, 130, 246, 0.12);
+        color: var(--primary-dark);
     }
 
-    /* Ерекше әдістер карточкалары */
-    .card-primary { border-left: 5px solid var(--primary); }
-    .card-secondary { border-left: 5px solid var(--primary-2); }
+    .index-cell .neg {
+        padding: 3px 0;
+        font-size: 12px;
+        font-weight: 700;
+        background: rgba(245, 158, 11, 0.15);
+        color: #b45309;
+    }
+
+    /* Әдістер кестесі */
+    .spec-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 25px 0;
+        background: var(--surface-strong);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .spec-table th {
+        background: var(--sidebar-bg);
+        color: #ffffff;
+        padding: 14px;
+        font-weight: 800;
+        text-align: left;
+    }
+
+    .spec-table td {
+        padding: 12px 14px;
+        color: var(--text-main);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .spec-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .spec-table td:first-child {
+        color: var(--primary-2);
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .table-scroll {
+        overflow-x: auto;
+    }
 
     /* Код редакторы мен Sandbox стилі */
     .editor-container {
@@ -93,6 +189,7 @@
 
     #code {
         width: 100%;
+        box-sizing: border-box;
         background: #0f172a;
         color: #38bdf8;
         font-family: 'Fira Code', Consolas, Monaco, monospace;
@@ -102,6 +199,14 @@
         outline: none;
         resize: vertical;
         line-height: 1.5;
+        tab-size: 4;
+    }
+
+    .btn-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
     }
 
     .btn-run {
@@ -126,6 +231,35 @@
         box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
     }
 
+    .btn-run:disabled {
+        opacity: .6;
+        cursor: wait;
+        transform: none;
+    }
+
+    .btn-clear {
+        margin-top: 15px;
+        background: transparent;
+        color: var(--text-main);
+        border: 1px solid var(--border);
+        padding: 12px 20px;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: var(--transition-smooth);
+    }
+
+    .btn-clear:hover {
+        border-color: var(--primary);
+    }
+
+    .hint {
+        font-size: 13px;
+        opacity: .7;
+        margin-top: 8px;
+    }
+
     #output {
         background: #0f172a;
         color: #22c55e;
@@ -139,19 +273,8 @@
         white-space: pre-wrap;
     }
 
-    .tip-card {
-        margin-top: 35px;
-        border-left: 5px solid var(--primary-2);
-        background: var(--surface-strong);
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow-sm);
-        color: var(--text-main);
-    }
-
-    .tip-card h4 {
-        color: var(--primary-2);
-        margin-top: 0;
-        margin-bottom: 8px;
+    #output.error {
+        color: #f87171;
     }
 
     hr {
@@ -167,91 +290,359 @@
     }
 </style>
 
-<h1 class="lesson-title">📝 Мәтіндік жолдармен жұмыс (String Methods)</h1>
+<h1 class="lesson-title">📝 Мәтіндік жолдар (Strings)</h1>
 
-<!-- YouTube видео бейнесі -->
+<!--
+    Видеоны қосу үшін төмендегі блоктың айналасындағы комментарийді өшіріп,
+    ВИДЕО_ID орнына өз YouTube видеоңның ID-ін жаз.
+
 <div class="video-wrapper">
-    <iframe 
-        src="https://www.youtube.com/embed/k9TUPpGqYTo" 
-        title="Python string methods"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+    <iframe
+        src="https://www.youtube.com/embed/ВИДЕО_ID"
+        title="Python strings"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen>
     </iframe>
 </div>
+-->
 
 <p>
-    Python-да мәтіндер (жолдар) <code>str</code> типімен сақталады. Мәтіндерді өңдеу, бас әріпке айналдыру, қажетсіз бос орындарды алып тастау немесе сөздерді алмастыру үшін арнайы <b>құрылған әдістер (methods)</b> қолданылады.
+    <b>Жол (string)</b> — бұл тырнақшаға алынған әріптер, сандар мен таңбалар тізбегі. Аты-жөнді, мекенжайды, хабарламаны — кез келген мәтінді Python-да жол ретінде сақтаймыз. Жолдың типі — <code>str</code>.
 </p>
 
 <hr>
 
-<h2>🛠 Негізгі жол әдістері (String Methods)</h2>
+<h2>✍️ Жолды қалай жазамыз?</h2>
 
 <div class="feature-grid">
     <div class="feature-card card-primary">
-        <b>1. Регистрді өзгерту</b>
-        <ul>
-            <li><code>upper()</code> — барлық әріптерді бас әріпке үлкейтеді.</li>
-            <li><code>lower()</code> — барлық әріптерді кіші әріпке кішійтеді.</li>
-            <li><code>capitalize()</code> — тек бірінші әріпті бас әріп етеді.</li>
-        </ul>
+        <h4>Бір немесе қос тырнақша</h4>
+        <p style="margin-bottom: 0;"><code>"Сәлем"</code> және <code>'Сәлем'</code> — екеуі де бірдей жұмыс істейді. Негізгісі — ашылған және жабылған тырнақша бірдей болуы.</p>
     </div>
-    
-    <div class="feature-card card-secondary">
-        <b>2. Тазарту және Іздеу</b>
-        <ul>
-            <li><code>strip()</code> — мәтіннің басындағы және соңындағы бос орындарды өшіреді.</li>
-            <li><code>replace(old, new)</code> — мәтіннің ішіндегі сөзді басқасына ауыстырады.</li>
-            <li><code>split(sep)</code> — мәтінді көрсетілген белгі бойынша тізімге бөліп тастайды.</li>
-        </ul>
+
+    <div class="feature-card card-purple">
+        <h4>Үш тырнақша</h4>
+        <p style="margin-bottom: 0;"><code>"""..."""</code> ішіне бірнеше жолдан тұратын ұзын мәтін жазуға болады.</p>
+    </div>
+
+    <div class="feature-card card-success">
+        <h4>Арнайы таңбалар</h4>
+        <p style="margin-bottom: 0;"><code>\n</code> — жаңа жол, <code>\t</code> — табуляция (шегініс). Олар жол ішінде жазылады.</p>
     </div>
 </div>
+
+<pre class="code-pre">a = "Бірінші жол"
+b = 'Екінші жол'
+print("Бірінші\nЕкінші\tшегінісімен")</pre>
+
+<hr>
+
+<h2>🔢 Индекстер: әр әріптің өз орны бар</h2>
+<p>Жол — бұл әріптер тізбегі. Әр әріптің нөмірі (индексі) бар. Санау <b>0-ден</b> басталады, ал соңынан санағанда <b>-1</b>-ден басталады.</p>
+
+<div class="index-row">
+    <div class="index-cell"><div class="ch">P</div><div class="pos">0</div><div class="neg">-6</div></div>
+    <div class="index-cell"><div class="ch">y</div><div class="pos">1</div><div class="neg">-5</div></div>
+    <div class="index-cell"><div class="ch">t</div><div class="pos">2</div><div class="neg">-4</div></div>
+    <div class="index-cell"><div class="ch">h</div><div class="pos">3</div><div class="neg">-3</div></div>
+    <div class="index-cell"><div class="ch">o</div><div class="pos">4</div><div class="neg">-2</div></div>
+    <div class="index-cell"><div class="ch">n</div><div class="pos">5</div><div class="neg">-1</div></div>
+</div>
+
+<pre class="code-pre">s = "Python"
+print(s[0])    # P
+print(s[-1])   # n</pre>
+
+<h3>✂️ Кесінділер (Slices)</h3>
+<p>Жолдың бір бөлігін алу үшін <code>[бастапқы:соңғы]</code> жазылады. Соңғы индекс <b>кірмейді</b>, дәл <code>range()</code> сияқты.</p>
+
+<pre class="code-pre">s = "Python"
+print(s[0:2])    # Py
+print(s[2:])     # thon
+print(s[:3])     # Pyt
+print(s[::-1])   # nohtyP  (кері бұру)</pre>
+
+<hr>
+
+<h2>🛠 Жолдармен жұмыс істейтін әдістер</h2>
+<p>Әдіс жолдан кейін нүкте қойып шақырылады: <code>жол.әдіс()</code>.</p>
+
+<div class="table-scroll">
+<table class="spec-table">
+    <tr>
+        <th>Әдіс</th>
+        <th>Не істейді?</th>
+        <th>Мысал</th>
+    </tr>
+    <tr>
+        <td><code>len(s)</code></td>
+        <td>Жолдың ұзындығын (таңба санын) қайтарады</td>
+        <td><code>len("Python")</code> → 6</td>
+    </tr>
+    <tr>
+        <td><code>s.upper()</code></td>
+        <td>Барлық әріпті бас әріпке айналдырады</td>
+        <td><code>"abc".upper()</code> → ABC</td>
+    </tr>
+    <tr>
+        <td><code>s.lower()</code></td>
+        <td>Барлық әріпті кіші әріпке айналдырады</td>
+        <td><code>"ABC".lower()</code> → abc</td>
+    </tr>
+    <tr>
+        <td><code>s.title()</code></td>
+        <td>Әр сөздің бірінші әрпін бас әріп етеді</td>
+        <td><code>"hello world".title()</code> → Hello World</td>
+    </tr>
+    <tr>
+        <td><code>s.strip()</code></td>
+        <td>Жолдың басы мен соңындағы бос орындарды өшіреді</td>
+        <td><code>"  hi  ".strip()</code> → hi</td>
+    </tr>
+    <tr>
+        <td><code>s.replace(a, b)</code></td>
+        <td>a бөлігін b-ға ауыстырады</td>
+        <td><code>"cat".replace("c", "b")</code> → bat</td>
+    </tr>
+    <tr>
+        <td><code>s.split()</code></td>
+        <td>Жолды сөздерге бөліп, тізім жасайды</td>
+        <td><code>"a b c".split()</code> → ['a', 'b', 'c']</td>
+    </tr>
+    <tr>
+        <td><code>"-".join(list)</code></td>
+        <td>Тізім элементтерін бір жолға біріктіреді</td>
+        <td><code>"-".join(["a", "b"])</code> → a-b</td>
+    </tr>
+    <tr>
+        <td><code>s.find(x)</code></td>
+        <td>x-тің бірінші орнын табады (жоқ болса -1)</td>
+        <td><code>"hello".find("l")</code> → 2</td>
+    </tr>
+    <tr>
+        <td><code>s.count(x)</code></td>
+        <td>x қанша рет кездесетінін санайды</td>
+        <td><code>"banana".count("a")</code> → 3</td>
+    </tr>
+    <tr>
+        <td><code>s.startswith(x)</code></td>
+        <td>Жол x-пен басталса True қайтарады</td>
+        <td><code>"Python".startswith("Py")</code> → True</td>
+    </tr>
+    <tr>
+        <td><code>x in s</code></td>
+        <td>Жолдың ішінде x бар ма, соны тексереді</td>
+        <td><code>"th" in "Python"</code> → True</td>
+    </tr>
+</table>
+</div>
+
+<h3>➕ Жолдарды біріктіру және көбейту</h3>
+<pre class="code-pre">print("Сәлем, " + "Әлем!")   # Сәлем, Әлем!
+print("ha" * 3)                # hahaha</pre>
 
 <hr>
 
 <h2>🧪 Тәжірибелік алаң (Sandbox)</h2>
-<p>Мәтін әдістерін кодта қалай қолдану керектігін тексеріп көр:</p>
+<p>Жолды өзгертіп, әдістердің қалай жұмыс істейтінін тексеріп көр:</p>
 
 <div class="editor-container">
-    <textarea id="code" rows="12">
-# Бастапқы мәтін
-мәтін = "   python бағдарламалау тілі   "
+    <textarea id="code" rows="32" spellcheck="false">
+# 1. Жол құру және ұзындығы
+tekst = "Python Programming"
+print("Жол:", tekst)
+print("Ұзындығы:", len(tekst))
 
-# Бос орындарды алып тастау
-таза_мәтін = мәтін.strip()
-print("Тазартылған:", таза_мәтін)
+# 2. Индекстер
+print("Бірінші әріп:", tekst[0])
+print("Соңғы әріп:", tekst[-1])
 
-# Барлық әріпті үлкейту
-print("Үлкен әріптермен:", таза_мәтін.upper())
+# 3. Кесінділер
+print("Алғашқы 6 әріп:", tekst[0:6])
+print("7-ші индекстен бастап:", tekst[7:])
+print("Кері бұру:", tekst[::-1])
 
-# Сөзді басқа сөзге ауыстыру
-жаңа_мәтін = таза_мәтін.replace("python", "JavaScript")
-print("Ауыстырылған:", жаңа_мәтін)
+# 4. Әдістер
+print(tekst.upper())
+print(tekst.lower())
+print(tekst.replace("Python", "Java"))
+print("Python жолдың ішінде бар ма?", "Python" in tekst)
 
-# Мәтінді тізімге бөлу
-бөліктер = таза_мәтін.split(" ")
-print("Тізім түрінде:", бөліктер)
-    </textarea>
+# 5. split және join
+soz = "alma banan shie"
+tizim = soz.split()
+print("Тізім:", tizim)
+print("Қайта біріктіру:", "-".join(tizim))
+
+# 6. strip, count, find
+kir = "   salem   "
+print("[" + kir.strip() + "]")
+print("a әрпі қанша рет:", soz.count("a"))
+print("banan қай орында:", soz.find("banan"))
+
+# 7. Біріктіру және көбейту
+print("Сәлем, " + "Әлем!")
+print("ha" * 3)
+</textarea>
 </div>
 
-<button class="btn-run" onclick="runCode()">▶ Run Code</button>
+<div class="btn-row">
+    <button class="btn-run" id="run-btn" type="button">▶ Run Code</button>
+    <button class="btn-clear" id="clear-btn" type="button">🗑 Тазалау</button>
+</div>
+<div class="hint">Ctrl + Enter — кодты іске қосу</div>
 
 <div style="margin-top: 15px; color: var(--text-light); font-size: 14px; font-weight: 500;">Нәтиже (Output):</div>
 <pre id="output">Нәтиже осында шығады...</pre>
 
-<div class="feature-card tip-card">
-    <h4>💡 Маңызды ескерту:</h4>
-    <p style="margin-bottom: 0;">Python-да жолдар (strings) өзгермейтін (immutable) объектілер болып табылады. Түрлендіру әдістері бастапқы мәтінді өзгертпейді, тек жаңа өзгерген мәтінді қайтарады!</p>
+<hr>
+
+<h2>⚠️ Жиі кездесетін қателер</h2>
+<div class="feature-grid">
+    <div class="feature-card card-danger">
+        <h4>1. Жолды өзгертуге болмайды</h4>
+        <p style="margin-bottom: 0;">Жол — <b>өзгермейтін</b> (immutable) тип. <code>s[0] = "J"</code> деп жазсаң, Python <code>TypeError</code> қатесін береді. Жаңа жол жасау керек: <code>s = "J" + s[1:]</code>.</p>
+    </div>
+
+    <div class="feature-card card-warning">
+        <h4>2. Жол мен санды қосуға болмайды</h4>
+        <p style="margin-bottom: 0;"><code>"Жасы: " + 14</code> қате береді. Санды алдымен жолға айналдыр: <code>"Жасы: " + str(14)</code>.</p>
+    </div>
+
+    <div class="feature-card card-danger">
+        <h4>3. Индекс шектен шығып кетті</h4>
+        <p style="margin-bottom: 0;">6 таңбалы жолда <code>s[10]</code> деп сұрасаң, Python <code>IndexError</code> қатесін шығарады.</p>
+    </div>
+</div>
+
+<div class="feature-card card-success" style="margin-top: 25px;">
+    <h4>🧠 Өзіңді тексер:</h4>
+    <p style="margin-bottom: 0;">Кодты өзгертіп көр: <code>tekst</code> айнымалысына өз атыңды жазып, оны кері бұр, бас әріппен шығар және ұзындығын тап.</p>
 </div>
 
 <script>
-    function runCode() {
-        const output = document.getElementById('output');
-        output.textContent = "Код орындалуда...";
-        setTimeout(() => {
-            output.textContent = "Тазартылған: python бағдарламалау тілі\nҮлкен әріптермен: PYTHON БАҒДАРЛАМАЛАУ ТІЛІ\nАуыстырылған: JavaScript бағдарламалау тілі\nТізім түрінде: ['python', 'бағдарламалау', 'тілі']";
-        }, 500);
+(function () {
+    const codeEl   = document.getElementById("code");
+    const outputEl = document.getElementById("output");
+    const runBtn   = document.getElementById("run-btn");
+    const clearBtn = document.getElementById("clear-btn");
+
+    // Skulpt-ты бірнеше көзден кезекпен жүктеу (әр көзге 10 секунд беріледі)
+    const SOURCES = [
+        ["https://skulpt.org/js/skulpt.min.js",
+         "https://skulpt.org/js/skulpt-stdlib.js"],
+        ["https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js",
+         "https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"],
+        ["https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt.min.js",
+         "https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt-stdlib.js"]
+    ];
+
+    function loadScript(src, timeoutMs) {
+        return new Promise(function (resolve, reject) {
+            const s = document.createElement("script");
+            const timer = setTimeout(function () {
+                s.remove();
+                reject(new Error("timeout: " + src));
+            }, timeoutMs || 10000);
+            s.src = src;
+            s.onload = function () { clearTimeout(timer); resolve(); };
+            s.onerror = function () { clearTimeout(timer); reject(new Error(src)); };
+            document.head.appendChild(s);
+        });
     }
+
+    async function loadSkulpt() {
+        if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
+        for (const pair of SOURCES) {
+            try {
+                await loadScript(pair[0]);
+                await loadScript(pair[1]);
+                if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
+            } catch (e) {
+                console.warn("Skulpt жүктелмеді:", e.message);
+            }
+        }
+        throw new Error("Skulpt ешбір көзден жүктелмеді");
+    }
+
+    const skulptReady = loadSkulpt();
+    runBtn.disabled = true;
+    runBtn.textContent = "⏳ Жүктелуде...";
+    function enableBtn() {
+        runBtn.disabled = false;
+        runBtn.textContent = "▶ Run Code";
+    }
+    skulptReady.then(enableBtn).catch(enableBtn);
+
+    function builtinRead(file) {
+        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][file] === undefined) {
+            throw "Файл табылмады: '" + file + "'";
+        }
+        return Sk.builtinFiles["files"][file];
+    }
+
+    async function runCode() {
+        outputEl.className = "";
+        outputEl.textContent = "";
+        runBtn.disabled = true;
+
+        try {
+            await skulptReady;
+        } catch (e) {
+            outputEl.className = "error";
+            outputEl.textContent = "Skulpt жүктелмеді. Интернетті тексеріп, бетті жаңартыңыз (Ctrl+F5).";
+            runBtn.disabled = false;
+            return;
+        }
+
+        Sk.configure({
+            output: function (text) { outputEl.textContent += text; },
+            read: builtinRead,
+            __future__: Sk.python3,
+            inputfun: function (prompt) {
+                return window.prompt(prompt || "Мәнді енгізіңіз:") || "";
+            },
+            execLimit: 10000
+        });
+
+        Sk.misceval
+            .asyncToPromise(function () {
+                return Sk.importMainWithBody("<stdin>", false, codeEl.value, true);
+            })
+            .then(function () {
+                if (outputEl.textContent === "") {
+                    outputEl.textContent = "Код сәтті орындалды (экранға ештеңе шықпады).";
+                }
+            })
+            .catch(function (err) {
+                outputEl.className = "error";
+                outputEl.textContent += (outputEl.textContent ? "\n" : "") + "Қате (Error): " + err.toString();
+            })
+            .finally(function () {
+                runBtn.disabled = false;
+            });
+    }
+
+    runBtn.addEventListener("click", runCode);
+
+    clearBtn.addEventListener("click", function () {
+        outputEl.className = "";
+        outputEl.textContent = "Нәтиже осында шығады...";
+    });
+
+    // Ctrl+Enter — іске қосу, Tab — шегініс (4 бос орын)
+    codeEl.addEventListener("keydown", function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+            e.preventDefault();
+            runCode();
+        } else if (e.key === "Tab") {
+            e.preventDefault();
+            const s = codeEl.selectionStart, end = codeEl.selectionEnd;
+            codeEl.value = codeEl.value.slice(0, s) + "    " + codeEl.value.slice(end);
+            codeEl.selectionStart = codeEl.selectionEnd = s + 4;
+        }
+    });
+})();
 </script>
 
 {% endblock %}

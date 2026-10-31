@@ -5,7 +5,7 @@
 {% block content %}
 <style>
     /* ==========================================
-       Бетке арналған қосымша стилизация
+        Бетке арналған қосымша стилизация
     ========================================== */
     .lesson-title {
         font-size: 2rem;
@@ -111,6 +111,7 @@
 
     #code {
         width: 100%;
+        box-sizing: border-box;
         background: #0f172a;
         color: #38bdf8;
         font-family: 'Fira Code', Consolas, Monaco, monospace;
@@ -120,6 +121,14 @@
         outline: none;
         resize: vertical;
         line-height: 1.5;
+        tab-size: 4;
+    }
+
+    .btn-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
     }
 
     .btn-run {
@@ -144,6 +153,35 @@
         box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
     }
 
+    .btn-run:disabled {
+        opacity: .6;
+        cursor: wait;
+        transform: none;
+    }
+
+    .btn-clear {
+        margin-top: 15px;
+        background: transparent;
+        color: var(--text-main);
+        border: 1px solid var(--border);
+        padding: 12px 20px;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: var(--transition-smooth);
+    }
+
+    .btn-clear:hover {
+        border-color: var(--primary);
+    }
+
+    .hint {
+        font-size: 13px;
+        opacity: .7;
+        margin-top: 8px;
+    }
+
     #output {
         background: #0f172a;
         color: #22c55e;
@@ -155,6 +193,10 @@
         margin-top: 8px;
         border: 1px solid #334155;
         white-space: pre-wrap;
+    }
+
+    #output.error {
+        color: #f87171;
     }
 
     /* Маңызды ереже блогы (Tip Card) */
@@ -191,10 +233,10 @@
 <h1 class="lesson-title">➕➖ Элемент қосу және жою</h1>
 
 <div class="video-wrapper">
-    <iframe 
-        src="https://www.youtube.com/embed/cFJfbB80S3k" 
+    <iframe
+        src="https://www.youtube.com/embed/cFJfbB80S3k"
         title="Python тізім элементтерін қосу және жою"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen>
     </iframe>
 </div>
@@ -215,7 +257,7 @@
             <li><code>insert(i, x)</code> — i-ші индекске қосады.</li>
         </ul>
     </div>
-    
+
     <div class="feature-card card-danger">
         <h4>Жою (Removing)</h4>
         <ul>
@@ -231,27 +273,31 @@
 <p>Тізімді қалай өзгертуге болатынын тексеріп көр:</p>
 
 <div class="editor-container">
-    <textarea id="code" rows="12">
+    <textarea id="code" rows="14" spellcheck="false">
 # Бастапқы тізім
-оқушылар = ["Али", "Сара", "Марат"]
-print("Бастапқы:", оқушылар)
+oqushylar = ["Али", "Сара", "Марат"]
+print("Бастапқы:", oqushylar)
 
 # Жаңа оқушы қосу
-оқушылар.append("Айша")
-print("append кейін:", оқушылар)
+oqushylar.append("Айша")
+print("append кейін:", oqushylar)
 
 # Маратты тізімнен өшіру
-оқушылар.remove("Марат")
-print("remove кейін:", оқушылар)
+oqushylar.remove("Марат")
+print("remove кейін:", oqushylar)
 
 # Бірінші тұрған оқушыны өшіру
-өшті = оқушылар.pop(0)
-print("Өшірілген оқушы:", өшті)
-print("Қорытынды тізім:", оқушылар)
-    </textarea>
+ashty = oqushylar.pop(0)
+print("Өшірілген оқушы:", ashty)
+print("Қорытынды тізім:", oqushylar)
+</textarea>
 </div>
 
-<button class="btn-run" onclick="runCode()">▶ Run Code</button>
+<div class="btn-row">
+    <button class="btn-run" id="run-btn" type="button">▶ Run Code</button>
+    <button class="btn-clear" id="clear-btn" type="button">🗑 Тазалау</button>
+</div>
+<div class="hint">Ctrl + Enter — кодты іске қосу</div>
 
 <div style="margin-top: 15px; color: var(--text-light); font-size: 14px; font-weight: 500;">Нәтиже (Output):</div>
 <pre id="output">Нәтиже осында шығады...</pre>
@@ -261,14 +307,83 @@ print("Қорытынды тізім:", оқушылар)
     <p style="margin-bottom: 0; color: var(--text-main);"><code>remove()</code> мән бойынша іздеп өшіреді, ал <code>pop()</code> индекс бойынша (орны бойынша) өшіреді.</p>
 </div>
 
+<!-- Skulpt: бір рет қана қосылады (jQuery керек емес) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt-stdlib.js"></script>
+
 <script>
-    function runCode() {
-        const output = document.getElementById('output');
-        output.textContent = "Код орындалуда...";
-        setTimeout(() => {
-            output.textContent = "Бастапқы: ['Али', 'Сара', 'Марат']\nappend кейін: ['Али', 'Сара', 'Марат', 'Айша']\nremove кейін: ['Али', 'Сара', 'Айша']\nӨшірілген оқушы: Али\nҚорытынды тізім: ['Сара', 'Айша']";
-        }, 500);
+(function () {
+    const codeEl   = document.getElementById("code");
+    const outputEl = document.getElementById("output");
+    const runBtn   = document.getElementById("run-btn");
+    const clearBtn = document.getElementById("clear-btn");
+
+    function builtinRead(file) {
+        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][file] === undefined) {
+            throw "Файл табылмады: '" + file + "'";
+        }
+        return Sk.builtinFiles["files"][file];
     }
+
+    function runCode() {
+        if (typeof Sk === "undefined") {
+            outputEl.className = "error";
+            outputEl.textContent = "Skulpt жүктелмеді. Интернетті тексеріп, бетті жаңартыңыз.";
+            return;
+        }
+
+        outputEl.className = "";
+        outputEl.textContent = "";
+        runBtn.disabled = true;
+
+        Sk.configure({
+            output: function (text) { outputEl.textContent += text; },
+            read: builtinRead,
+            __future__: Sk.python3,           // Python 3 синтаксисі
+            inputfun: function (prompt) {     // input() қолдауы
+                return window.prompt(prompt || "Мәнді енгізіңіз:") || "";
+            },
+            execLimit: 10000                  // шексіз циклден қорғаныс (мс)
+        });
+
+        Sk.misceval
+            .asyncToPromise(function () {
+                return Sk.importMainWithBody("<stdin>", false, codeEl.value, true);
+            })
+            .then(function () {
+                if (outputEl.textContent === "") {
+                    outputEl.textContent = "Код сәтті орындалды (экранға ештеңе шықпады).";
+                }
+            })
+            .catch(function (err) {
+                outputEl.className = "error";
+                outputEl.textContent += (outputEl.textContent ? "\n" : "") + "Қате (Error): " + err.toString();
+            })
+            .finally(function () {
+                runBtn.disabled = false;
+            });
+    }
+
+    runBtn.addEventListener("click", runCode);
+
+    clearBtn.addEventListener("click", function () {
+        outputEl.className = "";
+        outputEl.textContent = "Нәтиже осында шығады...";
+    });
+
+    // Ctrl+Enter — іске қосу, Tab — шегініс (4 бос орын)
+    codeEl.addEventListener("keydown", function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+            e.preventDefault();
+            runCode();
+        } else if (e.key === "Tab") {
+            e.preventDefault();
+            const s = codeEl.selectionStart, end = codeEl.selectionEnd;
+            codeEl.value = codeEl.value.slice(0, s) + "    " + codeEl.value.slice(end);
+            codeEl.selectionStart = codeEl.selectionEnd = s + 4;
+        }
+    });
+})();
 </script>
 
 {% endblock %}

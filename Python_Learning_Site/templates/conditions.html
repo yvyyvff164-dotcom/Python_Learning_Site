@@ -4,6 +4,9 @@
 
 {% block content %}
 <style>
+    /* ==========================================
+        Бетке арналған қосымша стилизация
+    ========================================== */
     .lesson-title {
         font-size: 2rem;
         font-weight: 800;
@@ -13,10 +16,11 @@
         margin-bottom: 20px;
     }
 
+    /* YouTube видеосын бейімдеу (Responsive iframe) */
     .video-wrapper {
         position: relative;
         width: 100%;
-        padding-bottom: 56.25%;
+        padding-bottom: 56.25%; /* 16:9 пропорция */
         height: 0;
         background: #000;
         border-radius: var(--radius-md);
@@ -34,6 +38,69 @@
         border: none;
     }
 
+    .feature-card {
+        background: var(--surface-strong);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 20px;
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition-smooth);
+        color: var(--text-main);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary);
+    }
+
+    .card-danger {
+        border-left: 5px solid #ef4444;
+    }
+    .card-danger h4 {
+        color: #ef4444;
+        font-size: 1.2rem;
+        font-weight: 800;
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
+    /* Салыстыру операторлары кестесі */
+    .ops-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+        background: var(--surface-strong);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .ops-table th {
+        background: var(--sidebar-bg);
+        color: #ffffff;
+        padding: 14px;
+        font-weight: 800;
+        text-align: left;
+    }
+
+    .ops-table td {
+        padding: 12px 14px;
+        color: var(--text-main);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .ops-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .ops-table td:first-child {
+        color: var(--primary-2);
+        font-weight: 700;
+    }
+
+    /* Код редакторы мен Sandbox стилі */
     .editor-container {
         margin-top: 15px;
         border-radius: var(--radius-md);
@@ -44,6 +111,7 @@
 
     #code {
         width: 100%;
+        box-sizing: border-box;
         background: #0f172a;
         color: #38bdf8;
         font-family: 'Fira Code', Consolas, Monaco, monospace;
@@ -53,6 +121,14 @@
         outline: none;
         resize: vertical;
         line-height: 1.5;
+        tab-size: 4;
+    }
+
+    .btn-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
     }
 
     .btn-run {
@@ -77,6 +153,35 @@
         box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
     }
 
+    .btn-run:disabled {
+        opacity: .6;
+        cursor: wait;
+        transform: none;
+    }
+
+    .btn-clear {
+        margin-top: 15px;
+        background: transparent;
+        color: var(--text-main);
+        border: 1px solid var(--border);
+        padding: 12px 20px;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: var(--transition-smooth);
+    }
+
+    .btn-clear:hover {
+        border-color: var(--primary);
+    }
+
+    .hint {
+        font-size: 13px;
+        opacity: .7;
+        margin-top: 8px;
+    }
+
     #output {
         background: #0f172a;
         color: #22c55e;
@@ -90,32 +195,27 @@
         white-space: pre-wrap;
     }
 
-    .feature-card {
-        background: var(--surface-strong);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-md);
-        padding: 20px;
-        box-shadow: var(--shadow-sm);
-        transition: var(--transition-smooth);
-        color: var(--text-main);
+    #output.error {
+        color: #f87171;
     }
 
-    .btn-primary-custom {
-        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    .btn-primary-action {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
         color: white;
         padding: 12px 20px;
         border-radius: var(--radius-sm);
         font-weight: 600;
-        box-shadow: var(--shadow-md);
+        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
         transition: var(--transition-smooth);
         text-decoration: none;
         display: inline-block;
         margin-top: 10px;
     }
 
-    .btn-primary-custom:hover {
-        opacity: 0.9;
+    .btn-primary-action:hover {
         transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+        color: white;
     }
 
     hr {
@@ -134,58 +234,59 @@
 <h1 class="lesson-title">🔀 Шартты операторлар (if, elif, else)</h1>
 
 <div class="video-wrapper">
-    <iframe 
+    <iframe
         src="https://www.youtube.com/embed/EKcp1xuM-l0"
         title="Python conditional statements"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen>
     </iframe>
 </div>
 
-<p style="color: var(--text-main);">
-    Python-да бағдарламаның белгілі бір бағытпен жүруі <b>шарттарға</b> байланысты. 
+<p>
+    Python-да бағдарламаның белгілі бір бағытпен жүруі <b>шарттарға</b> байланысты.
     Бұл «егер күн ашық болса, далаға шығамын, әйтпесе үйде отырамын» деген логикамен жұмыс істейді.
 </p>
 
 <hr>
 
 <h2>📊 Салыстыру операторлары</h2>
-<p style="color: var(--text-main);">Шарттарды құру үшін келесі белгілер қолданылады:</p>
+<p>Шарттарды құру үшін келесі белгілер қолданылады:</p>
 
-<table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; background: var(--surface); border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
-    <tr style="background: var(--sidebar-bg); color: white;">
-        <th style="padding: 14px; font-weight: 800; text-align: center; color: #ffffff;">Оператор</th>
-        <th style="padding: 14px; font-weight: 800; text-align: left; color: #ffffff;">Мағынасы</th>
-        <th style="padding: 14px; font-weight: 800; text-align: left; color: #ffffff;">Мысал</th>
-    </tr>
-    <tr style="border-bottom: 1px solid var(--border);">
-        <td style="padding: 12px; text-align: center; color: var(--text-main);"><code>==</code></td>
-        <td style="padding: 12px; color: var(--text-main);">Тең болады</td>
-        <td style="padding: 12px; color: var(--text-main);"><code>x == 5</code></td>
-    </tr>
-    <tr style="border-bottom: 1px solid var(--border);">
-        <td style="padding: 12px; text-align: center; color: var(--text-main);"><code>!=</code></td>
-        <td style="padding: 12px; color: var(--text-main);">Тең емес</td>
-        <td style="padding: 12px; color: var(--text-main);"><code>x != 0</code></td>
-    </tr>
-    <tr style="border-bottom: 1px solid var(--border);">
-        <td style="padding: 12px; text-align: center; color: var(--text-main);"><code>&gt; / &lt;</code></td>
-        <td style="padding: 12px; color: var(--text-main);">Үлкен / Кіші</td>
-        <td style="padding: 12px; color: var(--text-main);"><code>x &gt; 10</code></td>
+<table class="ops-table">
+    <tr>
+        <th>Оператор</th>
+        <th>Мағынасы</th>
+        <th>Мысал</th>
     </tr>
     <tr>
-        <td style="padding: 12px; text-align: center; color: var(--text-main);"><code>and / or</code></td>
-        <td style="padding: 12px; color: var(--text-main);">Және / Немесе</td>
-        <td style="padding: 12px; color: var(--text-main);"><code>a > 5 and b < 10</code></td>
+        <td><code>==</code></td>
+        <td>Тең болады</td>
+        <td><code>x == 5</code></td>
+    </tr>
+    <tr>
+        <td><code>!=</code></td>
+        <td>Тең емес</td>
+        <td><code>x != 0</code></td>
+    </tr>
+    <tr>
+        <td><code>&gt; / &lt;</code></td>
+        <td>Үлкен / Кіші</td>
+        <td><code>x &gt; 10</code></td>
+    </tr>
+    <tr>
+        <td><code>and / or</code></td>
+        <td>Және / Немесе</td>
+        <td><code>a &gt; 5 and b &lt; 10</code></td>
     </tr>
 </table>
 
 <hr>
 
-<h2>🛠 Тәжірибелік алаң (Sandbox)</h2>
-<p style="color: var(--text-main);">Төмендегі кодты өзгертіп, <b>Run Code</b> батырмасын басып тексеріп көр:</p>
+<h2>🧪 Тәжірибелік алаң (Sandbox)</h2>
+<p>Төмендегі кодты өзгертіп, <b>Run Code</b> батырмасын басып тексеріп көр:</p>
 
 <div class="editor-container">
-    <textarea id="code" rows="12">
+    <textarea id="code" rows="18" spellcheck="false">
 # Санды өзгертіп көріңіз
 n = 15
 
@@ -204,34 +305,150 @@ if login == "admin" and password == "123":
     print("Жүйеге кіру рұқсат етілді!")
 else:
     print("Қате логин немесе пароль!")
-    </textarea>
+</textarea>
 </div>
 
-<button class="btn-run" onclick="runCode()">▶ Run Code</button>
+<div class="btn-row">
+    <button class="btn-run" id="run-btn" type="button">▶ Run Code</button>
+    <button class="btn-clear" id="clear-btn" type="button">🗑 Тазалау</button>
+</div>
+<div class="hint">Ctrl + Enter — кодты іске қосу</div>
 
-<div style="margin-top: 15px; color: var(--text-soft); font-size: 14px;">Нәтиже (Output):</div>
+<div style="margin-top: 15px; color: var(--text-light); font-size: 14px; font-weight: 500;">Нәтиже (Output):</div>
 <pre id="output">Нәтиже осында шығады...</pre>
 
-<div class="feature-card" style="margin-top: 30px; border-left: 5px solid var(--danger);">
-    <h4 style="color: var(--danger); font-size: 18px; font-weight: 800; margin-bottom: 10px;">⚠️ Есіңде сақта:</h4>
-    <p style="color: var(--text-main); margin-bottom: 0;">Python-да <code>if</code>, <code>elif</code> және <code>else</code>-ден кейін міндетті түрде <b>қос нүкте (:)</b> қойылады және келесі жол <b>бос орынмен (отступ)</b> басталуы керек!</p>
+<div class="feature-card card-danger" style="margin-top: 30px;">
+    <h4>⚠️ Есіңде сақта:</h4>
+    <p style="margin-bottom: 0;">Python-да <code>if</code>, <code>elif</code> және <code>else</code>-ден кейін міндетті түрде <b>қос нүкте (:)</b> қойылады және келесі жол <b>бос орынмен (отступ)</b> басталуы керек!</p>
 </div>
 
-<h2>🧪 Қосымша тапсырма</h2>
-<a href="https://codepen.io/zlreibuh-the-sasster/pen/MYjgeLM" 
-   target="_blank" 
-   class="btn-primary-custom">
+<h2 style="margin-top: 30px;">🧪 Қосымша тапсырма</h2>
+<a href="https://codepen.io/zlreibuh-the-sasster/pen/MYjgeLM"
+   target="_blank"
+   rel="noopener"
+   class="btn-primary-action">
     🔀 CodePen-дегі тапсырманы ашу
 </a>
 
 <script>
-    function runCode() {
-        const output = document.getElementById('output');
-        output.textContent = "Код орындалуда...";
-        setTimeout(() => {
-            output.textContent = "Сан дәл 15-ке тең\nЖүйеге кіру рұқсат етілді!";
-        }, 500);
+(function () {
+    const codeEl   = document.getElementById("code");
+    const outputEl = document.getElementById("output");
+    const runBtn   = document.getElementById("run-btn");
+    const clearBtn = document.getElementById("clear-btn");
+
+    // Skulpt-ты бірнеше көзден кезекпен жүктеу
+    const SOURCES = [
+        ["https://skulpt.org/js/skulpt.min.js",
+         "https://skulpt.org/js/skulpt-stdlib.js"],
+        ["https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js",
+         "https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"],
+        ["https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt.min.js",
+         "https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt-stdlib.js"]
+    ];
+
+    function loadScript(src) {
+        return new Promise(function (resolve, reject) {
+            const s = document.createElement("script");
+            s.src = src;
+            s.onload = resolve;
+            s.onerror = function () { reject(new Error(src)); };
+            document.head.appendChild(s);
+        });
     }
+
+    async function loadSkulpt() {
+        if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
+        for (const pair of SOURCES) {
+            try {
+                await loadScript(pair[0]);
+                await loadScript(pair[1]);
+                if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
+            } catch (e) {
+                console.warn("Skulpt жүктелмеді:", e.message);
+            }
+        }
+        throw new Error("Skulpt ешбір көзден жүктелмеді");
+    }
+
+    const skulptReady = loadSkulpt();
+    runBtn.disabled = true;
+    runBtn.textContent = "⏳ Жүктелуде...";
+    function enableBtn() {
+        runBtn.disabled = false;
+        runBtn.textContent = "▶ Run Code";
+    }
+    skulptReady.then(enableBtn).catch(enableBtn);
+
+    function builtinRead(file) {
+        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][file] === undefined) {
+            throw "Файл табылмады: '" + file + "'";
+        }
+        return Sk.builtinFiles["files"][file];
+    }
+
+    async function runCode() {
+        outputEl.className = "";
+        outputEl.textContent = "";
+        runBtn.disabled = true;
+
+        try {
+            await skulptReady;
+        } catch (e) {
+            outputEl.className = "error";
+            outputEl.textContent = "Skulpt жүктелмеді. Интернетті тексеріп, бетті жаңартыңыз (Ctrl+F5).";
+            runBtn.disabled = false;
+            return;
+        }
+
+        Sk.configure({
+            output: function (text) { outputEl.textContent += text; },
+            read: builtinRead,
+            __future__: Sk.python3,
+            inputfun: function (prompt) {
+                return window.prompt(prompt || "Мәнді енгізіңіз:") || "";
+            },
+            execLimit: 10000
+        });
+
+        Sk.misceval
+            .asyncToPromise(function () {
+                return Sk.importMainWithBody("<stdin>", false, codeEl.value, true);
+            })
+            .then(function () {
+                if (outputEl.textContent === "") {
+                    outputEl.textContent = "Код сәтті орындалды (экранға ештеңе шықпады).";
+                }
+            })
+            .catch(function (err) {
+                outputEl.className = "error";
+                outputEl.textContent += (outputEl.textContent ? "\n" : "") + "Қате (Error): " + err.toString();
+            })
+            .finally(function () {
+                runBtn.disabled = false;
+            });
+    }
+
+    runBtn.addEventListener("click", runCode);
+
+    clearBtn.addEventListener("click", function () {
+        outputEl.className = "";
+        outputEl.textContent = "Нәтиже осында шығады...";
+    });
+
+    // Ctrl+Enter — іске қосу, Tab — шегініс (4 бос орын)
+    codeEl.addEventListener("keydown", function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+            e.preventDefault();
+            runCode();
+        } else if (e.key === "Tab") {
+            e.preventDefault();
+            const s = codeEl.selectionStart, end = codeEl.selectionEnd;
+            codeEl.value = codeEl.value.slice(0, s) + "    " + codeEl.value.slice(end);
+            codeEl.selectionStart = codeEl.selectionEnd = s + 4;
+        }
+    });
+})();
 </script>
 
 {% endblock %}

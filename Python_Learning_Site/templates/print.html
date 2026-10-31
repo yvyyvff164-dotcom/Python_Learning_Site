@@ -4,6 +4,9 @@
 
 {% block content %}
 <style>
+    /* ==========================================
+        Бетке арналған қосымша стилизация
+    ========================================== */
     .lesson-title {
         font-size: 2rem;
         font-weight: 800;
@@ -13,10 +16,11 @@
         margin-bottom: 20px;
     }
 
+    /* YouTube видеосын бейімдеу (Responsive iframe) */
     .video-wrapper {
         position: relative;
         width: 100%;
-        padding-bottom: 56.25%;
+        padding-bottom: 56.25%; /* 16:9 пропорция */
         height: 0;
         background: #000;
         border-radius: var(--radius-md);
@@ -34,6 +38,7 @@
         border: none;
     }
 
+    /* Карточкалар торы */
     .card-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -57,6 +62,29 @@
         border-color: var(--primary);
     }
 
+    .card-primary {
+        border-left: 5px solid var(--primary);
+    }
+    .card-primary h4 {
+        color: var(--primary);
+        font-size: 1.2rem;
+        font-weight: 800;
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
+    .card-success {
+        border-left: 5px solid var(--success);
+    }
+    .card-success h4 {
+        color: var(--success);
+        font-size: 1.2rem;
+        font-weight: 800;
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
+    /* Код редакторы мен Sandbox стилі */
     .editor-container {
         margin-top: 15px;
         border-radius: var(--radius-md);
@@ -67,6 +95,7 @@
 
     #code {
         width: 100%;
+        box-sizing: border-box;
         background: #0f172a;
         color: #38bdf8;
         font-family: 'Fira Code', Consolas, Monaco, monospace;
@@ -76,6 +105,14 @@
         outline: none;
         resize: vertical;
         line-height: 1.5;
+        tab-size: 4;
+    }
+
+    .btn-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
     }
 
     .btn-run {
@@ -100,6 +137,35 @@
         box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
     }
 
+    .btn-run:disabled {
+        opacity: .6;
+        cursor: wait;
+        transform: none;
+    }
+
+    .btn-clear {
+        margin-top: 15px;
+        background: transparent;
+        color: var(--text-main);
+        border: 1px solid var(--border);
+        padding: 12px 20px;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: var(--transition-smooth);
+    }
+
+    .btn-clear:hover {
+        border-color: var(--primary);
+    }
+
+    .hint {
+        font-size: 13px;
+        opacity: .7;
+        margin-top: 8px;
+    }
+
     #output {
         background: #0f172a;
         color: #22c55e;
@@ -113,22 +179,27 @@
         white-space: pre-wrap;
     }
 
-    .btn-primary-custom {
-        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    #output.error {
+        color: #f87171;
+    }
+
+    .btn-primary-action {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
         color: white;
         padding: 12px 20px;
         border-radius: var(--radius-sm);
         font-weight: 600;
-        box-shadow: var(--shadow-md);
+        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
         transition: var(--transition-smooth);
         text-decoration: none;
         display: inline-block;
-        margin-top: 20px;
+        margin-top: 25px;
     }
 
-    .btn-primary-custom:hover {
-        opacity: 0.9;
+    .btn-primary-action:hover {
         transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+        color: white;
     }
 
     hr {
@@ -150,47 +221,48 @@
     <iframe
         src="https://www.youtube.com/embed/2B91x1IG4W0"
         title="Print командасы"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen>
     </iframe>
 </div>
 
-<p style="color: var(--text-main);">
-    <code>print()</code> — бұл Python-дағы ең жиі қолданылатын функция. Оның негізгі мақсаты — бағдарлама орындалуының нәтижесін экранға (консольге) шығару. 
+<p>
+    <code>print()</code> — бұл Python-дағы ең жиі қолданылатын функция. Оның негізгі мақсаты — бағдарлама орындалуының нәтижесін экранға (консольге) шығару.
 </p>
 
 <hr>
 
 <h2>💡 Print() функциясының құпиялары</h2>
 
-<p style="color: var(--text-main);">Көпшілік тек мәтін шығаруды біледі, бірақ <code>print()</code>-тің пайдалы параметрлері бар:</p>
+<p>Көпшілік тек мәтін шығаруды біледі, бірақ <code>print()</code>-тің пайдалы параметрлері бар:</p>
 <ul style="color: var(--text-main); padding-left: 20px;">
-    <li><strong>sep=" "</strong> — элементтер арасына қандай белгі қоюды анықтайды (әдепкі бойынша бос орын).</li>
-    <li><strong>end="\n"</strong> — жол соңына не қоюды анықтайды (әдепкі бойынша келесі жолға өту).</li>
+    <li><b>sep=" "</b> — элементтер арасына қандай белгі қоюды анықтайды (әдепкі бойынша бос орын).</li>
+    <li><b>end="\n"</b> — жол соңына не қоюды анықтайды (әдепкі бойынша келесі жолға өту).</li>
 </ul>
 
 <div class="card-grid">
-    <div class="feature-card">
-        <h4 style="color: var(--primary2, #38bdf8); margin-bottom: 8px;">Мәтін шығару</h4>
-        <p style="margin-bottom: 0; color: var(--text-main);"><code>print("Сәлем!")</code></p>
+    <div class="feature-card card-primary">
+        <h4>Мәтін шығару</h4>
+        <p style="margin-bottom: 0;"><code>print("Сәлем!")</code></p>
     </div>
-    <div class="feature-card">
-        <h4 style="color: var(--primary2, #38bdf8); margin-bottom: 8px;">Сандар мен есептер</h4>
-        <p style="margin-bottom: 0; color: var(--text-main);"><code>print(25 + 75)</code></p>
+    <div class="feature-card card-primary">
+        <h4>Сандар мен есептер</h4>
+        <p style="margin-bottom: 0;"><code>print(25 + 75)</code></p>
     </div>
-    <div class="feature-card">
-        <h4 style="color: var(--primary2, #38bdf8); margin-bottom: 8px;">Бірнеше мән</h4>
-        <p style="margin-bottom: 0; color: var(--text-main);"><code>print("A", "B", "C")</code></p>
+    <div class="feature-card card-primary">
+        <h4>Бірнеше мән</h4>
+        <p style="margin-bottom: 0;"><code>print("A", "B", "C")</code></p>
     </div>
 </div>
 
 <hr>
 
-<h2>🧪 Тәжірибе жасап көр (Sandbox)</h2>
+<h2>🧪 Тәжірибелік алаң (Sandbox)</h2>
 
-<p style="color: var(--text-main);">Төмендегі кодты өзгертіп, <strong>Run Code</strong> батырмасын басыңыз. Мысалы, <code>sep="-"</code> қосып көріңіз.</p>
+<p>Төмендегі кодты өзгертіп, <b>Run Code</b> батырмасын басыңыз. Мысалы, <code>sep="-"</code> қосып көріңіз.</p>
 
 <div class="editor-container">
-    <textarea id="code" rows="10">
+    <textarea id="code" rows="14" spellcheck="false">
 # 1. Қарапайым шығару
 print("Python-ға қош келдіңіз!")
 
@@ -203,35 +275,151 @@ print("01", "01", "2024", sep=".")
 # 4. Бірнеше жолды біріктіру
 print("Бұл бірінші жол", end=" ---> ")
 print("Бұл жалғасы")
-    </textarea>
+</textarea>
 </div>
 
-<button class="btn-run" onclick="runCode()">▶ Run Code</button>
+<div class="btn-row">
+    <button class="btn-run" id="run-btn" type="button">▶ Run Code</button>
+    <button class="btn-clear" id="clear-btn" type="button">🗑 Тазалау</button>
+</div>
+<div class="hint">Ctrl + Enter — кодты іске қосу</div>
 
-<div style="margin-top: 15px; color: var(--text-soft); font-size: 14px;">Нәтиже (Output):</div>
-<pre id="output">Мұнда бағдарлама нәтижесі шығады...</pre>
+<div style="margin-top: 15px; color: var(--text-light); font-size: 14px; font-weight: 500;">Нәтиже (Output):</div>
+<pre id="output">Нәтиже осында шығады...</pre>
 
 <hr>
 
-<div class="feature-card" style="border-left: 4px solid var(--success);">
-    <h4 style="color: var(--success); margin-bottom: 8px;">🧠 Өзіңді тексер:</h4>
-    <p style="margin-bottom: 0; color: var(--text-main);">Мәтінді экранға шығару үшін ол міндетті түрде <b>тырнақшаға (" ")</b> алынуы керек. Егер тырнақшасыз жазсаңыз, Python оны айнымалы деп қабылдап, қате (NameError) береді.</p>
+<div class="feature-card card-success">
+    <h4>🧠 Өзіңді тексер:</h4>
+    <p style="margin-bottom: 0;">Мәтінді экранға шығару үшін ол міндетті түрде <b>тырнақшаға (" ")</b> алынуы керек. Егер тырнақшасыз жазсаңыз, Python оны айнымалы деп қабылдап, қате (NameError) береді.</p>
 </div>
 
 <a href="https://codepen.io/zlreibuh-the-sasster/pen/dPpbXqN"
    target="_blank"
-   class="btn-primary-custom">
+   rel="noopener"
+   class="btn-primary-action">
     🧠 CodePen-дегі тапсырмаларды орындау
 </a>
 
 <script>
-    function runCode() {
-        const output = document.getElementById('output');
-        output.textContent = "Код орындалуда...";
-        setTimeout(() => {
-            output.textContent = "Python-ға қош келдіңіз!\n5 + 10 = 15\n01.01.2024\nБұл бірінші жол ---> Бұл жалғасы";
-        }, 500);
+(function () {
+    const codeEl   = document.getElementById("code");
+    const outputEl = document.getElementById("output");
+    const runBtn   = document.getElementById("run-btn");
+    const clearBtn = document.getElementById("clear-btn");
+
+    // Skulpt-ты бірнеше көзден кезекпен жүктеу
+    const SOURCES = [
+        ["https://skulpt.org/js/skulpt.min.js",
+         "https://skulpt.org/js/skulpt-stdlib.js"],
+        ["https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js",
+         "https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"],
+        ["https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt.min.js",
+         "https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt-stdlib.js"]
+    ];
+
+    function loadScript(src) {
+        return new Promise(function (resolve, reject) {
+            const s = document.createElement("script");
+            s.src = src;
+            s.onload = resolve;
+            s.onerror = function () { reject(new Error(src)); };
+            document.head.appendChild(s);
+        });
     }
+
+    async function loadSkulpt() {
+        if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
+        for (const pair of SOURCES) {
+            try {
+                await loadScript(pair[0]);
+                await loadScript(pair[1]);
+                if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
+            } catch (e) {
+                console.warn("Skulpt жүктелмеді:", e.message);
+            }
+        }
+        throw new Error("Skulpt ешбір көзден жүктелмеді");
+    }
+
+    const skulptReady = loadSkulpt();
+    runBtn.disabled = true;
+    runBtn.textContent = "⏳ Жүктелуде...";
+    function enableBtn() {
+        runBtn.disabled = false;
+        runBtn.textContent = "▶ Run Code";
+    }
+    skulptReady.then(enableBtn).catch(enableBtn);
+
+    function builtinRead(file) {
+        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][file] === undefined) {
+            throw "Файл табылмады: '" + file + "'";
+        }
+        return Sk.builtinFiles["files"][file];
+    }
+
+    async function runCode() {
+        outputEl.className = "";
+        outputEl.textContent = "";
+        runBtn.disabled = true;
+
+        try {
+            await skulptReady;
+        } catch (e) {
+            outputEl.className = "error";
+            outputEl.textContent = "Skulpt жүктелмеді. Интернетті тексеріп, бетті жаңартыңыз (Ctrl+F5).";
+            runBtn.disabled = false;
+            return;
+        }
+
+        Sk.configure({
+            output: function (text) { outputEl.textContent += text; },
+            read: builtinRead,
+            __future__: Sk.python3,
+            inputfun: function (prompt) {
+                return window.prompt(prompt || "Мәнді енгізіңіз:") || "";
+            },
+            execLimit: 10000
+        });
+
+        Sk.misceval
+            .asyncToPromise(function () {
+                return Sk.importMainWithBody("<stdin>", false, codeEl.value, true);
+            })
+            .then(function () {
+                if (outputEl.textContent === "") {
+                    outputEl.textContent = "Код сәтті орындалды (экранға ештеңе шықпады).";
+                }
+            })
+            .catch(function (err) {
+                outputEl.className = "error";
+                outputEl.textContent += (outputEl.textContent ? "\n" : "") + "Қате (Error): " + err.toString();
+            })
+            .finally(function () {
+                runBtn.disabled = false;
+            });
+    }
+
+    runBtn.addEventListener("click", runCode);
+
+    clearBtn.addEventListener("click", function () {
+        outputEl.className = "";
+        outputEl.textContent = "Нәтиже осында шығады...";
+    });
+
+    // Ctrl+Enter — іске қосу, Tab — шегініс (4 бос орын)
+    codeEl.addEventListener("keydown", function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+            e.preventDefault();
+            runCode();
+        } else if (e.key === "Tab") {
+            e.preventDefault();
+            const s = codeEl.selectionStart, end = codeEl.selectionEnd;
+            codeEl.value = codeEl.value.slice(0, s) + "    " + codeEl.value.slice(end);
+            codeEl.selectionStart = codeEl.selectionEnd = s + 4;
+        }
+    });
+})();
 </script>
 
 {% endblock %}

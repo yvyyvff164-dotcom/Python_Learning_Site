@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Логикалық операторлар (and, or, not) — Python оқу сайты{% endblock %}
+{% block title %}Форматтау (f-strings) — Python оқу сайты{% endblock %}
 
 {% block content %}
 <style>
+    /* ==========================================
+        Бетке арналған қосымша стилизация
+    ========================================== */
     .lesson-title {
         font-size: 2rem;
         font-weight: 800;
@@ -57,10 +60,79 @@
         border-color: var(--primary);
     }
 
-    .card-primary { border-left: 5px solid var(--primary); }
-    .card-secondary { border-left: 5px solid var(--primary-2); }
-    .card-accent { border-left: 5px solid #22c55e; }
+    .feature-card h4 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 1.2rem;
+        font-weight: 800;
+    }
 
+    .card-primary { border-left: 5px solid var(--primary); }
+    .card-primary h4 { color: var(--primary); }
+
+    .card-purple { border-left: 5px solid var(--primary-2); }
+    .card-purple h4 { color: var(--primary-2); }
+
+    .card-success { border-left: 5px solid var(--success); }
+    .card-success h4 { color: var(--success); }
+
+    .card-danger { border-left: 5px solid #ef4444; }
+    .card-danger h4 { color: #ef4444; }
+
+    /* Қараңғы код блогы */
+    .code-pre {
+        background: #0f172a;
+        color: #38bdf8;
+        padding: 16px;
+        border-radius: var(--radius-sm);
+        font-family: 'Fira Code', Consolas, Monaco, monospace;
+        font-size: 14px;
+        line-height: 1.55;
+        overflow-x: auto;
+        border: 1px solid #334155;
+        margin: 12px 0 20px;
+    }
+
+    /* Форматтау кестесі */
+    .spec-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 25px 0;
+        background: var(--surface-strong);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .spec-table th {
+        background: var(--sidebar-bg);
+        color: #ffffff;
+        padding: 14px;
+        font-weight: 800;
+        text-align: left;
+    }
+
+    .spec-table td {
+        padding: 12px 14px;
+        color: var(--text-main);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .spec-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .spec-table td:first-child {
+        color: var(--primary-2);
+        font-weight: 700;
+    }
+
+    .table-scroll {
+        overflow-x: auto;
+    }
+
+    /* Код редакторы мен Sandbox стилі */
     .editor-container {
         margin-top: 15px;
         border-radius: var(--radius-md);
@@ -71,6 +143,7 @@
 
     #code {
         width: 100%;
+        box-sizing: border-box;
         background: #0f172a;
         color: #38bdf8;
         font-family: 'Fira Code', Consolas, Monaco, monospace;
@@ -80,6 +153,14 @@
         outline: none;
         resize: vertical;
         line-height: 1.5;
+        tab-size: 4;
+    }
+
+    .btn-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
     }
 
     .btn-run {
@@ -104,6 +185,35 @@
         box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
     }
 
+    .btn-run:disabled {
+        opacity: .6;
+        cursor: wait;
+        transform: none;
+    }
+
+    .btn-clear {
+        margin-top: 15px;
+        background: transparent;
+        color: var(--text-main);
+        border: 1px solid var(--border);
+        padding: 12px 20px;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: var(--transition-smooth);
+    }
+
+    .btn-clear:hover {
+        border-color: var(--primary);
+    }
+
+    .hint {
+        font-size: 13px;
+        opacity: .7;
+        margin-top: 8px;
+    }
+
     #output {
         background: #0f172a;
         color: #22c55e;
@@ -117,19 +227,8 @@
         white-space: pre-wrap;
     }
 
-    .tip-card {
-        margin-top: 35px;
-        border-left: 5px solid var(--primary-2);
-        background: var(--surface-strong);
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow-sm);
-        color: var(--text-main);
-    }
-
-    .tip-card h4 {
-        color: var(--primary-2);
-        margin-top: 0;
-        margin-bottom: 8px;
+    #output.error {
+        color: #f87171;
     }
 
     hr {
@@ -145,81 +244,271 @@
     }
 </style>
 
-<h1 class="lesson-title">🔀 Логикалық операторлар (and, or, not)</h1>
+<h1 class="lesson-title">✨ Форматтау (f-strings)</h1>
 
-<!-- YouTube видео сілтемесі кірістірілді -->
 <div class="video-wrapper">
-    <iframe 
-        src="https://www.youtube.com/embed/FrvBwdAU2dQ" 
-        title="Python logical operators"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+    <iframe
+        src="https://www.youtube.com/embed/DOxzzkjTcgI"
+        title="Python f-strings"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen>
     </iframe>
 </div>
 
 <p>
-    Бағдарламалау барысында бірнеше шартты бір мезгілде тексеру қажет болады. Ол үшін Python-да үш негізгі логикалық оператор қолданылады: <code>and</code>, <code>or</code> және <code>not</code>.
+    Мәтін ішіне айнымалылардың мәнін қою үшін Python-да ең ыңғайлы тәсіл — <b>f-string</b> (formatted string). Жолдың алдына <code>f</code> әрпін жазасыз, ал айнымалыны фигуралы жақшаның ішіне қоясыз.
 </p>
+
+<pre class="code-pre">at = "Aruzhan"
+print(f"Сәлем, {at}!")   # Сәлем, Aruzhan!</pre>
 
 <hr>
 
-<h2>🛠 Операторлардың түрлері</h2>
+<h2>🛠 f-string мүмкіндіктері</h2>
 
 <div class="feature-grid">
     <div class="feature-card card-primary">
-        <b>1. AND (және)</b>
-        <p style="margin-top: 8px; margin-bottom: 0; color: var(--text-main);">Барлық шарттар шын (True) болғанда ғана нәтиже True қайтарады.</p>
-    </div>
-    
-    <div class="feature-card card-secondary">
-        <b>2. OR (немесе)</b>
-        <p style="margin-top: 8px; margin-bottom: 0; color: var(--text-main);">Кем дегенде бір шарт шын болса, нәтиже True болады.</p>
+        <h4>1. Айнымалыны қою</h4>
+        <p style="margin-bottom: 0;"><code>{at}</code> — айнымалының мәні жолдың ішіне автоматты түрде қойылады.</p>
     </div>
 
-    <div class="feature-card card-accent">
-        <b>3. NOT (терістеу)</b>
-        <p style="margin-top: 8px; margin-bottom: 0; color: var(--text-main);">Шарттың мәнін қарама-қарсыға өзгертеді (True болса False етеді).</p>
+    <div class="feature-card card-purple">
+        <h4>2. Есептеулер</h4>
+        <p style="margin-bottom: 0;">Жақшаның ішінде өрнек жазуға болады: <code>{a + b}</code>, <code>{a * b}</code>.</p>
     </div>
+
+    <div class="feature-card card-success">
+        <h4>3. Сандарды форматтау</h4>
+        <p style="margin-bottom: 0;">Қос нүктеден кейін формат жазылады: <code>{baga:.2f}</code> — үтірден кейін 2 таңба.</p>
+    </div>
+</div>
+
+<h3>📊 Жиі қолданылатын форматтар</h3>
+<div class="table-scroll">
+<table class="spec-table">
+    <tr>
+        <th>Формат</th>
+        <th>Мағынасы</th>
+        <th>Мысал</th>
+    </tr>
+    <tr>
+        <td><code>:.2f</code></td>
+        <td>Ондық санның үтірден кейінгі 2 таңбасы</td>
+        <td><code>f"{3.14159:.2f}"</code> → 3.14</td>
+    </tr>
+    <tr>
+        <td><code>:03d</code></td>
+        <td>Бүтін санды нөлмен 3 таңбаға толтыру</td>
+        <td><code>f"{7:03d}"</code> → 007</td>
+    </tr>
+    <tr>
+        <td><code>:&lt;10</code></td>
+        <td>Солға туралау (10 таңба ені)</td>
+        <td><code>f"{'a':&lt;5}|"</code> → a&nbsp;&nbsp;&nbsp;&nbsp;|</td>
+    </tr>
+    <tr>
+        <td><code>:&gt;10</code></td>
+        <td>Оңға туралау (10 таңба ені)</td>
+        <td><code>f"{'a':&gt;5}|"</code> → &nbsp;&nbsp;&nbsp;&nbsp;a|</td>
+    </tr>
+    <tr>
+        <td><code>:^10</code></td>
+        <td>Ортаға туралау (10 таңба ені)</td>
+        <td><code>f"{'a':^5}|"</code> → &nbsp;&nbsp;a&nbsp;&nbsp;|</td>
+    </tr>
+</table>
 </div>
 
 <hr>
 
 <h2>🧪 Тәжірибелік алаң (Sandbox)</h2>
+<p>Айнымалылар мен форматтарды өзгертіп, нәтиженің қалай ауысатынын көр:</p>
+
 <div class="editor-container">
-    <textarea id="code" rows="12">
-# Айнымалылар
-жас = 18
-бар_актив = True
+    <textarea id="code" rows="26" spellcheck="false">
+# 1. Қарапайым f-string
+at = "Aruzhan"
+zhas = 14
+print(f"Менің атым {at}, мен {zhas} жастамын.")
 
-# AND операторы
-if жас >= 18 and бар_актив:
-    print("Кіруге рұқсат етілді!")
-else:
-    print("Кіруге тыйым салынды.")
+# 2. Жақша ішінде есептеу
+a = 7
+b = 3
+print(f"{a} + {b} = {a + b}")
+print(f"{a} * {b} = {a * b}")
 
-# OR операторы
-бал = 75
-сабаққа_қатысу = False
-if бал > 80 or сабаққа_қатысу:
-    print("Емтиханнан өтдіңіз!")
-else:
-    print("Қайта тапсыру керек.")
-    </textarea>
+# 3. Ондық санды форматтау
+baga = 1234.5678
+print(f"Бағасы: {baga:.2f} тг")
+
+# 4. Туралау (кесте сияқты)
+m1 = "Алма"
+m2 = "Банан"
+m3 = "Шие"
+print(f"|{m1:<10}|{m2:^10}|{m3:>10}|")
+
+# 5. Нөлмен толтыру
+print(f"Нөмір: {7:03d}")
+
+# 6. Үш тәсілді салыстыру
+print("Қосу арқылы:", "Сәлем, " + at + "!")
+print("format():   ", "Сәлем, {}!".format(at))
+print("f-string:   ", f"Сәлем, {at}!")
+</textarea>
 </div>
 
-<button class="btn-run" onclick="runCode()">▶ Run Code</button>
+<div class="btn-row">
+    <button class="btn-run" id="run-btn" type="button">▶ Run Code</button>
+    <button class="btn-clear" id="clear-btn" type="button">🗑 Тазалау</button>
+</div>
+<div class="hint">Ctrl + Enter — кодты іске қосу</div>
 
 <div style="margin-top: 15px; color: var(--text-light); font-size: 14px; font-weight: 500;">Нәтиже (Output):</div>
 <pre id="output">Нәтиже осында шығады...</pre>
 
+<hr>
+
+<h2>⚠️ Жиі кездесетін қателер</h2>
+<div class="feature-grid">
+    <div class="feature-card card-danger">
+        <h4>1. f әрпін ұмытып кету</h4>
+        <p style="margin-bottom: 0;"><code>"Сәлем, {at}"</code> деп жазсаң, Python айнымалыны қоймайды, жақшаның өзін шығарады. Жолдың алдына <code>f</code> қою керек.</p>
+    </div>
+
+    <div class="feature-card card-danger">
+        <h4>2. Тырнақшаның шатасуы</h4>
+        <p style="margin-bottom: 0;">Жолдың сыртында қос тырнақша болса, ішінде бір тырнақша қолдан (және керісінше), әйтпесе синтаксистік қате шығады.</p>
+    </div>
+
+    <div class="feature-card card-success">
+        <h4>💡 Жақшаның өзін шығару</h4>
+        <p style="margin-bottom: 0;">Мәтінде фигуралы жақша керек болса, оны екі рет жазыңыз: <code>&#123;&#123;</code> және <code>&#125;&#125;</code>.</p>
+    </div>
+</div>
+
 <script>
-    function runCode() {
-        const output = document.getElementById('output');
-        output.textContent = "Код орындалуда...";
-        setTimeout(() => {
-            output.textContent = "Кіруге рұқсат етілді!\nҚайта тапсыру керек.";
-        }, 500);
+(function () {
+    const codeEl   = document.getElementById("code");
+    const outputEl = document.getElementById("output");
+    const runBtn   = document.getElementById("run-btn");
+    const clearBtn = document.getElementById("clear-btn");
+
+    // Skulpt-ты бірнеше көзден кезекпен жүктеу (әр көзге 10 секунд уақыт беріледі)
+    const SOURCES = [
+        ["https://skulpt.org/js/skulpt.min.js",
+         "https://skulpt.org/js/skulpt-stdlib.js"],
+        ["https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js",
+         "https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"],
+        ["https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt.min.js",
+         "https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt-stdlib.js"]
+    ];
+
+    function loadScript(src, timeoutMs) {
+        return new Promise(function (resolve, reject) {
+            const s = document.createElement("script");
+            const timer = setTimeout(function () {
+                s.remove();
+                reject(new Error("timeout: " + src));
+            }, timeoutMs || 10000);
+            s.src = src;
+            s.onload = function () { clearTimeout(timer); resolve(); };
+            s.onerror = function () { clearTimeout(timer); reject(new Error(src)); };
+            document.head.appendChild(s);
+        });
     }
+
+    async function loadSkulpt() {
+        if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
+        for (const pair of SOURCES) {
+            try {
+                await loadScript(pair[0]);
+                await loadScript(pair[1]);
+                if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
+            } catch (e) {
+                console.warn("Skulpt жүктелмеді:", e.message);
+            }
+        }
+        throw new Error("Skulpt ешбір көзден жүктелмеді");
+    }
+
+    const skulptReady = loadSkulpt();
+    runBtn.disabled = true;
+    runBtn.textContent = "⏳ Жүктелуде...";
+    function enableBtn() {
+        runBtn.disabled = false;
+        runBtn.textContent = "▶ Run Code";
+    }
+    skulptReady.then(enableBtn).catch(enableBtn);
+
+    function builtinRead(file) {
+        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][file] === undefined) {
+            throw "Файл табылмады: '" + file + "'";
+        }
+        return Sk.builtinFiles["files"][file];
+    }
+
+    async function runCode() {
+        outputEl.className = "";
+        outputEl.textContent = "";
+        runBtn.disabled = true;
+
+        try {
+            await skulptReady;
+        } catch (e) {
+            outputEl.className = "error";
+            outputEl.textContent = "Skulpt жүктелмеді. Интернетті тексеріп, бетті жаңартыңыз (Ctrl+F5).";
+            runBtn.disabled = false;
+            return;
+        }
+
+        Sk.configure({
+            output: function (text) { outputEl.textContent += text; },
+            read: builtinRead,
+            __future__: Sk.python3,
+            inputfun: function (prompt) {
+                return window.prompt(prompt || "Мәнді енгізіңіз:") || "";
+            },
+            execLimit: 10000
+        });
+
+        Sk.misceval
+            .asyncToPromise(function () {
+                return Sk.importMainWithBody("<stdin>", false, codeEl.value, true);
+            })
+            .then(function () {
+                if (outputEl.textContent === "") {
+                    outputEl.textContent = "Код сәтті орындалды (экранға ештеңе шықпады).";
+                }
+            })
+            .catch(function (err) {
+                outputEl.className = "error";
+                outputEl.textContent += (outputEl.textContent ? "\n" : "") + "Қате (Error): " + err.toString();
+            })
+            .finally(function () {
+                runBtn.disabled = false;
+            });
+    }
+
+    runBtn.addEventListener("click", runCode);
+
+    clearBtn.addEventListener("click", function () {
+        outputEl.className = "";
+        outputEl.textContent = "Нәтиже осында шығады...";
+    });
+
+    // Ctrl+Enter — іске қосу, Tab — шегініс (4 бос орын)
+    codeEl.addEventListener("keydown", function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+            e.preventDefault();
+            runCode();
+        } else if (e.key === "Tab") {
+            e.preventDefault();
+            const s = codeEl.selectionStart, end = codeEl.selectionEnd;
+            codeEl.value = codeEl.value.slice(0, s) + "    " + codeEl.value.slice(end);
+            codeEl.selectionStart = codeEl.selectionEnd = s + 4;
+        }
+    });
+})();
 </script>
 
 {% endblock %}

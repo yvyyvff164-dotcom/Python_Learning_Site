@@ -6,10 +6,510 @@
     <meta name="theme-color" content="#1e293b">
     <title>{% block title %}Python оқу сайты{% endblock %}</title>
 
-    <!-- Барлық стильдер бір файлда. ?v=2 — браузер кэшін жаңарту үшін (өзгерткен сайын санын көбейт) -->
-    <link rel="stylesheet" href="/static/style.css?v=2">
+    <style>
+{% raw %}
+:root {
+    --primary: #3b82f6;
+    --primary-dark: #1d4ed8;
+    --primary-2: #8b5cf6;
+    --accent: #38bdf8;
+    --sidebar-bg: #1e293b;
+    --sidebar-hover: #334155;
+    --sidebar-active: #2563eb;
+    --sidebar-w: 280px;
+    --bg-main: #f8fafc;
+    --bg-soft: #f1f5f9;
+    --surface: rgba(255, 255, 255, 0.88);
+    --surface-strong: #ffffff;
+    --text-main: #0f172a;
+    --text-body: #163b65;
+    --text-light: #64748b;
+    --text-soft: #4e6484;
+    --heading-2: #0f3d7a;
+    --heading-3: #164b8c;
+    --strong: #0d4ea6;
+    --border: #e2e8f0;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 20px 45px rgba(16, 37, 68, 0.14);
+    --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: var(--text-main);
+    line-height: 1.7;
+    background-color: var(--bg-main);
+    background-image:
+        radial-gradient(circle at top left, rgba(0, 166, 251, 0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(15, 98, 254, 0.16), transparent 24%),
+        linear-gradient(180deg, #ffffff 0%, #eef4ff 100%);
+    background-attachment: fixed;
+}
+
+img, video, iframe { max-width: 100%; }
+
+/* ===== Layout ===== */
+.container { display: flex; min-height: 100vh; }
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-w);
+    height: 100vh;
+    padding: 70px 0 24px;
+    display: flex;
+    flex-direction: column;
+    color: #ffffff;
+    background: var(--sidebar-bg);
+    box-shadow: 4px 0 25px rgba(0, 0, 0, 0.15);
+    overflow-y: auto;
+    z-index: 1000;
+    transition: var(--transition-smooth);
+}
+
+.sidebar.closed { transform: translateX(-100%); box-shadow: none; }
+
+.sidebar h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 24px 15px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 15px 12px;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    color: #cbd5e1;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: var(--transition-smooth);
+}
+
+.sidebar ul li a:hover {
+    color: #ffffff;
+    background: var(--sidebar-hover);
+    transform: translateX(6px);
+}
+
+.sidebar ul li a.active {
+    color: #ffffff;
+    font-weight: 700;
+    background: var(--sidebar-active);
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.content {
+    flex: 1;
+    min-width: 0;
+    margin-left: var(--sidebar-w);
+    max-width: calc(100% - var(--sidebar-w));
+    padding: 90px clamp(20px, 4vw, 56px) 56px;
+    transition: var(--transition-smooth);
+    animation: pageFade 0.6s ease both;
+}
+
+.content.full { margin-left: 0; max-width: 100%; }
+.content-inner { width: 100%; max-width: 1100px; margin: 0 auto; }
+
+@keyframes pageFade {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: var(--transition-smooth);
+}
+
+.sidebar-overlay.active { opacity: 1; pointer-events: auto; }
+
+/* ===== Жоғарғы батырмалар ===== */
+.menu-toggle {
+    position: fixed;
+    top: 15px;
+    left: 20px;
+    z-index: 1001;
+    width: 48px;
+    height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+    transition: var(--transition-smooth);
+}
+
+.menu-toggle:hover { background: var(--primary-dark); transform: scale(1.05); }
+
+#ai-toggle-btn {
+    position: fixed;
+    top: 15px;
+    right: 20px;
+    z-index: 1001;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    color: #ffffff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(139, 92, 246, 0.35);
+    transition: var(--transition-smooth);
+}
+
+#ai-toggle-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5); }
+
+/* ===== ИИ чат ===== */
+#ai-chat-window {
+    position: fixed;
+    top: 75px;
+    right: 20px;
+    width: 360px;
+    max-width: calc(100vw - 40px);
+    height: 520px;
+    max-height: calc(100vh - 95px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--surface-strong);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    transform-origin: top right;
+    transition: var(--transition-smooth);
+}
+
+#ai-chat-window.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.92) translateY(-16px);
+    pointer-events: none;
+}
+
+#ai-chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    background: var(--sidebar-bg);
+    color: #ffffff;
+    font-weight: 700;
+}
+
+#ai-chat-messages {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 15px;
+    overflow-y: auto;
+    background: var(--bg-soft);
+}
+
+#ai-chat-input-area {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    background: var(--surface-strong);
+    border-top: 1px solid var(--border);
+}
+
+#ai-user-input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 14px;
+    background: var(--bg-main);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: var(--transition-smooth);
+}
+
+#ai-user-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
+
+#ai-send-btn {
+    padding: 10px 16px;
+    background: var(--success);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+#ai-send-btn:hover { background: #16a34a; transform: scale(1.05); }
+
+/* ===== Типографика ===== */
+.content h1 {
+    margin-bottom: 22px;
+    font-size: clamp(2rem, 4.5vw, 3.1rem);
+    font-weight: 900;
+    line-height: 1.12;
+    background: linear-gradient(90deg, #08203e 0%, #0f62fe 50%, #00a6fb 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.content h2 {
+    margin: 38px 0 16px;
+    font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+    font-weight: 800;
+    color: var(--heading-2);
+}
+
+.content h3 {
+    margin: 28px 0 12px;
+    font-size: clamp(1.15rem, 2vw, 1.4rem);
+    font-weight: 800;
+    color: var(--heading-3);
+}
+
+:where(.content) p { margin-bottom: 1.15rem; font-size: 1.05rem; }
+.content p { color: var(--text-body); }
+.content-inner > p { max-width: 80ch; }
+.content b, .content strong { color: var(--strong); font-weight: 800; }
+
+:where(.content) ul, :where(.content) ol { margin: 16px 0 22px 24px; }
+:where(.content) li { margin-bottom: 8px; }
+.content ul, .content ol { color: var(--text-body); }
+
+.content a:not([class]) {
+    color: var(--primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.content a:not([class]):hover { color: var(--primary-dark); text-decoration: underline; }
+
+.content hr { border: none; height: 1px; margin: 32px 0; background: var(--border); }
+
+.content code {
+    padding: 2px 8px;
+    border-radius: 8px;
+    background: #eaf2ff;
+    color: var(--strong);
+    font-family: 'Fira Code', Consolas, Monaco, monospace;
+    font-size: 0.92em;
+}
+
+.content pre code { padding: 0; background: none; color: inherit; }
+
+/* ===== Видео, карточкалар ===== */
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    margin: 0 0 30px;
+    background: #000;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+.video-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin: 25px 0;
+}
+
+.feature-card {
+    padding: 20px;
+    background: var(--surface-strong);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-smooth);
+}
+
+.feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+
+:where(.feature-card) h3, :where(.feature-card) h4 { margin: 0 0 10px; font-weight: 800; color: var(--text-main); }
+:where(.feature-card) h4 { font-size: 1.2rem; }
+.feature-card p { margin-bottom: 0; font-size: 0.98rem; line-height: 1.6; color: var(--text-body); }
+
+.card-primary   { border-left: 5px solid var(--primary); }
+.card-secondary { border-left: 5px solid var(--primary-2); }
+.card-success   { border-left: 5px solid var(--success); }
+.card-warning   { border-left: 5px solid var(--warning); }
+.card-danger    { border-left: 5px solid var(--danger); }
+
+/* ===== Кестелер ===== */
+:where(.content) table { width: 100%; border-collapse: collapse; }
+:where(.content) th, :where(.content) td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #e6eefb; }
+:where(.content) th { background: #eef5ff; color: #143d70; font-weight: 800; }
+
+/* ===== Sandbox ===== */
+.editor-container {
+    margin-top: 15px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+
+#code {
+    display: block;
+    width: 100%;
+    min-height: 160px;
+    padding: 16px;
+    background: #0f172a;
+    color: #38bdf8;
+    border: none;
+    outline: none;
+    resize: vertical;
+    font-family: 'Fira Code', Consolas, Monaco, monospace;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.btn-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+
+.btn-run, .btn-clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 15px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.btn-run {
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
+}
+
+.btn-run:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5); }
+.btn-run:disabled { opacity: 0.6; cursor: wait; transform: none; }
+
+.btn-clear { padding: 12px 20px; background: transparent; color: var(--text-main); border: 1px solid var(--border); }
+.btn-clear:hover { border-color: var(--primary); }
+
+.btn-primary-action, .btn-primary-custom {
+    display: inline-block;
+    margin-top: 22px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #ffffff;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+    transition: var(--transition-smooth);
+}
+
+.btn-primary-action:hover, .btn-primary-custom:hover { transform: translateY(-2px); color: #ffffff; }
+
+.hint { margin-top: 8px; font-size: 13px; opacity: 0.7; }
+
+#output {
+    min-height: 60px;
+    margin-top: 8px;
+    padding: 16px;
+    background: #0f172a;
+    color: #22c55e;
+    border: 1px solid #334155;
+    border-radius: var(--radius-md);
+    font-family: 'Fira Code', Consolas, Monaco, monospace;
+    font-size: 14px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+#output.error { color: #f87171; }
+
+/* ===== Адаптив ===== */
+@media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); width: min(300px, 86vw); }
+    .sidebar.open { transform: translateX(0); }
+    .content, .content.full { margin-left: 0; max-width: 100%; padding: 80px 18px 32px; }
+    #ai-chat-window { left: 14px; right: 14px; width: auto; max-width: none; }
+}
+
+@media (max-width: 560px) {
+    #ai-toggle-btn { right: 12px; padding: 9px 14px; font-size: 13px; }
+    .btn-row { flex-direction: column; align-items: stretch; }
+    .btn-row .btn-run, .btn-row .btn-clear { width: 100%; }
+}
+{% endraw %}
+    </style>
 </head>
 <body>
+
+    <!-- Тексеру белгісі: жаңа base.html жүктелгенін көрсетеді. Жұмыс істей бастаса, осы жолды өшіріп таста -->
+    <div style="position:fixed;left:8px;bottom:8px;z-index:99999;background:#000;color:#0f0;font:11px monospace;padding:3px 8px;border-radius:6px;opacity:.85;">base v4 ✔</div>
 
     <!-- Меню ашу/жабу батырмасы -->
     <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Менюді ашу">☰</button>
@@ -87,7 +587,6 @@
             const content = document.getElementById('content-area');
             const overlay = document.getElementById('sidebar-overlay');
 
-            // Экран өлшемін тексеру (CSS-тағы 768px-пен сәйкес)
             if (window.innerWidth <= 768) {
                 sidebar.classList.toggle('open');
                 overlay.classList.toggle('active');
@@ -118,7 +617,6 @@
 
             const chatMessages = document.getElementById('ai-chat-messages');
 
-            // Пайдаланушы хабарламасы
             const userDiv = document.createElement('div');
             userDiv.style = "background: var(--surface-strong); color: var(--text-main); padding: 10px 14px; border-radius: 14px 14px 0 14px; max-width: 85%; align-self: flex-end; font-size: 14px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); word-wrap: break-word;";
             userDiv.textContent = messageText;
@@ -127,7 +625,6 @@
             inputElement.value = '';
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            // Жауап күту индикаторы
             const loadingDiv = document.createElement('div');
             loadingDiv.style = "background: var(--primary); color: white; padding: 10px 14px; border-radius: 14px 14px 14px 0; max-width: 85%; align-self: flex-start; font-size: 14px; opacity: 0.8;";
             loadingDiv.textContent = "Ойланып жатырмын... 🧠";

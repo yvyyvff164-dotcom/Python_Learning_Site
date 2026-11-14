@@ -1,37 +1,180 @@
-<!DOCTYPE html>
-<html lang="kk">
-<head>
-    <meta charset="UTF-8">
-    <title>Python оқу сайты</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
 
-<div class="container">
-    <aside class="sidebar">
-        <h3>Сабақтар</h3>
-        <ul>
-            <li><a href="/">Python деген не?</a></li>
-            <li><a href="/print">Print</a></li>
-            <li><a href="/variables">Айнымалылар</a></li>
-            <li><a href="/conditions">Шарттар</a></li>
-            <li><a href="/functions">Функциялар</a></li>
-            <li><a href="/custom-functions">Өз функцияларың (def)</a></li>
-            <li><a href="/loops">Циклдер</a></li>
-            <li><a href="/sorting">Сұрыптау</a></li>
-            <li><a href="/arrays1">Бірөлшемді массив</a></li>
-            <li><a href="/arrays2">Екіөлшемді массив</a></li>
-            <li><a href="/add_remove">Элемент қосу және жою</a></li>
-            <!-- Жаңадан қосылған Мәтіндік жолдар сабағы -->
-            <li><a href="/strings">📝 Мәтіндік жолдар</a></li>
-			<li><a href="/formatting">✨ Форматтау (f-strings)</a></li>
-        </ul>
-    </aside>
+{% block title %}Python оқу сайты{% endblock %}
+{% block body_class %}home{% endblock %}
 
-    <main class="content">
-        {% block content %}{% endblock %}
-    </main>
-</div>
+{% block content %}
+<style>
+  .hero {
+    display: grid; grid-template-columns: 1.1fr .9fr; gap: 32px; align-items: center;
+    padding: 48px 44px; border-radius: 28px; color: #fff;
+    background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 60%, #38bdf8 120%);
+    box-shadow: 0 20px 45px rgba(16, 37, 68, .25);
+  }
+  .content .hero h1 { background: none; -webkit-text-fill-color: #fff; color: #fff; margin-bottom: 14px; }
+  .hero p { color: #dbeafe; font-size: 1.15rem; max-width: 46ch; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+  .hero-btn { padding: 14px 26px; border-radius: 12px; font-weight: 700; text-decoration: none; background: #fff; color: #1d4ed8 !important; }
+  .hero-btn.ghost { background: transparent; color: #fff !important; border: 2px solid rgba(255,255,255,.6); }
 
-</body>
-</html>
+  .hero-art { background: #0b1220; border-radius: 16px; padding: 18px 20px; font-family: 'Fira Code', Consolas, monospace; font-size: 14px; line-height: 1.7; box-shadow: 0 12px 30px rgba(0,0,0,.35); }
+  .hero-art .dots span { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 6px; }
+  .hero-art .k { color: #c084fc; } .hero-art .s { color: #4ade80; } .hero-art .f { color: #38bdf8; } .hero-art .c { color: #64748b; }
+
+  .resume { display: none; margin-top: 28px; padding: 22px 26px; background: #fff; border: 1px solid #e2e8f0; border-radius: 20px; box-shadow: 0 8px 30px rgba(16,37,68,.07); align-items: center; gap: 18px; flex-wrap: wrap; }
+  .resume.show { display: flex; }
+  .resume-text { flex: 1; min-width: 200px; }
+  .resume-text small { color: #64748b; }
+  .resume-text b { display: block; font-size: 1.2rem; color: #0f172a; }
+  .bar { height: 10px; background: #e2e8f0; border-radius: 99px; overflow: hidden; margin-top: 10px; }
+  .bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #22c55e, #38bdf8); transition: width .5s; }
+
+  .about h2 { margin-top: 56px; }
+
+  .lv-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 28px; padding: 8px 24px; box-shadow: 0 8px 30px rgba(16,37,68,.06); }
+  .lv { border-top: 1px solid #eef0f3; }
+  .lv:first-child { border-top: none; }
+  .lv summary { display: flex; align-items: center; gap: 18px; padding: 22px 0; cursor: pointer; list-style: none; }
+  .lv summary::-webkit-details-marker { display: none; }
+  .lv-icon { flex: none; width: 56px; height: 56px; border-radius: 16px; background: #f4f4f5; display: grid; place-items: center; font-size: 26px; }
+  .lv-text { flex: 1; min-width: 0; }
+  .lv-title { font-size: 1.25rem; font-weight: 800; color: #111827; line-height: 1.3; }
+  .lv-desc { margin-top: 4px; color: #6b7280; line-height: 1.5; }
+  .lv-prog { margin-top: 8px; font-size: .85rem; color: #64748b; }
+  .lv-arrow { flex: none; color: #9ca3af; transition: transform .25s; }
+  .lv[open] .lv-arrow { transform: rotate(90deg); }
+  .lv-list { list-style: none; margin: 0; padding: 0 0 18px 74px; }
+  .lv-list li { margin: 0; }
+  .lv-list a { display: flex; gap: 12px; padding: 10px 14px; border-radius: 10px; color: #163b65; font-weight: 600; text-decoration: none; }
+  .lv-list a:hover { background: #eef5ff; }
+  .lv-list a.done::after { content: "✓"; margin-left: auto; color: #22c55e; font-weight: 800; }
+  .lv-num { min-width: 38px; font-weight: 800; color: var(--c); }
+  .lv-soon { margin: 0; padding: 0 0 20px 74px; color: #9ca3af; font-style: italic; }
+
+  @media (max-width: 800px) {
+    .hero { grid-template-columns: 1fr; padding: 32px 24px; }
+    .hero-art { display: none; }
+    .lv-card { padding: 4px 14px; border-radius: 22px; }
+    .lv-list, .lv-soon { padding-left: 0; }
+  }
+</style>
+
+<!-- ШАПКА -->
+<section class="hero">
+  <div>
+    <h1>Python-ға қош келдіңіз! 🐍</h1>
+    <p>Бағдарламалауды нөлден бастап, қазақ тілінде, қадам-қадаммен үйреніңіз. Әр сабақта түсініктеме, мысал және өз кодыңызды іске қосатын орын бар.</p>
+    <div class="hero-actions">
+      <a class="hero-btn" href="#levels">Оқуды бастау</a>
+      <a class="hero-btn ghost" href="#about">Сайт туралы</a>
+    </div>
+  </div>
+  <div class="hero-art">
+    <div class="dots"><span style="background:#ef4444"></span><span style="background:#eab308"></span><span style="background:#22c55e"></span></div>
+    <div><span class="c"># менің алғашқы бағдарламам</span></div>
+    <div><span class="k">name</span> = <span class="f">input</span>(<span class="s">"Атың кім? "</span>)</div>
+    <div><span class="f">print</span>(<span class="s">f"Сәлем, {name}!"</span>)</div>
+    <div><span class="k">for</span> i <span class="k">in</span> <span class="f">range</span>(3):</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="f">print</span>(<span class="s">"Python 🚀"</span>)</div>
+  </div>
+</section>
+
+<!-- ЖАЛҒАСТЫРУ (прогресс болса ғана көрінеді) -->
+<section class="resume" id="resume">
+  <div class="resume-text">
+    <small>Сіз тоқтаған жер</small>
+    <b id="resume-title"></b>
+    <div class="bar"><i id="total-bar"></i></div>
+    <small id="total-text"></small>
+  </div>
+  <a class="hero-btn" id="resume-link" href="#" style="background:#1d4ed8;color:#fff !important;">Жалғастыру →</a>
+</section>
+
+<!-- САЙТ ТУРАЛЫ -->
+<section class="about" id="about">
+  <h2>Сайт туралы</h2>
+  <div class="feature-grid">
+    <div class="feature-card card-primary">
+      <h4>🇰🇿 Қазақ тілінде</h4>
+      <p>Барлық сабақтар түсінікті тілде жазылған, күрделі терминдер мысалмен түсіндіріледі.</p>
+    </div>
+    <div class="feature-card card-success">
+      <h4>⌨️ Практика</h4>
+      <p>Кодты тікелей сайтта жазып, нәтижесін бірден көресіз. Ештеңе орнатудың қажеті жоқ.</p>
+    </div>
+    <div class="feature-card card-secondary">
+      <h4>🤖 AI көмекші</h4>
+      <p>Түсінбеген жеріңіз болса, оң жақ жоғарыдағы көмекшіден сұраңыз.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ДЕҢГЕЙЛЕР -->
+<section id="levels">
+  <h2>Деңгейлер</h2>
+  <div class="lv-card">
+    {% for level in levels %}
+    {% set lvl = loop.index %}
+    <details class="lv" data-level="{{ loop.index0 }}" style="--c: {{ level.color }}">
+      <summary>
+        <span class="lv-icon">{{ level.icon }}</span>
+        <span class="lv-text">
+          <div class="lv-title">{{ level.title }}</div>
+          <div class="lv-desc">{{ level.desc }}</div>
+          {% if level.lessons %}<div class="lv-prog" data-prog></div>{% endif %}
+        </span>
+        <span class="lv-arrow">▶</span>
+      </summary>
+
+      {% if level.lessons %}
+      <ul class="lv-list">
+        {% for lesson in level.lessons %}
+        <li>
+          <a href="{{ lesson.url }}" data-url="{{ lesson.url }}">
+            <span class="lv-num">{{ lvl }}.{{ loop.index }}</span>
+            {{ lesson.title }}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="lv-soon">Жақында қосылады</p>
+      {% endif %}
+    </details>
+    {% endfor %}
+  </div>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var P = window.PLS.load();
+  var LEVELS = window.PLS.LEVELS;
+  var total = 0, doneCount = 0, lastInfo = null, lastLevelIdx = -1;
+
+  LEVELS.forEach(function (lv, li) {
+    var d = 0;
+    lv.lessons.forEach(function (ls, i) {
+      total++;
+      if (P.done[ls.url]) { d++; doneCount++; }
+      if (ls.url === P.last) { lastInfo = { num: (li + 1) + "." + (i + 1), title: ls.title, url: ls.url }; lastLevelIdx = li; }
+    });
+    var el = document.querySelector('.lv[data-level="' + li + '"] [data-prog]');
+    if (el) el.textContent = d + " / " + lv.lessons.length + " сабақ аяқталды";
+  });
+
+  document.querySelectorAll(".lv-list a").forEach(function (a) {
+    if (P.done[a.dataset.url]) a.classList.add("done");
+  });
+
+  if (lastInfo) {
+    document.getElementById("resume").classList.add("show");
+    document.getElementById("resume-title").textContent = lastInfo.num + " " + lastInfo.title;
+    document.getElementById("resume-link").href = lastInfo.url;
+    document.getElementById("total-bar").style.width = Math.round(doneCount / total * 100) + "%";
+    document.getElementById("total-text").textContent = doneCount + " / " + total + " сабақ аяқталды";
+    var d = document.querySelector('.lv[data-level="' + lastLevelIdx + '"]');
+    if (d) d.open = true;
+  }
+});
+</script>
+{% endblock %}

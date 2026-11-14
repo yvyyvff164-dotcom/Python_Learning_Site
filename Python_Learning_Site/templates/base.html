@@ -135,6 +135,69 @@ img, video, iframe { max-width: 100%; }
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
 }
 
+/* ===== Деңгейлер (раскрывающиеся списки в сайдбаре) ===== */
+.sidebar-levels {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px 12px;
+}
+
+.s-level {
+    border: 1px solid var(--c);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.04);
+    overflow: hidden;
+}
+
+.s-level summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    cursor: pointer;
+    list-style: none;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--c);
+    user-select: none;
+    transition: var(--transition-smooth);
+}
+
+.s-level summary::-webkit-details-marker { display: none; }
+.s-level summary:hover { background: rgba(255, 255, 255, 0.06); }
+
+.s-count {
+    margin-left: auto;
+    padding: 1px 9px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #cbd5e1;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.s-arrow { font-size: 12px; transition: transform 0.25s; }
+.s-level[open] .s-arrow { transform: rotate(90deg); }
+
+.sidebar .lesson-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 2px 8px 10px;
+}
+
+.sidebar .lesson-list li a { padding: 10px 12px; font-size: 14px; }
+
+.s-num {
+    min-width: 30px;
+    font-weight: 700;
+    color: var(--c);
+}
+
+.sidebar .lesson-list li a.active .s-num { color: #ffffff; }
+
 .content {
     flex: 1;
     min-width: 0;
@@ -503,13 +566,24 @@ img, video, iframe { max-width: 100%; }
     .btn-row { flex-direction: column; align-items: stretch; }
     .btn-row .btn-run, .btn-row .btn-clear { width: 100%; }
 }
+
+/* ===== Басты бет режимі ===== */
+body.home .sidebar,
+body.home .menu-toggle,
+body.home .sidebar-overlay { display: none; }
+body.home .content { margin-left: 0; max-width: 100%; padding-top: 80px; }
+body.home .content-inner { max-width: 980px; }
+
+/* ===== Прогресс ===== */
+.sidebar .lesson-list a.done::after { content: "✓"; margin-left: auto; color: #22c55e; font-weight: 800; }
+.finish-box { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.btn-finish { padding: 12px 22px; border: none; border-radius: var(--radius-sm); background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff; font: 600 15px inherit; cursor: pointer; box-shadow: 0 4px 14px rgba(34,197,94,.35); }
+.btn-finish.is-done { background: #e2e8f0; color: #475569; box-shadow: none; }
+.btn-next { padding: 12px 22px; border-radius: var(--radius-sm); background: var(--primary); color: #fff !important; font-weight: 600; text-decoration: none; }
 {% endraw %}
     </style>
 </head>
-<body>
-
-    <!-- Тексеру белгісі: жаңа base.html жүктелгенін көрсетеді. Жұмыс істей бастаса, осы жолды өшіріп таста -->
-    <div style="position:fixed;left:8px;bottom:8px;z-index:99999;background:#000;color:#0f0;font:11px monospace;padding:3px 8px;border-radius:6px;opacity:.85;">base v4 ✔</div>
+<body class="{% block body_class %}{% endblock %}">
 
     <!-- Меню ашу/жабу батырмасы -->
     <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Менюді ашу">☰</button>
@@ -538,24 +612,32 @@ img, video, iframe { max-width: 100%; }
     </div>
 
     <div class="container">
-        <!-- Сайдбар навигациясы -->
+        <!-- Сайдбар навигациясы: деңгейлер app.py ішіндегі LEVELS-тен келеді -->
         <aside class="sidebar" id="sidebar">
             <h3>🐍 Python Курсы</h3>
-            <ul>
-                <li><a href="/" id="menu-home">Python деген не?</a></li>
-                <li><a href="/print" id="menu-print">🖨 Print командасы</a></li>
-                <li><a href="/variables" id="menu-variables">📦 Айнымалылар</a></li>
-                <li><a href="/conditions" id="menu-conditions">🔀 Шарттар</a></li>
-                <li><a href="/loops" id="menu-loops">🔁 Циклдер</a></li>
-                <li><a href="/functions" id="menu-functions">🧩 Функциялар</a></li>
-                <li><a href="/custom-functions" id="menu-custom-functions">🛠️ Өз функцияларың (def)</a></li>
-                <li><a href="/sorting" id="menu-sorting">📊 Сұрыптау</a></li>
-                <li><a href="/arrays1" id="menu-arrays1">📉 Бірөлшемді массив</a></li>
-                <li><a href="/arrays2" id="menu-arrays2">🧩 Екіөлшемді массив</a></li>
-                <li><a href="/add_remove" id="menu-add-remove">➕ Элемент қосу/жою</a></li>
-                <li><a href="/strings" id="menu-strings">📝 Мәтіндік жолдар</a></li>
-                <li><a href="/formatting" id="menu-formatting">✨ Форматтау (f-strings)</a></li>
-            </ul>
+
+            <div class="sidebar-levels">
+                {% for level in levels %}
+                {% set lvl = loop.index %}
+                <details class="s-level" style="--c: {{ level.color }}">
+                    <summary>
+                        <span>{{ lvl }}. {{ level.short }}</span>
+                        <span class="s-count">{{ level.lessons|length or "—" }}</span>
+                        <span class="s-arrow">▶</span>
+                    </summary>
+                    <ul class="lesson-list">
+                        {% for lesson in level.lessons %}
+                        <li>
+                            <a href="{{ lesson.url }}">
+                                <span class="s-num">{{ lvl }}.{{ loop.index }}</span>
+                                {{ lesson.title }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </details>
+                {% endfor %}
+            </div>
         </aside>
 
         <!-- Негізгі контент аймағы -->
@@ -568,20 +650,9 @@ img, video, iframe { max-width: 100%; }
         </main>
     </div>
 
-    <!-- СКРИПТТЕР: Интерактивті қызмет -->
+    <!-- СКРИПТ 1: Меню және AI чат -->
     <script>
-        // Ағымдағы бетті танып, меню сілтемесін белсенді (active) ету
-        document.addEventListener("DOMContentLoaded", () => {
-            const currentPath = window.location.pathname;
-            const menuLinks = document.querySelectorAll('.sidebar ul li a');
-            menuLinks.forEach(link => {
-                if (link.getAttribute('href') === currentPath) {
-                    link.classList.add('active');
-                }
-            });
-        });
-
-        // Сайдбарды плавный ашу/жабу логикасы
+        // Сайдбарды ашу/жабу
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const content = document.getElementById('content-area');
@@ -639,21 +710,92 @@ img, video, iframe { max-width: 100%; }
                 });
 
                 const data = await response.json();
-                chatMessages.removeChild(loadingDiv);
-
-                const aiDiv = document.createElement('div');
-                aiDiv.style = "background: var(--primary); color: white; padding: 10px 14px; border-radius: 14px 14px 14px 0; max-width: 85%; align-self: flex-start; font-size: 14px; box-shadow: var(--shadow-sm); word-wrap: break-word;";
-                aiDiv.textContent = data.response || "Қате орын алды.";
-                chatMessages.appendChild(aiDiv);
+                loadingDiv.style.opacity = "1";
+                loadingDiv.style.whiteSpace = "pre-wrap";
+                loadingDiv.style.wordWrap = "break-word";
+                loadingDiv.textContent = data.response || data.error || "Жауап алынбады.";
             } catch (error) {
-                chatMessages.removeChild(loadingDiv);
-                const errorDiv = document.createElement('div');
-                errorDiv.style = "background: #ef4444; color: white; padding: 10px 14px; border-radius: 14px 14px 14px 0; max-width: 85%; align-self: flex-start; font-size: 14px;";
-                errorDiv.textContent = "Серверге қосылу мүмкін болмады. Қайталап көріңіз.";
-                chatMessages.appendChild(errorDiv);
+                loadingDiv.style.opacity = "1";
+                loadingDiv.textContent = "Байланыс қатесі: " + error.message;
             }
+
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
+    </script>
+
+    <!-- СКРИПТ 2: Прогресс (localStorage) -->
+    <script>
+    (function () {
+        var LEVELS = {{ levels|tojson }};
+        var KEY = "pls_progress_v1";
+
+        function load() {
+            try { return JSON.parse(localStorage.getItem(KEY)) || { done: {}, last: null }; }
+            catch (e) { return { done: {}, last: null }; }
+        }
+        function save(p) { try { localStorage.setItem(KEY, JSON.stringify(p)); } catch (e) {} }
+
+        window.PLS = { LEVELS: LEVELS, load: load };
+
+        var path = location.pathname.replace(/\/$/, "") || "/";
+        var p = load();
+
+        var flat = [];
+        LEVELS.forEach(function (l) {
+            l.lessons.forEach(function (ls) { flat.push({ url: ls.url, title: ls.title }); });
+        });
+        var idx = flat.findIndex(function (x) { return x.url === path; });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Сайдбар: белсенді сабақ және аяқталғандар
+            document.querySelectorAll(".sidebar .lesson-list a").forEach(function (a) {
+                var href = a.getAttribute("href");
+                if (p.done[href]) a.classList.add("done");
+                if (href === path) {
+                    a.classList.add("active");
+                    var d = a.closest("details");
+                    if (d) d.open = true;
+                }
+            });
+
+            if (idx === -1) return;
+            p.last = path;
+            save(p);
+
+            // Сабақ соңындағы батырма
+            var box = document.createElement("div");
+            box.className = "finish-box";
+            var btn = document.createElement("button");
+            btn.className = "btn-finish";
+            box.appendChild(btn);
+
+            if (idx < flat.length - 1) {
+                var next = document.createElement("a");
+                next.className = "btn-next";
+                next.href = flat[idx + 1].url;
+                next.textContent = "Келесі сабақ →";
+                box.appendChild(next);
+            }
+
+            function render() {
+                var done = !!p.done[path];
+                btn.textContent = done ? "✓ Аяқталды" : "✅ Сабақты аяқтадым";
+                btn.classList.toggle("is-done", done);
+            }
+            btn.onclick = function () {
+                if (p.done[path]) delete p.done[path]; else p.done[path] = Date.now();
+                save(p);
+                render();
+                document.querySelectorAll('.sidebar .lesson-list a[href="' + path + '"]').forEach(function (a) {
+                    a.classList.toggle("done", !!p.done[path]);
+                });
+            };
+            render();
+
+            var inner = document.querySelector(".content-inner");
+            if (inner) inner.appendChild(box);
+        });
+    })();
     </script>
 </body>
 </html>

@@ -1,0 +1,1056 @@
+{% extends "base.html" %}
+
+{% block title %}Блок-схема құрастырушы (FlowRun) — Python оқу сайты{% endblock %}
+
+{% block content %}
+{% raw %}
+<style>
+    /* ==========================================
+        Блок-схема құрастырушы: стильдер
+    ========================================== */
+    .lesson-title { margin-bottom: 14px; }
+
+    .fc-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        margin: 18px 0 16px;
+    }
+
+    .fc-toolbar .btn-run,
+    .fc-toolbar .btn-clear { margin-top: 0; }
+
+    .fc-select {
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        background: var(--surface-strong);
+        color: var(--text-main);
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .fc-layout {
+        display: grid;
+        grid-template-columns: 190px minmax(0, 1fr);
+        gap: 18px;
+        align-items: start;
+    }
+
+    /* Блоктар палитрасы */
+    .fc-palette {
+        position: sticky;
+        top: 80px;
+        background: var(--surface-strong);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 12px;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .fc-palette h4 {
+        margin: 0 0 10px;
+        font-size: 0.95rem;
+        color: var(--text-main);
+    }
+
+    .pal {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 10px;
+        margin-bottom: 8px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        border-left: 5px solid var(--c, #3b82f6);
+        background: #ffffff;
+        cursor: grab;
+        user-select: none;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: var(--text-main);
+        transition: var(--transition-smooth);
+    }
+
+    .pal small {
+        display: block;
+        font-weight: 500;
+        color: var(--text-light);
+        font-size: 0.72rem;
+    }
+
+    .pal:hover { transform: translateX(3px); box-shadow: var(--shadow-sm); }
+    .pal.active { background: #eff6ff; outline: 2px solid var(--primary); }
+
+    #fc-status {
+        font-size: 0.8rem;
+        color: var(--text-light);
+        line-height: 1.45;
+        margin-top: 4px;
+    }
+
+    /* Канвас */
+    #fc-canvas {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 380px;
+        padding: 18px 14px 22px;
+        overflow-x: auto;
+        background-color: var(--surface-strong);
+        background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+        background-size: 18px 18px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+    }
+
+    .node {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .node-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        width: 100%;
+    }
+
+    .grip, .ctl { flex: 0 0 28px; }
+
+    .grip {
+        cursor: grab;
+        text-align: center;
+        color: #94a3b8;
+        font-size: 20px;
+        line-height: 1;
+        user-select: none;
+    }
+
+    .ctl { display: flex; flex-direction: column; gap: 2px; }
+
+    .ctl button {
+        width: 26px;
+        height: 22px;
+        padding: 0;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: #ffffff;
+        color: var(--text-light);
+        cursor: pointer;
+        font-size: 12px;
+        line-height: 1;
+    }
+
+    .ctl button:hover { background: #eff6ff; color: var(--primary-dark); }
+    .ctl .del:hover { background: #fee2e2; color: #b91c1c; }
+
+    .terminal .grip, .terminal .ctl { visibility: hidden; }
+
+    /* Блок пішіндері (блок-схема фигуралары) */
+    .shape {
+        position: relative;
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: 480px;
+        min-height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 6px 8px;
+        padding: 10px 26px;
+        color: #0f172a;
+        font-size: 0.88rem;
+        font-weight: 700;
+    }
+
+    .shape::before, .shape::after {
+        content: "";
+        position: absolute;
+        pointer-events: none;
+        clip-path: var(--clip);
+    }
+
+    .shape::before { inset: 0; background: var(--edge); }
+    .shape::after  { inset: 2px; background: var(--fill); }
+    .shape > * { position: relative; z-index: 1; }
+
+    .shape-start, .shape-end {
+        --clip: inset(0 round 999px);
+        --edge: #0f172a;
+        --fill: #1e293b;
+        color: #ffffff;
+        min-width: 170px;
+        max-width: 220px;
+    }
+
+    .shape-input, .shape-output {
+        --clip: polygon(9% 0, 100% 0, 91% 100%, 0 100%);
+        padding: 10px 9%;
+    }
+
+    .shape-input   { --edge: #2563eb; --fill: #dbeafe; }
+    .shape-output  { --edge: #16a34a; --fill: #dcfce7; }
+    .shape-process { --clip: inset(0 round 8px); --edge: #7c3aed; --fill: #ede9fe; }
+
+    .shape-if {
+        --clip: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+        --edge: #d97706;
+        --fill: #fef3c7;
+        flex-direction: column;
+        min-height: 104px;
+        padding: 22px 18%;
+    }
+
+    .shape-while, .shape-for {
+        --clip: polygon(7% 0, 93% 0, 100% 50%, 93% 100%, 7% 100%, 0 50%);
+        padding: 10px 9%;
+    }
+
+    .shape-while { --edge: #0891b2; --fill: #cffafe; }
+    .shape-for   { --edge: #4f46e5; --fill: #e0e7ff; }
+
+    .lbl { white-space: nowrap; }
+
+    .fld {
+        font-family: 'Fira Code', Consolas, Monaco, monospace;
+        font-size: 13px;
+        padding: 5px 8px;
+        min-width: 0;
+        border: 1px solid rgba(15, 23, 42, 0.25);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.88);
+        color: #0f172a;
+        outline: none;
+    }
+
+    .fld:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+    select.fld { cursor: pointer; }
+    .fld-xs { width: 48px; }
+    .fld-s  { width: 76px; }
+    .fld-l  { flex: 1 1 150px; width: 100%; min-width: 110px; }
+
+    /* Көрсеткілер және қою орындары */
+    .slot {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 30px;
+    }
+
+    .slot-line {
+        position: relative;
+        width: 2px;
+        height: 30px;
+        background: #94a3b8;
+    }
+
+    .slot-line::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 5px solid transparent;
+        border-top: 7px solid #94a3b8;
+        border-bottom: 0;
+    }
+
+    .slot-hint { display: none; font-size: 12px; font-weight: 700; color: var(--primary-dark); }
+    .slot.empty .slot-hint { display: block; opacity: 0.65; margin-bottom: 2px; }
+
+    body.dragging .slot, body.armed .slot {
+        width: min(320px, 92%);
+        align-self: center;
+        min-height: 38px;
+        margin: 2px 0;
+        border: 2px dashed #93c5fd;
+        border-radius: 10px;
+        background: rgba(59, 130, 246, 0.07);
+        cursor: pointer;
+    }
+
+    body.dragging .slot-line, body.armed .slot-line { display: none; }
+    body.dragging .slot-hint, body.armed .slot-hint { display: block; opacity: 1; margin: 0; }
+    body.dragging .slot.over { background: rgba(34, 197, 94, 0.2); border-color: #22c55e; }
+    body.armed .slot:hover { background: rgba(34, 197, 94, 0.2); border-color: #22c55e; }
+
+    /* Тармақталу және цикл денесі */
+    .branches {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        width: 100%;
+        margin-top: 2px;
+    }
+
+    .branch {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 0;
+        padding: 8px 8px 0;
+        border: 2px dashed var(--bc);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.55);
+    }
+
+    .branch.yes { --bc: #86efac; }
+    .branch.no  { --bc: #fca5a5; }
+
+    .tag {
+        align-self: flex-start;
+        padding: 2px 12px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 800;
+        color: #ffffff;
+    }
+
+    .branch.yes .tag { background: #16a34a; }
+    .branch.no .tag  { background: #dc2626; }
+
+    .loop-body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: calc(100% - 24px);
+        margin-left: 24px;
+        padding: 2px 0 0 12px;
+        border-left: 3px dashed #06b6d4;
+    }
+
+    .loop-body .tag { background: #0891b2; }
+
+    /* Код, нәтиже */
+    .fc-bottom {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        margin-top: 20px;
+    }
+
+    .fc-title {
+        margin-bottom: 6px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-light);
+    }
+
+    #fc-code {
+        margin: 0;
+        min-height: 200px;
+        max-height: 420px;
+        overflow: auto;
+        padding: 16px;
+        background: #0f172a;
+        color: #38bdf8;
+        border: 1px solid #334155;
+        border-radius: var(--radius-md);
+        font-family: 'Fira Code', Consolas, Monaco, monospace;
+        font-size: 13px;
+        line-height: 1.55;
+        white-space: pre;
+    }
+
+    .fc-bottom #output { margin-top: 0; min-height: 200px; max-height: 420px; overflow: auto; }
+
+    .legend-dot {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        margin-right: 6px;
+        border-radius: 3px;
+        vertical-align: -1px;
+    }
+
+    @media (max-width: 820px) {
+        .fc-layout { grid-template-columns: 1fr; }
+        .fc-palette {
+            position: static;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 8px;
+        }
+        .fc-palette h4, #fc-status { grid-column: 1 / -1; margin: 0; }
+        .pal { margin: 0; }
+        .branches { grid-template-columns: 1fr; }
+        .fc-bottom { grid-template-columns: 1fr; }
+        .shape-if { padding: 22px 14%; }
+    }
+</style>
+
+<h1 class="lesson-title">🧭 Блок-схема құрастырушы (FlowRun)</h1>
+
+<p>
+    <b>Блок-схема</b> — алгоритмді фигуралар мен көрсеткілер арқылы көрсететін сурет. Өткен жылы біз есепті шешу алдында блок-схема құруды үйрендік. Төмендегі құрастырушыда фигураларды сүйреп қойып, олардан алгоритм жинайсың, ал сайт сол схеманы <b>Python кодына автоматты түрде айналдырады</b> және оны бірден іске қосады.
+</p>
+
+<div class="hero-actions">
+    <a class="btn-primary-action" style="margin-top: 0;" href="https://flowrun.io/scratchpad" target="_blank" rel="noopener">🔗 Түпнұсқа FlowRun бағдарламасын ашу</a>
+</div>
+
+<hr>
+
+<h2>🧱 Блоктар (фигуралар)</h2>
+<div class="feature-grid">
+    <div class="feature-card" style="border-left: 5px solid #0f172a;">
+        <h4><span class="legend-dot" style="background:#1e293b"></span>Басы / Соңы</h4>
+        <p>Сопақ фигура. Алгоритм осыдан басталып, осымен аяқталады. Ол әрқашан тұрады.</p>
+    </div>
+    <div class="feature-card" style="border-left: 5px solid #2563eb;">
+        <h4><span class="legend-dot" style="background:#2563eb"></span>Енгізу</h4>
+        <p>Параллелограмм. Пайдаланушыдан мән сұрайды: <code>a = int(input())</code>.</p>
+    </div>
+    <div class="feature-card" style="border-left: 5px solid #16a34a;">
+        <h4><span class="legend-dot" style="background:#16a34a"></span>Шығару</h4>
+        <p>Параллелограмм. Нәтижені экранға шығарады: <code>print(...)</code>.</p>
+    </div>
+    <div class="feature-card" style="border-left: 5px solid #7c3aed;">
+        <h4><span class="legend-dot" style="background:#7c3aed"></span>Есептеу</h4>
+        <p>Тіктөртбұрыш. Айнымалыға мән береді немесе есептейді: <code>s = a + b</code>.</p>
+    </div>
+    <div class="feature-card" style="border-left: 5px solid #d97706;">
+        <h4><span class="legend-dot" style="background:#d97706"></span>Шарт</h4>
+        <p>Ромб. Сұрақ қояды. <b>Иә</b> және <b>Жоқ</b> тармақтары бөлек орындалады: <code>if ... else</code>.</p>
+    </div>
+    <div class="feature-card" style="border-left: 5px solid #0891b2;">
+        <h4><span class="legend-dot" style="background:#0891b2"></span>Цикл (while / for)</h4>
+        <p>Алтыбұрыш. Ішіндегі блоктарды қайталайды: <code>while</code> шарт орындалғанша, <code>for</code> белгілі рет.</p>
+    </div>
+</div>
+
+<hr>
+
+<h2>🛠 Өзің құрастыр</h2>
+<p>
+    <b>Қалай жұмыс істейді:</b> сол жақтағы блокты схемаға <b>сүйреп апар</b> (немесе блокты бір рет басып, содан кейін схемадағы <b>＋</b> орынды бас — бұл телефонда ыңғайлы). Блоктың ішіндегі өрістерге мәнін жаз. Код төменде автоматты түрде жаңарады.
+</p>
+
+<div class="fc-toolbar">
+    <select id="fc-examples" class="fc-select">
+        <option value="">📚 Дайын үлгіні таңда…</option>
+        <option value="sum">Екі санның қосындысы</option>
+        <option value="parity">Жұп па, тақ па?</option>
+        <option value="sumn">1-ден n-ге дейінгі қосынды (for)</option>
+        <option value="countdown">Кері санау (while)</option>
+    </select>
+    <button class="btn-run" id="fc-run" type="button">▶ Іске қосу</button>
+    <button class="btn-clear" id="fc-copy" type="button">📋 Кодты көшіру</button>
+    <button class="btn-clear" id="fc-download" type="button">⬇ .py жүктеу</button>
+    <button class="btn-clear" id="fc-clear" type="button">🗑 Тазалау</button>
+</div>
+
+<div class="fc-layout">
+    <aside class="fc-palette" id="fc-palette">
+        <h4>🧩 Блоктар</h4>
+        <div id="fc-status">Блокты схемаға сүйреп апар немесе басып таңда.</div>
+    </aside>
+
+    <div id="fc-canvas"></div>
+</div>
+
+<div class="fc-bottom">
+    <div>
+        <div class="fc-title">🐍 Автоматты жасалған Python коды</div>
+        <pre id="fc-code"></pre>
+    </div>
+    <div>
+        <div class="fc-title">📟 Нәтиже (Output)</div>
+        <pre id="output">Нәтиже осында шығады...</pre>
+    </div>
+</div>
+
+<hr>
+
+<h2>💡 Кеңестер</h2>
+<div class="feature-grid">
+    <div class="feature-card card-success">
+        <h4>Айнымалы аттары</h4>
+        <p>Айнымалыларды <b>латын әрпімен</b> жаз: <code>a</code>, <code>sum</code>, <code>san1</code>. Бос орын қалдырма.</p>
+    </div>
+    <div class="feature-card card-warning">
+        <h4>Мәтін мен сан</h4>
+        <p>Мәтінді міндетті түрде тырнақшаға ал: <code>"Сәлем!"</code>. Бірнеше мәнді үтірмен бөл: <code>"Қосынды:", s</code>.</p>
+    </div>
+    <div class="feature-card card-primary">
+        <h4>Шарттар</h4>
+        <p>Салыстыру: <code>a &gt; b</code>, <code>n % 2 == 0</code>. Біріктіру: <code>a &gt; 0 and b &gt; 0</code>.</p>
+    </div>
+    <div class="feature-card card-danger">
+        <h4>Шексіз цикл</h4>
+        <p><code>while</code> ішінде шарт өзгеріп отыруы керек. Әйтпесе бағдарлама 10 секундтан кейін тоқтатылады.</p>
+    </div>
+</div>
+
+<h2>🧠 Тапсырмалар</h2>
+<ul>
+    <li>Үш санның ішіндегі <b>ең үлкенін</b> табатын блок-схема құр (шарт блоктарын пайдалан).</li>
+    <li>1-ден 100-ге дейінгі <b>жұп сандардың қосындысын</b> тап (<code>for</code> және <code>if</code>).</li>
+    <li>Санның <b>факториалын</b> есепте: <code>n! = 1 · 2 · 3 · … · n</code>.</li>
+    <li>Пайдаланушы <b>дұрыс құпия сөзді</b> енгізгенше қайта сұрайтын схема жаса (<code>while</code>).</li>
+</ul>
+
+<script>
+(function () {
+    'use strict';
+
+    /* ---------- Мәліметтер моделі ---------- */
+    const STORE_KEY = 'flowchart_v1';
+    let program = [];      // Басы мен Соңы арасындағы блоктар
+    let armed = null;      // басып таңдалған блок түрі (телефонға)
+    let dragging = null;   // сүйреліп жатқан нәрсе
+
+    const TYPES = {
+        input:   { label: 'Енгізу',     sub: 'input()',    ico: '⌨️', color: '#2563eb' },
+        output:  { label: 'Шығару',     sub: 'print()',    ico: '🖨️', color: '#16a34a' },
+        process: { label: 'Есептеу',    sub: 'x = ...',    ico: '⚙️', color: '#7c3aed' },
+        if:      { label: 'Шарт',       sub: 'if / else',  ico: '◇',  color: '#d97706' },
+        while:   { label: 'Цикл while', sub: 'while ...',  ico: '🔁', color: '#0891b2' },
+        for:     { label: 'Цикл for',   sub: 'for ... in', ico: '🔢', color: '#4f46e5' }
+    };
+
+    function makeNode(type, preset) {
+        let n;
+        switch (type) {
+            case 'input':   n = { type: type, name: 'a', kind: 'int', prompt: '' }; break;
+            case 'output':  n = { type: type, expr: '"Сәлем!"' }; break;
+            case 'process': n = { type: type, name: 'x', expr: '0' }; break;
+            case 'if':      n = { type: type, cond: 'a > 0', yes: [], no: [] }; break;
+            case 'while':   n = { type: type, cond: 'i <= 5', body: [] }; break;
+            case 'for':     n = { type: type, name: 'i', from: '1', to: '5', body: [] }; break;
+            default:        n = { type: 'output', expr: '""' };
+        }
+        if (preset) { Object.keys(preset).forEach(function (k) { n[k] = preset[k]; }); }
+        return n;
+    }
+
+    function childLists(n) {
+        if (n.type === 'if') return [n.yes, n.no];
+        return n.body ? [n.body] : [];
+    }
+
+    function ownsList(node, target) {
+        return childLists(node).some(function (l) {
+            return l === target || l.some(function (ch) { return ownsList(ch, target); });
+        });
+    }
+
+    /* ---------- Python код генераторы ---------- */
+    function ident(s) {
+        s = (s || '').trim().replace(/\s+/g, '_');
+        return s || 'x';
+    }
+
+    function genBlock(list, ind, out) {
+        const before = out.length;
+        gen(list, ind, out);
+        if (out.length === before) out.push('    '.repeat(ind) + 'pass');
+    }
+
+    function gen(list, ind, out) {
+        const pad = '    '.repeat(ind);
+        list.forEach(function (n) {
+            switch (n.type) {
+                case 'input': {
+                    const call = 'input(' + (n.prompt ? JSON.stringify(n.prompt) : '') + ')';
+                    let val = call;
+                    if (n.kind === 'int') val = 'int(' + call + ')';
+                    if (n.kind === 'float') val = 'float(' + call + ')';
+                    out.push(pad + ident(n.name) + ' = ' + val);
+                    break;
+                }
+                case 'output':
+                    out.push(pad + 'print(' + (n.expr || '').trim() + ')');
+                    break;
+                case 'process':
+                    out.push(pad + ident(n.name) + ' = ' + ((n.expr || '').trim() || '0'));
+                    break;
+                case 'if':
+                    out.push(pad + 'if ' + ((n.cond || '').trim() || 'True') + ':');
+                    genBlock(n.yes, ind + 1, out);
+                    if (n.no.length) {
+                        out.push(pad + 'else:');
+                        genBlock(n.no, ind + 1, out);
+                    }
+                    break;
+                case 'while':
+                    out.push(pad + 'while ' + ((n.cond || '').trim() || 'True') + ':');
+                    genBlock(n.body, ind + 1, out);
+                    break;
+                case 'for': {
+                    const to = (n.to || '0').trim();
+                    const top = /^\w+$/.test(to) ? to : '(' + to + ')';
+                    out.push(pad + 'for ' + ident(n.name) + ' in range(' + ((n.from || '0').trim()) + ', ' + top + ' + 1):');
+                    genBlock(n.body, ind + 1, out);
+                    break;
+                }
+            }
+        });
+    }
+
+    function buildCode() {
+        const out = ['# Блок-схемадан автоматты түрде жасалған Python коды'];
+        gen(program, 0, out);
+        if (out.length === 1) out.push('# Блок-схема бос. Сол жақтан блоктарды қос.');
+        return out.join('\n') + '\n';
+    }
+
+    /* ---------- DOM көмекшілері ---------- */
+    function $(id) { return document.getElementById(id); }
+
+    function el(tag, cls, text) {
+        const e = document.createElement(tag);
+        if (cls) e.className = cls;
+        if (text !== undefined) e.textContent = text;
+        return e;
+    }
+
+    function save() {
+        try { localStorage.setItem(STORE_KEY, JSON.stringify(program)); } catch (e) { /* ештеңе істемейміз */ }
+    }
+
+    function updateCode() { $('fc-code').textContent = buildCode(); }
+    function onEdit() { updateCode(); save(); }
+
+    function finishDrag() {
+        dragging = null;
+        document.body.classList.remove('dragging');
+        document.querySelectorAll('.slot.over').forEach(function (s) { s.classList.remove('over'); });
+    }
+
+    function setArmed(type) {
+        armed = type;
+        document.body.classList.toggle('armed', !!type);
+        document.querySelectorAll('.pal').forEach(function (p) {
+            p.classList.toggle('active', p.dataset.type === type);
+        });
+        $('fc-status').textContent = type
+            ? 'Таңдалды: «' + TYPES[type].label + '». Енді схемадағы ＋ орынды бас. (Esc — бас тарту)'
+            : 'Блокты схемаға сүйреп апар немесе басып таңда.';
+    }
+
+    /* ---------- Блок қосу, жылжыту ---------- */
+    function insertNew(list, index, type) {
+        list.splice(index, 0, makeNode(type));
+        renderAll();
+        save();
+    }
+
+    function moveNode(node, fromList, toList, index) {
+        if (ownsList(node, toList)) return;
+        const i = fromList.indexOf(node);
+        if (i < 0) return;
+        fromList.splice(i, 1);
+        if (fromList === toList && i < index) index--;
+        toList.splice(index, 0, node);
+        renderAll();
+        save();
+    }
+
+    function dropAt(list, index) {
+        const d = dragging;
+        finishDrag();
+        if (!d) return;
+        if (d.kind === 'new') insertNew(list, index, d.type);
+        else moveNode(d.node, d.list, list, index);
+    }
+
+    /* ---------- Көрсету (render) ---------- */
+    function makeSlot(list, index) {
+        const s = el('div', 'slot' + (list.length === 0 ? ' empty' : ''));
+        s.appendChild(el('div', 'slot-line'));
+        s.appendChild(el('div', 'slot-hint', list.length === 0 ? '＋ блокты осында қой' : '＋ осында қой'));
+        s.addEventListener('dragover', function (e) {
+            if (!dragging) return;
+            if (dragging.kind === 'move' && ownsList(dragging.node, list)) return;
+            e.preventDefault();
+            s.classList.add('over');
+        });
+        s.addEventListener('dragleave', function () { s.classList.remove('over'); });
+        s.addEventListener('drop', function (e) { e.preventDefault(); dropAt(list, index); });
+        s.addEventListener('click', function () {
+            if (armed) { const t = armed; setArmed(null); insertNew(list, index, t); }
+        });
+        return s;
+    }
+
+    function renderList(list) {
+        const frag = document.createDocumentFragment();
+        frag.appendChild(makeSlot(list, 0));
+        list.forEach(function (n, i) {
+            frag.appendChild(renderNode(n, list));
+            frag.appendChild(makeSlot(list, i + 1));
+        });
+        return frag;
+    }
+
+    function field(node, key, cls, placeholder) {
+        const i = el('input', 'fld ' + (cls || ''));
+        i.type = 'text';
+        i.value = node[key] || '';
+        i.placeholder = placeholder || '';
+        i.spellcheck = false;
+        i.addEventListener('input', function () { node[key] = i.value; onEdit(); });
+        return i;
+    }
+
+    function kindSelect(node) {
+        const s = el('select', 'fld');
+        [['int', 'бүтін сан'], ['float', 'ондық сан'], ['str', 'мәтін']].forEach(function (o) {
+            const op = el('option', '', o[1]);
+            op.value = o[0];
+            if (node.kind === o[0]) op.selected = true;
+            s.appendChild(op);
+        });
+        s.addEventListener('change', function () { node.kind = s.value; onEdit(); });
+        return s;
+    }
+
+    function buildShape(n) {
+        const sh = el('div', 'shape shape-' + n.type);
+        switch (n.type) {
+            case 'input':
+                sh.append(el('span', 'lbl', 'Енгізу'), field(n, 'name', 'fld-s', 'a'), kindSelect(n),
+                          field(n, 'prompt', 'fld-l', 'сұрақ мәтіні (міндетті емес)'));
+                break;
+            case 'output':
+                sh.append(el('span', 'lbl', 'Шығару'), field(n, 'expr', 'fld-l', '"Қосынды:", s'));
+                break;
+            case 'process':
+                sh.append(field(n, 'name', 'fld-s', 'x'), el('span', 'lbl', '='), field(n, 'expr', 'fld-l', 'a + b'));
+                break;
+            case 'if':
+                sh.append(el('span', 'lbl', 'Егер'), field(n, 'cond', 'fld-l', 'a > b'));
+                break;
+            case 'while':
+                sh.append(el('span', 'lbl', 'Қайталау, әзір'), field(n, 'cond', 'fld-l', 'i <= 5'));
+                break;
+            case 'for':
+                sh.append(el('span', 'lbl', 'for'), field(n, 'name', 'fld-xs', 'i'), el('span', 'lbl', '='),
+                          field(n, 'from', 'fld-xs', '1'), el('span', 'lbl', '→'), field(n, 'to', 'fld-xs', 'n'));
+                break;
+        }
+        return sh;
+    }
+
+    function ctlButton(cls, text, title, handler) {
+        const b = el('button', cls, text);
+        b.type = 'button';
+        b.title = title;
+        b.addEventListener('click', handler);
+        return b;
+    }
+
+    function renderNode(node, list) {
+        const wrap = el('div', 'node');
+        const row = el('div', 'node-row');
+
+        const grip = el('span', 'grip', '⠿');
+        grip.title = 'Сүйреп жылжыту';
+        grip.draggable = true;
+        grip.addEventListener('dragstart', function (e) {
+            dragging = { kind: 'move', node: node, list: list };
+            e.dataTransfer.setData('text/plain', 'move');
+            e.dataTransfer.effectAllowed = 'move';
+            try { e.dataTransfer.setDragImage(row, 20, 20); } catch (err) { /* ештеңе істемейміз */ }
+            setTimeout(function () { if (dragging) document.body.classList.add('dragging'); }, 0);
+        });
+        grip.addEventListener('dragend', finishDrag);
+
+        const ctl = el('div', 'ctl');
+        ctl.append(
+            ctlButton('', '↑', 'Жоғары', function () {
+                const i = list.indexOf(node);
+                if (i > 0) { list.splice(i, 1); list.splice(i - 1, 0, node); renderAll(); save(); }
+            }),
+            ctlButton('', '↓', 'Төмен', function () {
+                const i = list.indexOf(node);
+                if (i < list.length - 1) { list.splice(i, 1); list.splice(i + 1, 0, node); renderAll(); save(); }
+            }),
+            ctlButton('del', '✕', 'Өшіру', function () {
+                const i = list.indexOf(node);
+                if (i >= 0) { list.splice(i, 1); renderAll(); save(); }
+            })
+        );
+
+        row.append(grip, buildShape(node), ctl);
+        wrap.appendChild(row);
+
+        if (node.type === 'if') {
+            const br = el('div', 'branches');
+            [['Иә', node.yes, 'yes'], ['Жоқ', node.no, 'no']].forEach(function (b) {
+                const box = el('div', 'branch ' + b[2]);
+                box.appendChild(el('span', 'tag', b[0]));
+                box.appendChild(renderList(b[1]));
+                br.appendChild(box);
+            });
+            wrap.appendChild(br);
+        } else if (node.body) {
+            const body = el('div', 'loop-body');
+            body.appendChild(el('span', 'tag', 'Қайталанатын дене'));
+            body.appendChild(renderList(node.body));
+            wrap.appendChild(body);
+        }
+        return wrap;
+    }
+
+    function terminal(text, cls) {
+        const wrap = el('div', 'node terminal');
+        const row = el('div', 'node-row');
+        const sh = el('div', 'shape shape-' + cls, text);
+        row.append(el('span', 'grip', '⠿'), sh, el('div', 'ctl'));
+        wrap.appendChild(row);
+        return wrap;
+    }
+
+    function renderAll() {
+        const cv = $('fc-canvas');
+        cv.innerHTML = '';
+        cv.appendChild(terminal('Басы (Start)', 'start'));
+        cv.appendChild(renderList(program));
+        cv.appendChild(terminal('Соңы (End)', 'end'));
+        updateCode();
+    }
+
+    /* ---------- Палитра ---------- */
+    function buildPalette() {
+        const pal = $('fc-palette');
+        const status = $('fc-status');
+        Object.keys(TYPES).forEach(function (key) {
+            const t = TYPES[key];
+            const p = el('div', 'pal');
+            p.dataset.type = key;
+            p.draggable = true;
+            p.style.setProperty('--c', t.color);
+            p.appendChild(el('span', '', t.ico));
+            const txt = el('span');
+            txt.appendChild(document.createTextNode(t.label));
+            txt.appendChild(el('small', '', t.sub));
+            p.appendChild(txt);
+            p.addEventListener('dragstart', function (e) {
+                dragging = { kind: 'new', type: key };
+                e.dataTransfer.setData('text/plain', key);
+                e.dataTransfer.effectAllowed = 'copy';
+                setArmed(null);
+                setTimeout(function () { if (dragging) document.body.classList.add('dragging'); }, 0);
+            });
+            p.addEventListener('dragend', finishDrag);
+            p.addEventListener('click', function () { setArmed(armed === key ? null : key); });
+            pal.insertBefore(p, status);
+        });
+    }
+
+    /* ---------- Дайын үлгілер ---------- */
+    const N = makeNode;
+    const EXAMPLES = {
+        sum: function () {
+            return [
+                N('input', { name: 'a', kind: 'int', prompt: 'Бірінші сан:' }),
+                N('input', { name: 'b', kind: 'int', prompt: 'Екінші сан:' }),
+                N('process', { name: 's', expr: 'a + b' }),
+                N('output', { expr: '"Қосындысы:", s' })
+            ];
+        },
+        parity: function () {
+            return [
+                N('input', { name: 'n', kind: 'int', prompt: 'Санды енгізіңіз:' }),
+                N('if', {
+                    cond: 'n % 2 == 0',
+                    yes: [N('output', { expr: '"Жұп сан"' })],
+                    no: [N('output', { expr: '"Тақ сан"' })]
+                })
+            ];
+        },
+        sumn: function () {
+            return [
+                N('input', { name: 'n', kind: 'int', prompt: 'n = ' }),
+                N('process', { name: 's', expr: '0' }),
+                N('for', { name: 'i', from: '1', to: 'n', body: [N('process', { name: 's', expr: 's + i' })] }),
+                N('output', { expr: '"1-ден n-ге дейінгі қосынды:", s' })
+            ];
+        },
+        countdown: function () {
+            return [
+                N('process', { name: 'i', expr: '5' }),
+                N('while', {
+                    cond: 'i >= 1',
+                    body: [N('output', { expr: 'i' }), N('process', { name: 'i', expr: 'i - 1' })]
+                }),
+                N('output', { expr: '"Іске қосылды!"' })
+            ];
+        }
+    };
+
+    /* ---------- Skulpt: кодты орындау ---------- */
+    const SOURCES = [
+        ['https://skulpt.org/js/skulpt.min.js', 'https://skulpt.org/js/skulpt-stdlib.js'],
+        ['https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js', 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js'],
+        ['https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt.min.js', 'https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt-stdlib.js']
+    ];
+
+    function loadScript(src, timeoutMs) {
+        return new Promise(function (resolve, reject) {
+            const s = document.createElement('script');
+            const timer = setTimeout(function () { s.remove(); reject(new Error('timeout: ' + src)); }, timeoutMs || 10000);
+            s.src = src;
+            s.onload = function () { clearTimeout(timer); resolve(); };
+            s.onerror = function () { clearTimeout(timer); reject(new Error(src)); };
+            document.head.appendChild(s);
+        });
+    }
+
+    async function loadSkulpt() {
+        if (typeof Sk !== 'undefined' && Sk.builtinFiles) return;
+        for (const pair of SOURCES) {
+            try {
+                await loadScript(pair[0]);
+                await loadScript(pair[1]);
+                if (typeof Sk !== 'undefined' && Sk.builtinFiles) return;
+            } catch (e) {
+                console.warn('Skulpt жүктелмеді:', e.message);
+            }
+        }
+        throw new Error('Skulpt ешбір көзден жүктелмеді');
+    }
+
+    function builtinRead(file) {
+        if (Sk.builtinFiles === undefined || Sk.builtinFiles['files'][file] === undefined) {
+            throw "Файл табылмады: '" + file + "'";
+        }
+        return Sk.builtinFiles['files'][file];
+    }
+
+    function init() {
+        const outputEl = $('output');
+        const runBtn = $('fc-run');
+
+        buildPalette();
+
+        try {
+            const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
+            if (Array.isArray(saved)) program = saved;
+        } catch (e) { program = []; }
+        if (!program.length) program = EXAMPLES.sum();
+        renderAll();
+
+        const skulptReady = loadSkulpt();
+        runBtn.disabled = true;
+        runBtn.textContent = '⏳ Жүктелуде...';
+        function enableBtn() { runBtn.disabled = false; runBtn.textContent = '▶ Іске қосу'; }
+        skulptReady.then(enableBtn).catch(enableBtn);
+
+        async function runProgram() {
+            outputEl.className = '';
+            outputEl.textContent = '';
+            if (!program.length) {
+                outputEl.textContent = 'Блок-схема бос. Алдымен блоктарды қос.';
+                return;
+            }
+            runBtn.disabled = true;
+            try {
+                await skulptReady;
+            } catch (e) {
+                outputEl.className = 'error';
+                outputEl.textContent = 'Skulpt жүктелмеді. Интернетті тексеріп, бетті жаңартыңыз (Ctrl+F5).';
+                runBtn.disabled = false;
+                return;
+            }
+            Sk.configure({
+                output: function (text) { outputEl.textContent += text; },
+                read: builtinRead,
+                __future__: Sk.python3,
+                inputfun: function (prompt) { return window.prompt(prompt || 'Мәнді енгізіңіз:') || ''; },
+                execLimit: 10000
+            });
+            Sk.misceval
+                .asyncToPromise(function () { return Sk.importMainWithBody('<stdin>', false, buildCode(), true); })
+                .then(function () {
+                    if (outputEl.textContent === '') outputEl.textContent = 'Код сәтті орындалды (экранға ештеңе шықпады).';
+                })
+                .catch(function (err) {
+                    outputEl.className = 'error';
+                    outputEl.textContent += (outputEl.textContent ? '\n' : '') + 'Қате (Error): ' + err.toString();
+                })
+                .finally(function () { runBtn.disabled = false; });
+        }
+
+        runBtn.addEventListener('click', runProgram);
+
+        $('fc-clear').addEventListener('click', function () {
+            if (!program.length || confirm('Блок-схеманы толық тазалайсың ба?')) {
+                program = [];
+                renderAll();
+                save();
+                outputEl.className = '';
+                outputEl.textContent = 'Нәтиже осында шығады...';
+            }
+        });
+
+        $('fc-examples').addEventListener('change', function (e) {
+            const key = e.target.value;
+            if (key && EXAMPLES[key]) {
+                program = EXAMPLES[key]();
+                renderAll();
+                save();
+                outputEl.className = '';
+                outputEl.textContent = 'Нәтиже осында шығады...';
+            }
+            e.target.value = '';
+        });
+
+        $('fc-copy').addEventListener('click', function () {
+            const btn = $('fc-copy');
+            const text = buildCode();
+            function done() {
+                btn.textContent = '✅ Көшірілді';
+                setTimeout(function () { btn.textContent = '📋 Кодты көшіру'; }, 1500);
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(done).catch(function () { fallbackCopy(text); done(); });
+            } else {
+                fallbackCopy(text);
+                done();
+            }
+        });
+
+        function fallbackCopy(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch (e) { /* ештеңе істемейміз */ }
+            document.body.removeChild(ta);
+        }
+
+        $('fc-download').addEventListener('click', function () {
+            const blob = new Blob([buildCode()], { type: 'text/x-python;charset=utf-8' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'blok_sxema.py';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') setArmed(null);
+        });
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+})();
+</script>
+{% endraw %}
+{% endblock %}

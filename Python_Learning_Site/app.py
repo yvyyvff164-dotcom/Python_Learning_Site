@@ -6,11 +6,10 @@ from dotenv import load_dotenv
 # Загружаем переменные окружения (нужно для локальной разработки)
 load_dotenv()
 
-# БЕЗОПАСНОСТЬ: Ключ теперь извлекается строго из переменных окружения хостинга.
-# На GitHub этот код отправлять абсолютно безопасно!
+# БЕЗОПАСНОСТЬ: ключ берётся только из переменных окружения хостинга.
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
-# Явно привязываем Flask к путям вашего проекта на сервере Vercel
+# Явно привязываем Flask к путям проекта (нужно для Vercel)
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(
@@ -21,8 +20,83 @@ app = Flask(
 )
 
 
-# --- Маршруты обучающих страниц ---
+# --- Деңгейлер мен сабақтар ---
+LEVELS = [
+    {
+        "title": "1-деңгей. Python негіздері",
+        "short": "Python негіздері",
+        "desc": "print, input, айнымалылар, деректер типтері, арифметика",
+        "icon": "📖",
+        "color": "#22c55e",
+        "lessons": [
+            {"title": "Python деген не?", "url": "/python"},
+            {"title": "Print командасы", "url": "/print"},
+            {"title": "Айнымалылар", "url": "/variables"},
+        ],
+    },
+    {
+        "title": "2-деңгей. Алгоритмдер",
+        "short": "Алгоритмдер",
+        "desc": "Блок-схема, if/elif/else, логикалық операторлар, for/while",
+        "icon": "🔀",
+        "color": "#3b82f6",
+        "lessons": [
+            {"title": "Блок-схема (FlowRun)", "url": "/flowchart"},
+            {"title": "Шарттар", "url": "/conditions"},
+            {"title": "Циклдер", "url": "/loops"},
+        ],
+    },
+    {
+        "title": "3-деңгей. Деректермен жұмыс",
+        "short": "Деректермен жұмыс",
+        "desc": "Жолдар, тізімдер, матрицалар, сұрыптау, сөздіктер",
+        "icon": "🗂️",
+        "color": "#eab308",
+        "lessons": [
+            {"title": "Мәтіндік жолдар", "url": "/strings"},
+            {"title": "Форматтау (f-strings)", "url": "/formatting"},
+            {"title": "Бірөлшемді массив", "url": "/arrays1"},
+            {"title": "Екіөлшемді массив", "url": "/arrays2"},
+            {"title": "Элемент қосу/жою", "url": "/add_remove"},
+            {"title": "Сұрыптау", "url": "/sorting"},
+        ],
+    },
+    {
+        "title": "4-деңгей. Бағдарлама құрастыру",
+        "short": "Бағдарлама құрастыру",
+        "desc": "Функциялар, кітапханалар, қателерді өңдеу, файлдар",
+        "icon": "🧩",
+        "color": "#f97316",
+        "lessons": [
+            {"title": "Функциялар", "url": "/functions"},
+            {"title": "Өз функцияларың (def)", "url": "/custom-functions"},
+        ],
+    },
+    {
+        "title": "5-деңгей. Жобалық жұмыс",
+        "short": "Жобалық жұмыс",
+        "desc": "Ойындар, калькулятор, деректерді талдау, қорытынды жоба",
+        "icon": "🎓",
+        "color": "#8b5cf6",
+        "lessons": [],
+    },
+]
+
+
+# Делает `levels` доступной в ЛЮБОМ шаблоне (index.html, base.html и т.д.)
+@app.context_processor
+def inject_levels():
+    return {"levels": LEVELS}
+
+
+# --- Главная страница: шапка, о сайте, уровни и прогресс ---
 @app.route("/")
+def home():
+    return render_template("index.html")
+
+
+# --- Маршруты обучающих страниц ---
+@app.route("/python")
 def python_page():
     return render_template("python.html")
 
@@ -42,7 +116,6 @@ def conditions():
 def functions():
     return render_template("functions.html")
 
-# 🛠️ Жаңадан қосылған "Өз функцияларың" бетінің маршруты
 @app.route("/custom-functions")
 def custom_functions():
     return render_template("custom_functions.html")
@@ -66,16 +139,21 @@ def add_remove():
 @app.route("/loops")
 def loops():
     return render_template("loops.html")
-    
-@app.route("/strings")   
+
+@app.route("/strings")
 def strings_page():
     return render_template("strings.html")
-    
+
 @app.route("/formatting")
 def formatting_page():
     return render_template("formatting.html")
 
-# --- МАРШРУТ: Прием вопросов к ИИ ( /api/chat фронтендке сәйкестендірілді ) ---
+@app.route("/flowchart")
+def flowchart():
+    return render_template("flowchart.html")
+
+
+# --- МАРШРУТ: Прием вопросов к ИИ ---
 @app.route("/api/chat", methods=["POST"])
 def ask_ai():
     data = request.get_json()
@@ -108,7 +186,7 @@ def ask_ai():
                     }
                 ]
             },
-            timeout=9  # Ограничение до 9 секунд, чтобы укладываться в лимиты бесплатных функций Vercel
+            timeout=9  # лимит бесплатных функций Vercel
         )
 
         result = response.json()

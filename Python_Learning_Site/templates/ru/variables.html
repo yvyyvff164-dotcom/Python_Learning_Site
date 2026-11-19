@@ -1,0 +1,88 @@
+{% extends "variables.html" %}
+
+{% block title %}Переменные и типы данных — Курс Python{% endblock %}
+
+{% block content %}
+<header class="course-lesson-header">
+    <h1 class="lesson-title">Переменные и типы данных</h1>
+    <p class="course-objective">Вы научитесь давать значениям имена, обновлять их и различать строки, числа и логические значения.</p>
+</header>
+<section aria-labelledby="variables-how">
+    <h2 id="variables-how">Как присвоить и обновить значение</h2>
+    <p>Переменная — это имя, которое ссылается на значение. В строке <code>age = 14</code> знак <code>=</code> присваивает имени <code>age</code> значение справа. Дальше это имя можно использовать в вычислениях или передать в <code>print()</code>.</p>
+    <div class="feature-card course-example">
+        <h3>Как меняется значение переменной</h3>
+        <pre class="course-code"><code>age = 14
+age = age + 1
+print(age)  # 15</code></pre>
+        <p>Во второй строке Python прибавляет <code>1</code> к прежнему значению, а затем присваивает переменной <code>age</code> результат.</p>
+    </div>
+</section>
+
+<section aria-labelledby="variables-types">
+    <h2 id="variables-types">Типы данных</h2>
+    <p>У каждого значения в Python есть тип. Его можно узнать с помощью <code>type()</code>.</p>
+    <div class="course-table" role="region" aria-label="Таблица типов данных" tabindex="0">
+        <table>
+            <thead><tr><th scope="col">Тип</th><th scope="col">Значение</th><th scope="col">Пример</th></tr></thead>
+            <tbody>
+                <tr><th scope="row"><code>int</code></th><td>Целое число</td><td><code>age = 14</code></td></tr>
+                <tr><th scope="row"><code>str</code></th><td>Строка текста</td><td><code>name = "Аружан"</code></td></tr>
+                <tr><th scope="row"><code>float</code></th><td>Число с плавающей точкой</td><td><code>height = 1.62</code></td></tr>
+                <tr><th scope="row"><code>bool</code></th><td>Логическое значение</td><td><code>is_ready = True</code></td></tr>
+            </tbody>
+        </table>
+    </div>
+    <p>Имя начинается с буквы или символа <code>_</code> и пишется без пробелов. Регистр имеет значение: <code>age</code> и <code>Age</code> — разные имена.</p>
+</section>
+<section class="course-practice" aria-labelledby="variables-practice">
+    <h2 id="variables-practice">Измените данные ученика</h2>
+    <ol>
+        <li>Укажите своё имя и город в переменных <code>name</code> и <code>city</code>.</li>
+        <li>Присвойте <code>age</code> значение <code>16</code>. Проверьте, какой возраст программа выведет для этого ученика через пять лет.</li>
+        <li>Временно запишите возраст в кавычках: <code>"16"</code>. Запустите код, прочитайте сообщение и уберите кавычки.</li>
+    </ol>
+
+        <label class="course-output-label" for="code">Код Python</label>
+        <div class="editor-container">
+            <textarea id="code" rows="15" spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off" aria-describedby="editor-shortcuts">name = "Аружан"
+age = 14
+city = "Алматы"
+height = 1.62
+is_ready = True
+
+print("Имя:", name)
+print("Город:", city)
+print("Возраст через пять лет:", age + 5)
+
+print(type(name))
+print(type(age))
+print(type(height))
+print(type(is_ready))
+</textarea>
+        </div>
+        <div class="btn-row">
+            <button class="btn-run" id="run-btn" type="button">Запустить код</button>
+            <button class="btn-clear" id="clear-btn" type="button">Очистить результат</button>
+        </div>
+        <p class="hint" id="editor-shortcuts"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Enter</kbd> — запуск. <kbd>Tab</kbd> — отступ. Чтобы выйти из редактора, нажмите <kbd>Esc</kbd>, затем <kbd>Tab</kbd>.</p>
+        <p class="course-output-label" id="editor-result">Результат</p>
+        <pre id="output" role="status" aria-labelledby="editor-result" aria-atomic="true">Здесь появится результат.</pre>
+    <details class="course-media">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Почему возникает ошибка?</summary>
+        <p><code>16</code> — целое число, а <code>"16"</code> — строка. Python не может прибавить число <code>5</code> к строке. Если в строке записано целое число, его можно преобразовать: выражение <code>int("16") + 5</code> даст <code>21</code>.</p>
+    </details>
+</section>
+<section aria-labelledby="variables-more">
+    <h2 id="variables-more">Дополнительные материалы</h2>
+    <details class="course-media">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Открыть видеоурок</summary>
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/nTbPOCShQ6I?hl=ru&amp;cc_lang_pref=ru" title="Переменные и типы данных" loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+    </details>
+    <p><a href="https://codepen.io/zlreibuh-the-sasster/pen/yyaBJRr" target="_blank" rel="noopener noreferrer">Открыть дополнительные задания на CodePen</a></p>
+</section>
+{% endblock %}

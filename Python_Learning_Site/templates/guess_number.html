@@ -1,0 +1,364 @@
+{% extends "base.html" %}
+
+{% block title %}Санды тап ойыны — Python оқу сайты{% endblock %}
+
+{% block page_assets %}
+<style>
+    .guess-lesson {
+        --guess-accent: var(--primary-dark);
+        --guess-muted: #45617e;
+        --guess-line: #ccd9ec;
+        --guess-soft: #f0f5ff;
+        container-type: inline-size;
+    }
+
+    .guess-lesson .guess-lead { max-width: 68ch; }
+    .guess-lesson .guess-section { margin-top: 28px; }
+    .guess-lesson h2 { margin: 0 0 10px; }
+    .guess-lesson h3 { margin: 0 0 8px; }
+    .guess-lesson [hidden] { display: none; }
+
+    .guess-steps {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin: 12px 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .guess-steps li, .guess-example, .guess-game, .guess-reference {
+        border: 1px solid var(--guess-line);
+        border-radius: var(--radius-md);
+        background: var(--surface-strong);
+    }
+
+    .guess-steps li { margin: 0; padding: 15px; }
+    .guess-steps p { margin: 4px 0 0; font-size: .95rem; }
+
+    .guess-example {
+        margin-top: 14px;
+        padding: 14px 16px;
+        background: var(--guess-soft);
+    }
+
+    .guess-example p { margin: 0; }
+
+    .guess-game {
+        max-width: 720px;
+        padding: clamp(14px, 3vw, 24px);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .guess-stats {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    .guess-stats div {
+        padding: 10px 12px;
+        border: 1px solid var(--guess-line);
+        border-radius: 9px;
+        background: var(--guess-soft);
+    }
+
+    .guess-stats dt { color: var(--guess-muted); font-size: .84rem; }
+    .guess-stats dd { color: var(--text-main); font-weight: 750; }
+
+    .guess-form label { display: block; margin-bottom: 5px; font-weight: 700; }
+    .guess-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .guess-actions input, .guess-actions button {
+        min-height: 44px;
+        padding: 8px 12px;
+        border: 1px solid var(--guess-line);
+        border-radius: 8px;
+        font: inherit;
+        color: var(--text-main);
+        background: var(--surface-strong);
+    }
+
+    .guess-actions input { width: 110px; }
+    .guess-actions input[aria-invalid="true"] { border-color: #a13921; }
+    .guess-actions button { cursor: pointer; font-weight: 650; }
+
+    .guess-actions .guess-submit {
+        border-color: var(--guess-accent);
+        background: var(--guess-accent);
+        color: white;
+    }
+
+    .guess-actions button:hover:not(:disabled) { box-shadow: inset 0 0 0 1px currentColor; }
+    .guess-actions :disabled { opacity: .55; cursor: default; }
+
+    .guess-lesson :is(button, input, summary):focus-visible {
+        outline: 3px solid var(--guess-accent);
+        outline-offset: 2px;
+    }
+
+    .guess-lesson .guess-feedback {
+        min-height: 1.7em;
+        margin: 10px 0 0;
+        color: var(--guess-muted);
+    }
+
+    .guess-lesson .guess-feedback[data-tone="success"] { color: #156742; }
+    .guess-lesson .guess-feedback[data-tone="error"] { color: #9b321c; }
+    .guess-history { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--guess-line); }
+    .guess-history ol { margin: 4px 0 0 23px; }
+    .guess-history li { margin: 0 0 4px; }
+
+    .guess-reference { margin-top: 12px; padding: 12px 16px; }
+    .guess-reference summary { width: fit-content; color: var(--guess-accent); font-weight: 700; cursor: pointer; }
+
+    .guess-reference pre {
+        margin: 10px 0 0;
+        padding: 14px;
+        overflow-x: auto;
+        border-radius: 8px;
+        color: #edf5ff;
+        background: #142746;
+        font: .88rem/1.55 Consolas, monospace;
+    }
+
+    @container (max-width: 600px) {
+        .guess-steps { grid-template-columns: minmax(0, 1fr); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<article class="guess-lesson" aria-labelledby="guess-title">
+    <h1 id="guess-title">Санды тап ойыны</h1>
+    <p class="guess-lead course-objective">Python-да жасырын санды табатын ойын құрастырасыз. Бағдарлама 1 мен 20 аралығындағы бір санды таңдайды. Ойыншы оны 5 мүмкіндіктің ішінде табуы керек.</p>
+    <a class="course-jump" href="#guess-test">Ойынға өту <span aria-hidden="true">↓</span></a>
+
+    <section class="guess-section" aria-labelledby="guess-how">
+        <h2 id="guess-how">Ойын қалай жұмыс істейді?</h2>
+        <ol class="guess-steps">
+            <li><strong>1. Санды жасырыңыз</strong><p><code>randint(1, 20)</code> 1 мен 20-ны қоса алғанда, сол аралықтан бір бүтін сан таңдайды.</p></li>
+            <li><strong>2. Болжамды салыстырыңыз</strong><p><code>if</code> арқылы болжамның жасырын санға тең екенін тексеріңіз. Сан табылмаса, келесі болжам үлкенірек пе, кішірек пе екенін айтыңыз.</p></li>
+            <li><strong>3. Мүмкіндіктерді санаңыз</strong><p><code>while</code> циклі мүмкіндік барда жалғасады. Әр жаңа, жарамды болжамнан кейін бір мүмкіндік азаяды. Дұрыс жауап ойынның аяқталғанын білдіреді.</p></li>
+        </ol>
+        <div class="guess-example">
+            <h3>Мысал</h3>
+            <p>Жасырын сан <strong>13</strong> делік. Ойыншы <strong>8</strong> енгізсе, бағдарлама «Үлкенірек сан енгізіңіз» дейді. Ойыншы <strong>17</strong> енгізсе, «Кішірек сан енгізіңіз» дейді. Енді іздейтін сандар 9 бен 16 арасында.</p>
+        </div>
+    </section>
+
+    <section class="guess-section" aria-labelledby="guess-test">
+        <h2 id="guess-test" tabindex="-1">Ойынды сынап көріңіз</h2>
+        <p>Алдымен 10 санын болжап көріңіз. Көмекке сүйеніп, келесі болжамыңызды қалған аралықтың ортасына жақын таңдаңыз. Қайталанған немесе жарамсыз болжам мүмкіндік санын азайтпайды.</p>
+        <div class="guess-game" hidden>
+            <dl class="guess-stats">
+                <div><dt>Қалған мүмкіндік</dt><dd data-guess-attempts></dd></div>
+                <div><dt>Мүмкін аралық</dt><dd data-guess-range></dd></div>
+            </dl>
+            <form class="guess-form" novalidate>
+                <label for="guess-input">Болжамыңыз</label>
+                <div class="guess-actions">
+                    <input id="guess-input" type="number" min="1" max="20" step="1" inputmode="numeric">
+                    <button class="guess-submit" type="submit">Тексеру</button>
+                    <button class="guess-reset" type="button">Жаңа ойын</button>
+                </div>
+            </form>
+            <p class="guess-feedback" role="status">1 мен 20 аралығындағы бүтін санды енгізіңіз.</p>
+            <div class="guess-history" hidden>
+                <h3>Болжамдар тізімі</h3>
+                <ol></ol>
+            </div>
+        </div>
+        <noscript><p>Ойынды сынап көру үшін браузерде JavaScript қосыңыз.</p></noscript>
+    </section>
+
+    <section class="guess-section" aria-labelledby="guess-build">
+        <h2 id="guess-build">Өз ойыныңызды жазыңыз</h2>
+        <ol>
+            <li>Алдымен жасырын санды 13 деп бекітіп, <code>input()</code> арқылы болжам алыңыз.</li>
+            <li>Тең, кіші және үлкен болжамдарды <code>if</code>, <code>elif</code> және <code>else</code> арқылы өңдеңіз. 8, 17 және 13 сандарымен тексеріңіз.</li>
+            <li><code>while</code> циклін және мүмкіндік санауышын қосыңыз. Бос енгізуге, мәтінге және қайталанған сандарға да ойынның қалай жауап беретінін тексеріңіз.</li>
+            <li>Тексеруді аяқтаған соң жасырын санды <code>randint(1, 20)</code> арқылы таңдаңыз.</li>
+        </ol>
+        <p><strong>Қосымша тапсырма.</strong> Ойыншыға қиындық деңгейін таңдауға мүмкіндік беріңіз. Жеңіл деңгейде 1–10 аралығын және 4 мүмкіндікті, ал күрделі деңгейде 1–50 аралығын және 6 мүмкіндікті қолданыңыз.</p>
+
+        <details class="guess-reference">
+            <summary>Python үлгі кодын ашу</summary>
+            <pre><code>from random import randint
+
+құпия = randint(1, 20)
+мүмкіндік = 5
+болжамдар = []
+төменгі_шек, жоғарғы_шек = 1, 20
+
+while мүмкіндік &gt; 0:
+    print(f"Мүмкін аралық: {төменгі_шек}–{жоғарғы_шек}")
+    try:
+        болжам = int(input("1 мен 20 аралығындағы санды енгізіңіз: "))
+    except ValueError:
+        print("Бүтін сан енгізіңіз.")
+        continue
+
+    if not 1 &lt;= болжам &lt;= 20:
+        print("Сан 1 мен 20 арасында болуы керек.")
+        continue
+    if болжам in болжамдар:
+        print("Бұл санды бұрын енгіздіңіз. Басқа сан таңдаңыз.")
+        continue
+
+    болжамдар.append(болжам)
+    мүмкіндік -= 1
+
+    if болжам == құпия:
+        print(f"Жарайсыз! Жасырын сан — {құпия}.")
+        break
+
+    if болжам &lt; құпия:
+        төменгі_шек = max(төменгі_шек, болжам + 1)
+        print("Үлкенірек сан енгізіңіз.")
+    else:
+        жоғарғы_шек = min(жоғарғы_шек, болжам - 1)
+        print("Кішірек сан енгізіңіз.")
+    print(f"Қалған мүмкіндік: {мүмкіндік}")
+else:
+    print(f"Мүмкіндіктер бітті. Жасырын сан — {құпия}.")</code></pre>
+        </details>
+    </section>
+</article>
+{% endblock %}
+
+{% block lesson_scripts %}
+<script>
+(() => {
+    const lessonText = window.courseText;
+    const game = document.querySelector('.guess-game');
+    const form = game.querySelector('.guess-form');
+    const input = game.querySelector('#guess-input');
+    const submit = game.querySelector('.guess-submit');
+    const reset = game.querySelector('.guess-reset');
+    const attempts = game.querySelector('[data-guess-attempts]');
+    const range = game.querySelector('[data-guess-range]');
+    const feedback = game.querySelector('.guess-feedback');
+    const history = game.querySelector('.guess-history');
+    const list = history.querySelector('ol');
+    const maxNumber = 20;
+    const maxAttempts = 5;
+    const guessed = new Set();
+    let secret;
+    let remaining;
+    let lower;
+    let upper;
+
+    function updateStats() {
+        attempts.textContent = remaining;
+        range.textContent = lower + '–' + upper;
+    }
+
+    function announce(message, tone = '') {
+        feedback.textContent = message;
+        feedback.dataset.tone = tone;
+    }
+
+    function start() {
+        secret = 1 + Math.floor(Math.random() * maxNumber);
+        remaining = maxAttempts;
+        lower = 1;
+        upper = maxNumber;
+        guessed.clear();
+        list.replaceChildren();
+        history.hidden = true;
+        form.reset();
+        input.removeAttribute('aria-invalid');
+        input.disabled = false;
+        submit.disabled = false;
+        updateStats();
+        announce(lessonText('1 мен 20 аралығындағы бүтін санды енгізіңіз.', 'Введите целое число от 1 до 20.'));
+    }
+
+    function reject(message) {
+        input.setAttribute('aria-invalid', 'true');
+        announce(message, 'error');
+        input.focus();
+    }
+
+    function finish(message, tone) {
+        range.textContent = String(secret);
+        input.disabled = true;
+        submit.disabled = true;
+        reset.focus();
+        announce(message, tone);
+    }
+
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+        if (input.disabled) return;
+
+        const number = input.valueAsNumber;
+        if (!Number.isInteger(number) || number < 1 || number > maxNumber) {
+            reject(lessonText('1 мен 20 аралығындағы бүтін санды енгізіңіз.', 'Введите целое число от 1 до 20.'));
+            return;
+        }
+        if (guessed.has(number)) {
+            reject(lessonText('Бұл санды бұрын енгіздіңіз. Басқа сан таңдаңыз.', 'Вы уже вводили это число. Попробуйте другое.'));
+            return;
+        }
+
+        input.removeAttribute('aria-invalid');
+        guessed.add(number);
+        remaining -= 1;
+        const item = document.createElement('li');
+        list.append(item);
+        history.hidden = false;
+
+        if (number === secret) {
+            window.CourseRewards.practice('project:guess-number');
+            item.textContent = number + lessonText(' — дұрыс жауап.', ' — верный ответ.');
+            updateStats();
+            finish(lessonText('Жарайсыз! Жасырын сан — ', 'Верно! Загаданное число — ') + secret + '.', 'success');
+            return;
+        }
+
+        const isLow = number < secret;
+        if (isLow) lower = Math.max(lower, number + 1);
+        else upper = Math.min(upper, number - 1);
+        item.textContent = number + (isLow ? lessonText(' — тым кіші.', ' — слишком мало.') : lessonText(' — тым үлкен.', ' — слишком много.'));
+        updateStats();
+
+        if (remaining === 0) {
+            finish(lessonText('Мүмкіндіктер бітті. Жасырын сан — ', 'Попытки закончились. Загаданное число — ') + secret + '.', 'error');
+            return;
+        }
+
+        const hint = isLow ? lessonText('Үлкенірек сан енгізіңіз.', 'Попробуйте число побольше.') : lessonText('Кішірек сан енгізіңіз.', 'Попробуйте число поменьше.');
+        announce(hint + lessonText(' Қалған мүмкіндік: ', ' Осталось попыток: ') + remaining + lessonText('. Мүмкін аралық: ', '. Диапазон поиска: ') + lower + '–' + upper + '.');
+        input.value = '';
+        input.focus();
+    });
+
+    input.addEventListener('input', () => input.removeAttribute('aria-invalid'));
+    reset.addEventListener('click', () => {
+        start();
+        input.focus();
+    });
+
+    start();
+    game.hidden = false;
+    window.courseLanguage.preserveActivity(
+        () => ({secret, guesses: [...guessed], draft: input.value}),
+        saved => {
+            const inRange = n => Number.isInteger(n) && n >= 1 && n <= maxNumber;
+            if (!inRange(saved.secret) || !Array.isArray(saved.guesses) ||
+                saved.guesses.length > maxAttempts || !saved.guesses.every(inRange)) return;
+            secret = saved.secret;
+            for (const guess of saved.guesses) {
+                input.value = guess;
+                form.requestSubmit();
+            }
+            if (typeof saved.draft === 'string') input.value = saved.draft;
+        }
+    );
+})();
+</script>
+{% endblock %}

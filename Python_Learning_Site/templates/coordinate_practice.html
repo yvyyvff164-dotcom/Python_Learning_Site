@@ -1,0 +1,741 @@
+{% extends "base.html" %}
+{% block title %}Координаталар және циклдер — Python оқу сайты{% endblock %}
+{% block page_assets %}
+<style>
+    .coord-lesson {
+        --coord-ink: #172b4d;
+        --coord-blue: var(--primary-dark);
+        --coord-edge: var(--border);
+        --coord-muted: #48617e;
+        container-type: inline-size;
+    }
+
+    .coord-lesson .coord-intro { max-width: 65ch; }
+    .coord-lesson h2 { margin: 0 0 12px; }
+    .coord-lesson h3 { margin: 0 0 10px; }
+    .coord-lesson p { margin: 0 0 12px; }
+    .coord-study, .coord-practice { margin-top: 28px; }
+    .coord-study-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 255px), 1fr));
+        gap: 12px;
+    }
+    .coord-study-card {
+        min-width: 0;
+        padding: 16px;
+        border: 1px solid var(--coord-edge);
+        border-radius: var(--radius-md);
+        background: var(--surface-strong);
+    }
+    .coord-study-card p, .coord-study-card pre:last-child { margin-bottom: 0; }
+    .coord-lesson button { font: inherit; }
+    .coord-lesson button:focus-visible, .coord-lesson summary:focus-visible {
+        outline: 3px solid var(--coord-blue);
+        outline-offset: 2px;
+        z-index: 1;
+    }
+
+    .coord-shell {
+        margin-top: 16px;
+        border: 1px solid var(--coord-edge);
+        border-radius: var(--radius-lg);
+        background: white;
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+    }
+
+    .coord-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 14px clamp(14px, 3vw, 26px);
+        background: #f0f5ff;
+        border-bottom: 1px solid var(--coord-edge);
+    }
+
+    .coord-nav button, .coord-controls button, .coord-shape-card {
+        min-height: 44px;
+        padding: 6px 12px;
+        border: 1px solid var(--coord-edge);
+        border-radius: 9px;
+        background: white;
+        color: var(--coord-ink);
+        cursor: pointer;
+    }
+
+    .coord-nav button[aria-pressed="true"], .coord-controls .coord-check {
+        border-color: var(--coord-blue);
+        background: var(--coord-blue);
+        color: white;
+    }
+
+    .coord-nav button:hover, .coord-controls button:hover, .coord-shape-card:hover {
+        box-shadow: inset 0 0 0 1px currentColor;
+    }
+
+    .coord-workspace {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 1.2fr);
+        gap: clamp(16px, 3vw, 32px);
+        padding: clamp(14px, 3vw, 28px);
+        align-items: start;
+    }
+
+    .coord-brief { min-width: 0; }
+    .coord-brief .coord-instructions { color: var(--coord-muted); font-size: .94rem; }
+    .coord-brief details { margin-top: 14px; }
+    .coord-brief summary { width: fit-content; color: var(--coord-blue); cursor: pointer; }
+    .coord-brief details p { margin: 6px 0 0; font-size: .94rem; }
+
+    .coord-lab { width: 100%; max-width: 410px; margin: 0 auto; }
+
+    .coord-grid {
+        display: grid;
+        grid-template-columns: 1.75rem repeat(5, minmax(0, 1fr)) 1.6rem;
+        grid-template-rows: 1.35rem repeat(5, auto) 1.35rem;
+        gap: 4px;
+        padding: 9px 6px 7px;
+        background: #edf4ff;
+        border-radius: 14px;
+    }
+
+    .coord-axis {
+        align-self: center;
+        justify-self: center;
+        color: var(--coord-muted);
+        font-size: .8rem;
+        font-weight: 650;
+        white-space: nowrap;
+    }
+
+    .coord-axis-name { color: var(--coord-blue); }
+    .coord-cell {
+        display: grid;
+        place-items: center;
+        width: 100%;
+        aspect-ratio: 1;
+        padding: 0;
+        border: 1px solid #d5e1f2;
+        border-radius: 6px;
+        background: white;
+        cursor: pointer;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+
+    .coord-cell:empty::before {
+        content: "";
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: #adbed8;
+    }
+
+    .coord-cell[data-shape-index], .coord-shape-card { cursor: grab; touch-action: none; }
+    .coord-cell[data-anchor] { border: 2px dashed #a16c19; background: #fff8e8; }
+    .coord-cell:hover, .coord-cell.is-drop-target { border-color: var(--coord-blue); background: #dbeafe; }
+    .coord-cell.is-selected { box-shadow: inset 0 0 0 2px var(--coord-blue); }
+    .coord-lesson [hidden] { display: none; }
+
+    .coord-shape {
+        display: block;
+        width: 24px;
+        height: 24px;
+        flex: 0 0 24px;
+        pointer-events: none;
+    }
+
+    .coord-cell .coord-shape { width: 60%; height: 60%; }
+    .coord-shape-square { border-radius: 20%; background: #2563eb; }
+    .coord-shape-circle { border-radius: 50%; background: #af640a; }
+    .coord-shape-triangle { clip-path: polygon(50% 3%, 99% 96%, 1% 96%); background: #7744b8; }
+
+    .coord-ghost {
+        position: fixed;
+        z-index: 1100;
+        width: 34px;
+        height: 34px;
+        transform: translate(-50%, -50%);
+        opacity: .85;
+    }
+
+    .coord-lesson .coord-palette-title {
+        margin: 0 0 6px;
+        font-size: .9rem;
+        font-weight: 700;
+    }
+
+    .coord-palette { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .coord-shape-card { display: inline-flex; align-items: center; gap: 6px; }
+    .coord-lesson .coord-shape-card { padding: 6px 8px; font-size: .84rem; }
+    .coord-shape-card .coord-shape { flex-basis: 16px; width: 16px; height: 16px; }
+    .coord-shape-card[aria-pressed="true"] { border-color: var(--coord-blue); background: #e7efff; }
+
+    .coord-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .coord-lesson .coord-feedback {
+        min-height: 3em;
+        margin: 10px 0 0;
+        font-size: .94rem;
+        color: var(--coord-muted);
+    }
+
+    .coord-lesson .coord-feedback[data-tone="success"] { color: #14613d; }
+    .coord-lesson .coord-feedback[data-tone="error"] { color: #9a3412; }
+
+    .coord-example {
+        margin-top: 16px;
+        padding: 12px;
+        border: 1px solid var(--coord-edge);
+        background: #f4f8ff;
+        border-radius: 10px;
+    }
+
+    .coord-example h4 { margin: 0; color: var(--coord-ink); }
+
+    .coord-lesson pre {
+        margin: 6px 0 10px;
+        padding: 10px;
+        overflow-x: auto;
+        border-radius: 6px;
+        background: #142746;
+        color: #f4f8ff;
+        font: .86rem/1.5 Consolas, monospace;
+    }
+
+    .coord-example p { margin: 0; font-size: .9rem; }
+
+    @container (max-width: 630px) {
+        .coord-workspace { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    @container (max-width: 410px) {
+        .coord-nav { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; }
+        .coord-nav button { padding-inline: 3px; font-size: .82rem; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="coord-lesson" aria-labelledby="coord-title">
+    <h1 id="coord-title">Координаталар және циклдер</h1>
+    <p class="coord-intro course-objective">Бұл жобада 5 × 5 торға тоғанды, ағаштарды және орындықтарды орналастырып, бақтың жоспарын жасайсыз. Жоспарды Python тілінде координаталар мен циклдер арқылы көрсетуге болады.</p>
+    <a class="course-jump" href="#coord-practice-title">Тордағы тапсырмаларға өту <span aria-hidden="true">↓</span></a>
+
+    <section class="coord-study" aria-labelledby="coord-study-title">
+        <h2 id="coord-study-title">Жоспарды қалай құрамыз?</h2>
+        <div class="coord-study-grid">
+            <article class="coord-study-card">
+                <h3>1. Координатаны оқу</h3>
+                <p>Торкөздің орны <code>(x, y)</code> жұбымен жазылады. Төменгі сол жақ бұрыш — <code>(0, 0)</code>. Сол жерден <code>x</code> бойынша оңға, <code>y</code> бойынша жоғары санаймыз. Мысалы, <code>(2, 1)</code> нүктесі 2 торкөз оңға және 1 торкөз жоғары орналасқан.</p>
+            </article>
+            <article class="coord-study-card">
+                <h3>2. Жаңа орынды есептеу</h3>
+                <p>Оңға жылжығанда <code>x</code> мәніне қосамыз, солға жылжығанда азайтамыз. Жоғары жылжығанда <code>y</code> мәніне қосамыз, төмен жылжығанда азайтамыз. Мысалы, <code>(2, 2)</code> нүктесінен 1 торкөз оңға және 2 торкөз төмен жылжысақ, <code>(3, 0)</code> шығады.</p>
+                <pre><code>x, y = (2, 2)
+жаңа_орын = (x + 1, y - 2)
+print(жаңа_орын)</code></pre>
+            </article>
+            <article class="coord-study-card">
+                <h3>3. Циклмен қатар құру</h3>
+                <p>Бір қатардағы торкөздердің <code>y</code> мәні бірдей. <code>range(0, 3)</code> цикліне <code>x</code> үшін 0, 1, 2 мәндерін береді. Код <code>(0, 2)</code>, <code>(1, 2)</code> және <code>(2, 2)</code> нүктелерін тізімге қосады.</p>
+                <pre><code>нүктелер = []
+for x in range(0, 3):
+    нүктелер.append((x, 2))
+print(нүктелер)</code></pre>
+            </article>
+        </div>
+    </section>
+
+    <section class="coord-practice" aria-labelledby="coord-practice-title">
+        <h2 id="coord-practice-title" tabindex="-1">Бақтың жоспарын жасаңыз</h2>
+        <p>Алғашқы үш тапсырмада координаталарды қолданып жаттығыңыз. Төртінші тапсырмада бақтың жоспарын құрып, оны шығаратын Python кодын көріңіз.</p>
+        <div class="coord-shell" hidden>
+            <nav class="coord-nav" aria-label="Практикалық тапсырмалар"></nav>
+            <div class="coord-workspace">
+                <div class="coord-brief">
+                    <h3 id="coord-task-title"></h3>
+                    <p class="coord-task-text"></p>
+                    <p class="coord-instructions">Фигураны торкөзге сүйреңіз немесе фигура мен торкөзді кезекпен басыңыз.</p>
+                    <details class="coord-hint">
+                        <summary>Көмек</summary>
+                        <p></p>
+                        <p id="coord-keyboard">Пернетақтамен фигураны таңдаған соң, торкөздер арасында бағыттауыш пернелермен жылжыңыз. Фигураны Enter пернесімен қойыңыз.</p>
+                    </details>
+                </div>
+                <div class="coord-lab">
+                    <p class="coord-palette-title" id="coord-palette-title">Фигуралар</p>
+                    <div class="coord-palette" role="group" aria-labelledby="coord-palette-title"></div>
+                    <div class="coord-grid" role="group" aria-label="Координаталар торы" aria-describedby="coord-keyboard"></div>
+                    <div class="coord-controls">
+                        <button type="button" class="coord-check">Тексеру</button>
+                        <button type="button" class="coord-reset">Қайта бастау</button>
+                        <button type="button" class="coord-next" hidden>Келесі тапсырма →</button>
+                    </div>
+                    <p class="coord-feedback" role="status"></p>
+                    <div class="coord-example" hidden>
+                        <h4>Python коды</h4>
+                        <pre><code></code></pre>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <noscript><p>Тапсырмаларды орындау үшін браузерде JavaScript қосыңыз.</p></noscript>
+    </section>
+</section>
+{% endblock %}
+
+{% block lesson_scripts %}
+<script>
+(() => {
+    const lessonText = window.courseText;
+    const tasks = [
+        {
+            title: lessonText('Координатаны табу', 'Найдите клетку по координатам'),
+            prompt: lessonText('Шаршыны (1, 3) нүктесіне, ал үшбұрышты (4, 2) нүктесіне қойыңыз.', 'Поставьте квадрат в клетку (1, 3), а треугольник — в клетку (4, 2).'),
+            hint: lessonText(
+                'Алдымен төмендегі x мәнін, содан кейін сол жақтағы y мәнін табыңыз. Олардың қиылысқан торкөзін таңдаңыз.',
+                'Найдите значение x под сеткой и значение y слева. Выберите клетку на пересечении нужного столбца и ряда.'
+            ),
+            shapes: ['square', 'triangle'],
+            targets: { square: ['1,3'], triangle: ['4,2'] },
+            code: lessonText('шаршы = (1, 3)\nүшбұрыш = (4, 2)', 'квадрат = (1, 3)\nтреугольник = (4, 2)'),
+            explanation: lessonText('Координата жұбында x мәні бірінші, y мәні екінші жазылады.', 'В паре координат значение x записывают первым, а значение y — вторым.')
+        },
+        {
+            title: lessonText('Фигураны жылжыту', 'Переместите фигуру'),
+            prompt: lessonText(
+                'Дөңгелек (1, 1) нүктесінде бекітілген. Шаршыны дөңгелектен 3 торкөз оңға және 2 торкөз жоғары қойыңыз.',
+                'Круг закреплён в клетке (1, 1). Поставьте квадрат на три клетки правее и на две клетки выше круга.'
+            ),
+            hint: lessonText(
+                'Оңға жылжу үшін x мәніне 3, жоғары жылжу үшін y мәніне 2 қосыңыз.',
+                'Для перемещения вправо прибавьте 3 к значению x, а для перемещения вверх — 2 к значению y.'
+            ),
+            shapes: ['square'],
+            anchor: '1,1',
+            targets: { square: ['4,3'] },
+            code: lessonText('x, y = (1, 1)\nшаршы = (x + 3, y + 2)\nprint(шаршы)  # (4, 3)', 'x, y = (1, 1)\nквадрат = (x + 3, y + 2)\nprint(квадрат)  # (4, 3)'),
+            explanation: lessonText(
+                'Жаңа координатаны бастапқы орынға ығысу мәндерін қосу арқылы табуға болады.',
+                'Чтобы найти новые координаты, прибавьте смещение по каждой оси к соответствующей исходной координате.'
+            )
+        },
+        {
+            title: lessonText('Циклмен қатар құру', 'Постройте ряд с помощью цикла'),
+            prompt: lessonText(
+                'Төрт үшбұрышты y = 4 болатын қатарға қойыңыз. x мәні 1, 2, 3 және 4 болатын торкөздердің әрқайсысына бір үшбұрыштан орналастырыңыз.',
+                'Поставьте четыре треугольника в ряд, где y = 4. Разместите по одному треугольнику в клетках со значениями x от 1 до 4.'
+            ),
+            hint: lessonText(
+                'Бір қатардағы фигуралардың y мәні бірдей. x мәні әр қадам сайын 1-ге артады.',
+                'У всех фигур в этом ряду одинаковое значение y. При каждом шаге значение x увеличивается на 1.'
+            ),
+            shapes: ['triangle', 'triangle', 'triangle', 'triangle'],
+            targets: { triangle: ['1,4', '2,4', '3,4', '4,4'] },
+            code: lessonText(
+                'үшбұрыштар = []\nfor x in range(1, 5):\n    үшбұрыштар.append((x, 4))\nprint(үшбұрыштар)',
+                'треугольники = []\nfor x in range(1, 5):\n    треугольники.append((x, 4))\nprint(треугольники)'
+            ),
+            explanation: lessonText(
+                'Python тілінде range(1, 5) 1, 2, 3 және 4 мәндерін береді. 5 саны бұл аралыққа кірмейді.',
+                'В Python функция range(1, 5) даёт значения 1, 2, 3 и 4. Правая граница 5 в диапазон не входит.'
+            )
+        },
+        {
+            title: lessonText('Бақтың жоспары', 'План сада'),
+            prompt: lessonText(
+                'Дөңгелек тоған (2, 2) нүктесінде тұр. Үшбұрыш ағаштарды тоғанға жанасатын төрт торкөзге — жоғары, төмен, сол және оң жаққа — қойыңыз. Шаршы орындықтарды (1, 1) және (3, 1) нүктелеріне орналастырыңыз.',
+                'Круглый пруд находится в клетке (2, 2). Посадите четыре дерева-треугольника в соседних с прудом клетках: сверху, снизу, слева и справа. Разместите квадратные скамейки в клетках (1, 1) и (3, 1).'
+            ),
+            hint: lessonText(
+                'Ағаштардың біреуі тоғаннан бір торкөз жоғары, яғни (2, 3) нүктесінде тұрады. Қалған үшеуінің орнын да осылай анықтаңыз.',
+                'Одно дерево растёт на клетку выше пруда, в точке (2, 3). Так же определите координаты остальных трёх деревьев.'
+            ),
+            shapes: ['triangle', 'triangle', 'triangle', 'triangle', 'square', 'square'],
+            anchor: '2,2',
+            targets: { triangle: ['2,3', '3,2', '2,1', '1,2'], square: ['1,1', '3,1'] },
+            code: lessonText(
+                `тоған = (2, 2)
+x, y = тоған
+ағаштар = []
+for dx, dy in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
+    ағаштар.append((x + dx, y + dy))
+орындықтар = [(1, 1), (3, 1)]
+
+белгілер = {тоған: "Т"}
+for орын in ағаштар:
+    белгілер[орын] = "А"
+for орын in орындықтар:
+    белгілер[орын] = "О"
+
+for y in range(4, -1, -1):
+    қатар = []
+    for x in range(5):
+        қатар.append(белгілер.get((x, y), "·"))
+    print(" ".join(қатар))`,
+                `пруд = (2, 2)
+x, y = пруд
+деревья = []
+for dx, dy in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
+    деревья.append((x + dx, y + dy))
+скамейки = [(1, 1), (3, 1)]
+
+знаки = {пруд: "П"}
+for клетка in деревья:
+    знаки[клетка] = "Д"
+for клетка in скамейки:
+    знаки[клетка] = "С"
+
+for y in range(4, -1, -1):
+    ряд = []
+    for x in range(5):
+        ряд.append(знаки.get((x, y), "·"))
+    print(" ".join(ряд))`
+            ),
+            explanation: lessonText(
+                'Код бақтың сызбасын жоғарыдан төмен қарай шығарады. Т — тоған, А — ағаш, О — орындық. Қосымша тапсырма ретінде тоғанды (3, 2) нүктесіне жылжытып, ағаштар мен орындықтар бір торкөзге түспейтіндей сызбаны өзгертіңіз.',
+                'Программа выводит план сада по рядам сверху вниз. П обозначает пруд, Д — дерево, С — скамейку. Для дополнительной практики перенесите пруд в точку (3, 2) и измените план так, чтобы деревья и скамейки занимали разные клетки.'
+            )
+        }
+    ];
+
+    const lesson = document.querySelector('.coord-lesson');
+    const shell = lesson.querySelector('.coord-shell');
+    const nav = lesson.querySelector('.coord-nav');
+    const grid = lesson.querySelector('.coord-grid');
+    const palette = lesson.querySelector('.coord-palette');
+    const feedback = lesson.querySelector('.coord-feedback');
+    const example = lesson.querySelector('.coord-example');
+    const hint = lesson.querySelector('.coord-hint');
+    const next = lesson.querySelector('.coord-next');
+    const names = { square: lessonText('Шаршы', 'Квадрат'), circle: lessonText('Дөңгелек', 'Круг'), triangle: lessonText('Үшбұрыш', 'Треугольник') };
+    const states = tasks.map(task => ({ positions: task.shapes.map(() => null), solved: false }));
+    const cells = new Map();
+    const size = 5;
+
+    let taskIndex = 0;
+    let selected = null;
+    let focusCell = '0,0';
+    let drag = null;
+    let skipPointerClick = false;
+
+    function makeButton(text) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = text;
+        return button;
+    }
+
+    function makeShape(type) {
+        const shape = document.createElement('span');
+        shape.className = `coord-shape coord-shape-${type}`;
+        shape.setAttribute('aria-hidden', 'true');
+        return shape;
+    }
+
+    function coordinates(key) {
+        return `(${key.replace(',', ', ')})`;
+    }
+
+    function setFeedback(message, tone = '') {
+        feedback.textContent = message;
+        feedback.dataset.tone = tone;
+    }
+
+    function setFocusCell(key) {
+        cells.get(focusCell).tabIndex = -1;
+        focusCell = key;
+        cells.get(key).tabIndex = 0;
+    }
+
+    function addAxis(text, column, row, isName = false) {
+        const label = document.createElement('span');
+        label.className = isName ? 'coord-axis coord-axis-name' : 'coord-axis';
+        label.textContent = text;
+        label.style.gridColumn = column;
+        label.style.gridRow = row;
+        label.setAttribute('aria-hidden', 'true');
+        grid.append(label);
+    }
+
+    function buildGrid() {
+        addAxis('y ↑', 1, 1, true);
+        addAxis('x →', 7, 7, true);
+        for (let y = size - 1; y >= 0; y--) {
+            const row = size + 1 - y;
+            addAxis(y, 1, row);
+            for (let x = 0; x < size; x++) {
+                const key = `${x},${y}`;
+                const cell = makeButton('');
+                cell.className = 'coord-cell';
+                cell.dataset.coord = key;
+                cell.style.gridColumn = x + 2;
+                cell.style.gridRow = row;
+                cell.tabIndex = -1;
+                cells.set(key, cell);
+                grid.append(cell);
+            }
+        }
+        for (let x = 0; x < size; x++) {
+            addAxis(x, x + 2, 7);
+        }
+        setFocusCell(focusCell);
+    }
+
+    function updateView() {
+        const task = tasks[taskIndex];
+        const state = states[taskIndex];
+
+        for (const [key, cell] of cells) {
+            const occupant = state.positions.indexOf(key);
+            const anchored = task.anchor === key;
+            const shape = anchored ? 'circle' : task.shapes[occupant];
+            const label = anchored ? lessonText('Дөңгелек бекітілген', 'Закреплённый круг') : (shape ? names[shape] : lessonText('Бос торкөз', 'Свободная клетка'));
+            cell.setAttribute('aria-label', `${coordinates(key)} · ${label}`);
+            cell.toggleAttribute('data-anchor', anchored);
+            cell.classList.toggle('is-selected', occupant !== -1 && selected === occupant);
+            if (occupant !== -1) cell.dataset.shapeIndex = occupant;
+            else delete cell.dataset.shapeIndex;
+            cell.replaceChildren(...(shape ? [makeShape(shape)] : []));
+        }
+
+        Array.from(palette.children).forEach((card, index) => {
+            const position = state.positions[index];
+            const label = card.textContent;
+            card.setAttribute('aria-label', position ? `${label} · ${coordinates(position)}` : label);
+            card.setAttribute('aria-pressed', String(index === selected));
+        });
+
+        Array.from(nav.children).forEach((button, index) => {
+            const done = states[index].solved;
+            button.textContent = lessonText(`${index + 1}-тапсырма${done ? ' ✓' : ''}`, `Задание ${index + 1}${done ? ' ✓' : ''}`);
+            button.setAttribute('aria-label', done ? lessonText(`${index + 1}-тапсырма, орындалды`, `Задание ${index + 1}, выполнено`) : lessonText(`${index + 1}-тапсырма`, `Задание ${index + 1}`));
+            button.setAttribute('aria-pressed', String(index === taskIndex));
+        });
+
+        example.hidden = !state.solved;
+        next.hidden = !state.solved || taskIndex === tasks.length - 1;
+    }
+
+    function openTask(index) {
+        taskIndex = index;
+        selected = null;
+        setFocusCell('0,0');
+
+        const task = tasks[index];
+        lesson.querySelector('#coord-task-title').textContent = task.title;
+        lesson.querySelector('.coord-task-text').textContent = task.prompt;
+        hint.open = false;
+        hint.querySelector('p').textContent = task.hint;
+        example.querySelector('code').textContent = task.code;
+        example.querySelector('p').textContent = task.explanation;
+
+        palette.replaceChildren();
+        const shapeCounts = new Map();
+        task.shapes.forEach((type, shapeIndex) => {
+            const count = (shapeCounts.get(type) ?? 0) + 1;
+            shapeCounts.set(type, count);
+            const name = task.targets[type].length > 1
+                ? `${names[type]} ${count}`
+                : names[type];
+            const card = makeButton(name);
+            card.className = 'coord-shape-card';
+            card.dataset.shapeIndex = shapeIndex;
+            card.prepend(makeShape(type));
+            palette.append(card);
+        });
+        setFeedback(states[index].solved ? lessonText('Тапсырма орындалды.', 'Задание выполнено.') : '');
+        updateView();
+    }
+
+    function selectShape(index) {
+        selected = selected === index ? null : index;
+        setFeedback(selected === null ? '' : lessonText('Фигура таңдалды. Енді торкөзді таңдаңыз.', 'Фигура выбрана. Теперь выберите клетку.'));
+        updateView();
+    }
+
+    function placeShape(index, key) {
+        const task = tasks[taskIndex];
+        const state = states[taskIndex];
+        const occupant = state.positions.indexOf(key);
+        if (task.anchor === key || (occupant !== -1 && occupant !== index)) {
+            setFeedback(lessonText('Бұл торкөз бос емес. Басқа торкөзді таңдаңыз.', 'Эта клетка занята. Выберите другую.'), 'error');
+            return;
+        }
+
+        if (state.positions[index] !== key) {
+            state.positions[index] = key;
+            state.solved = false;
+        }
+        selected = null;
+        setFocusCell(key);
+        setFeedback(lessonText(`Фигура ${coordinates(key)} нүктесіне қойылды.`, `Фигура поставлена в клетку ${coordinates(key)}.`));
+        updateView();
+    }
+
+    function checkTask() {
+        const task = tasks[taskIndex];
+        const state = states[taskIndex];
+        if (state.positions.includes(null)) {
+            setFeedback(lessonText('Алдымен барлық фигураны торға қойыңыз.', 'Сначала разместите все фигуры на сетке.'), 'error');
+            return;
+        }
+
+        state.solved = task.shapes.every((type, index) => task.targets[type].includes(state.positions[index]));
+        const allSolved = states.every(item => item.solved);
+        if (state.solved) {
+            window.CourseRewards.practice('project:garden:' + taskIndex);
+            setFeedback(allSolved ? lessonText('Жарайсыз! Төрт тапсырманы да орындадыңыз.', 'Вы выполнили все четыре задания!') : lessonText('Дұрыс! Барлық фигура өз орнында.', 'Верно! Все фигуры на своих местах.'), 'success');
+        } else {
+            setFeedback(lessonText(
+                'Кемінде бір фигура дұрыс орналаспаған. Координаталарды қайта тексеріңіз.',
+                'Проверьте координаты. По крайней мере одна фигура стоит не на своём месте.'
+            ), 'error');
+        }
+        updateView();
+    }
+
+    function dragTarget(event) {
+        const cell = document.elementFromPoint(event.clientX, event.clientY)?.closest('.coord-cell');
+        return cell && grid.contains(cell) ? cell : null;
+    }
+
+    shell.addEventListener('pointerdown', event => {
+        skipPointerClick = false;
+        if (drag || !event.isPrimary || event.button !== 0) return;
+        const source = event.target.closest('[data-shape-index]');
+        if (!source) return;
+
+        drag = {
+            source,
+            pointerId: event.pointerId,
+            index: Number(source.dataset.shapeIndex),
+            x: event.clientX,
+            y: event.clientY,
+            ghost: null,
+            target: null
+        };
+    });
+
+    window.addEventListener('pointermove', event => {
+        if (!drag || event.pointerId !== drag.pointerId) return;
+        if (!drag.ghost) {
+            if (Math.hypot(event.clientX - drag.x, event.clientY - drag.y) < 8) return;
+            drag.source.setPointerCapture(event.pointerId);
+            drag.ghost = makeShape(tasks[taskIndex].shapes[drag.index]);
+            drag.ghost.classList.add('coord-ghost');
+            document.body.append(drag.ghost);
+            selected = drag.index;
+            updateView();
+        }
+        drag.ghost.style.left = `${event.clientX}px`;
+        drag.ghost.style.top = `${event.clientY}px`;
+        drag.target?.classList.remove('is-drop-target');
+        drag.target = dragTarget(event);
+        drag.target?.classList.add('is-drop-target');
+    });
+
+    function finishPointer(event) {
+        if (!drag || event.pointerId !== drag.pointerId) return;
+        const activeDrag = drag;
+        drag = null;
+        if (!activeDrag.ghost) return;
+
+        skipPointerClick = event.type === 'pointerup';
+        activeDrag.ghost.remove();
+        activeDrag.target?.classList.remove('is-drop-target');
+        if (event.type !== 'pointerup') {
+            selectShape(activeDrag.index);
+            return;
+        }
+
+        const cell = dragTarget(event);
+        if (cell) placeShape(activeDrag.index, cell.dataset.coord);
+        else setFeedback(lessonText('Фигураны торкөздің үстіне апарыңыз.', 'Перетащите фигуру на клетку.'));
+    }
+
+    window.addEventListener('pointerup', finishPointer);
+    window.addEventListener('pointercancel', finishPointer);
+    shell.addEventListener('click', event => {
+        if (skipPointerClick && event.detail > 0) {
+            skipPointerClick = false;
+            event.stopPropagation();
+        }
+    }, true);
+
+    palette.addEventListener('click', event => {
+        const card = event.target.closest('.coord-shape-card');
+        if (!card) return;
+        selectShape(Number(card.dataset.shapeIndex));
+        if (event.detail === 0 && selected !== null) cells.get(focusCell).focus();
+    });
+
+    grid.addEventListener('click', event => {
+        const cell = event.target.closest('.coord-cell');
+        if (!cell) return;
+        const key = cell.dataset.coord;
+        setFocusCell(key);
+        if (selected !== null) placeShape(selected, key);
+        else if (cell.dataset.shapeIndex !== undefined) selectShape(Number(cell.dataset.shapeIndex));
+        else setFeedback(lessonText('Алдымен фигураны таңдаңыз.', 'Сначала выберите фигуру.'));
+    });
+
+    grid.addEventListener('keydown', event => {
+        const cell = event.target.closest('.coord-cell');
+        const offsets = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] };
+        const offset = offsets[event.key];
+        if (!cell || !offset) return;
+        event.preventDefault();
+
+        const [x, y] = cell.dataset.coord.split(',').map(Number);
+        const key = `${x + offset[0]},${y + offset[1]}`;
+        if (cells.has(key)) {
+            setFocusCell(key);
+            cells.get(key).focus();
+        }
+    });
+
+    tasks.forEach((_, index) => {
+        const button = makeButton('');
+        button.addEventListener('click', () => openTask(index));
+        nav.append(button);
+    });
+
+    lesson.querySelector('.coord-check').addEventListener('click', checkTask);
+    lesson.querySelector('.coord-reset').addEventListener('click', () => {
+        states[taskIndex] = { positions: tasks[taskIndex].shapes.map(() => null), solved: false };
+        openTask(taskIndex);
+        setFeedback(lessonText('Тапсырма бастапқы күйіне қайтарылды.', 'Задание возвращено в исходное состояние.'));
+    });
+
+    next.addEventListener('click', () => {
+        openTask(taskIndex + 1);
+        nav.children[taskIndex].focus();
+    });
+
+    buildGrid();
+    openTask(0);
+    shell.hidden = false;
+    window.courseLanguage.preserveActivity(
+        () => ({states, taskIndex, selected, focusCell, hintOpen: hint.open}),
+        saved => {
+            if (!Array.isArray(saved.states) || saved.states.length !== tasks.length ||
+                !Number.isInteger(saved.taskIndex) || !tasks[saved.taskIndex]) return;
+            for (const [index, state] of saved.states.entries()) {
+                if (!Array.isArray(state?.positions) || state.positions.length !== tasks[index].shapes.length ||
+                    !state.positions.every(key => key === null || cells.has(key))) return;
+            }
+            saved.states.forEach((state, index) => {
+                states[index] = {positions: state.positions, solved: state.solved === true};
+            });
+            openTask(saved.taskIndex);
+            if (Number.isInteger(saved.selected) && tasks[taskIndex].shapes[saved.selected]) selectShape(saved.selected);
+            if (cells.has(saved.focusCell)) setFocusCell(saved.focusCell);
+            hint.open = saved.hintOpen === true;
+        }
+    );
+})();
+</script>
+{% endblock %}

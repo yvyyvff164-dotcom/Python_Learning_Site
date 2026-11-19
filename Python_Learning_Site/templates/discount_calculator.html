@@ -1,0 +1,437 @@
+{% extends "base.html" %}
+{% block title %}Жеңілдік калькуляторы — Python оқу сайты{% endblock %}
+{% block page_assets %}
+<style>
+    .discount-project {
+        --discount-line: #cbd9e9;
+        --discount-blue: #1e40af;
+        --discount-ink: #18324e;
+        --discount-pale: #edf5ff;
+        --discount-success: #11603c;
+        --discount-error: #9a3412;
+        container-type: inline-size;
+    }
+
+    .discount-project > p { max-width: 68ch; }
+    .discount-project h2 { margin: 0 0 12px; }
+    .discount-project h3 { margin: 0 0 10px; }
+    .discount-project p { margin: 0 0 12px; }
+    .discount-project [hidden] { display: none; }
+
+    .discount-panel {
+        min-width: 0;
+        margin: 24px 0;
+        padding: clamp(16px, 3vw, 28px);
+        border: 1px solid var(--discount-line);
+        border-radius: 18px;
+        background: var(--surface-strong);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .discount-project .discount-steps {
+        margin: 12px 0 16px;
+        padding-left: 1.35em;
+    }
+
+    .discount-example {
+        padding: 12px 16px;
+        border-radius: 12px;
+        background: var(--discount-pale);
+    }
+
+    .discount-example p { margin: 0; }
+    .discount-columns {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
+        gap: clamp(12px, 3vw, 24px);
+    }
+
+    .discount-columns .discount-panel { margin: 0; }
+    .discount-fields { display: grid; gap: 12px; }
+    .discount-field { display: grid; gap: 4px; }
+    .discount-field label { font-weight: 650; color: var(--discount-ink); }
+
+    .discount-project input, .discount-project select {
+        width: 100%;
+        min-width: 0;
+        min-height: 44px;
+        padding: 8px 10px;
+        border: 1px solid #8ca6c5;
+        border-radius: 8px;
+        background: white;
+        color: var(--discount-ink);
+        font: inherit;
+    }
+
+    .discount-project input[aria-invalid="true"] { border: 2px solid var(--discount-error); }
+
+    .discount-field small { color: #48617d; }
+
+    .discount-project :is(button, input, select, summary):focus-visible {
+        outline: 3px solid var(--discount-blue);
+        outline-offset: 2px;
+    }
+
+    .discount-project button {
+        min-height: 44px;
+        padding: 7px 14px;
+        border: 1px solid var(--discount-line);
+        border-radius: 8px;
+        background: white;
+        color: var(--discount-ink);
+        font: inherit;
+        font-weight: 650;
+        cursor: pointer;
+    }
+
+    .discount-project button[type="submit"] {
+        border-color: var(--discount-blue);
+        background: var(--discount-blue);
+        color: white;
+    }
+
+    .discount-project button:hover { box-shadow: inset 0 0 0 1px currentColor; }
+    .discount-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .discount-project .discount-feedback { min-height: 1.7rem; margin: 8px 0 0; }
+    .discount-project .discount-feedback[data-tone="error"] { color: var(--discount-error); }
+    .discount-project .discount-feedback[data-tone="success"] { color: var(--discount-success); }
+
+    .discount-receipt {
+        display: grid;
+        gap: 8px;
+        margin-top: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        background: var(--discount-pale);
+    }
+
+    .discount-receipt > div {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 4px 12px;
+    }
+
+    .discount-receipt dd { margin: 0; font-variant-numeric: tabular-nums; font-weight: 700; }
+    .discount-receipt > div:last-child { padding-top: 8px; border-top: 1px solid var(--discount-line); }
+
+    .discount-project .discount-cases { list-style: none; margin: 0; padding: 0; }
+    .discount-cases li {
+        display: grid;
+        gap: 4px;
+        margin: 0;
+        padding: 12px 0;
+        border-top: 1px solid var(--discount-line);
+    }
+
+    .discount-cases small { color: var(--discount-success); font-weight: 700; }
+    .discount-formulas { display: grid; gap: 12px; }
+    .discount-formulas select { font-family: Consolas, monospace; }
+    .discount-solution { margin-top: 18px; }
+
+    .discount-solution summary {
+        width: fit-content;
+        color: var(--discount-blue);
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .discount-solution pre {
+        margin: 10px 0 0;
+        padding: 14px;
+        overflow-x: auto;
+        border-radius: 12px;
+        background: #142746;
+        color: #f5f8ff;
+        font: .9rem/1.55 Consolas, monospace;
+    }
+
+    @container (max-width: 650px) {
+        .discount-columns { grid-template-columns: minmax(0, 1fr); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<article class="discount-project" aria-labelledby="discount-title">
+    <h1 id="discount-title">Жеңілдік калькуляторы</h1>
+    <p class="course-objective">Дүкенде бір тауардың бірнеше данасын алғанда жеңілдіктен кейін қанша төлейсіз? Осы жобада тауардың жалпы бағасын, жеңілдік сомасын және соңғы төлемді есептейтін Python бағдарламасын құрастырасыз.</p>
+    <a class="course-jump" href="#discount-demo-title">Калькуляторды сынап көру <span aria-hidden="true">↓</span></a>
+
+    <section class="discount-panel" aria-labelledby="discount-theory">
+        <h2 id="discount-theory">Калькулятор қалай жұмыс істейді?</h2>
+        <p>Бағдарлама бір дананың бағасын, тауар санын және жеңілдік пайызын қабылдайды. Python тілінде <code>input()</code> енгізілген мәнді мәтін ретінде оқиды, ал <code>int()</code> оны бүтін санға айналдырады. <code>if</code> шарты 0–100 аралығындағы пайызды және оң мәндерді тексеруге көмектеседі.</p>
+        <ol class="discount-steps">
+            <li>Бір дананың бағасын тауар санына көбейтіп, жалпы бағаны табыңыз.</li>
+            <li>Жалпы бағаны жеңілдік пайызына көбейтіп, 100-ге бөліңіз.</li>
+            <li>Жалпы бағадан жеңілдікті шегеріп, соңғы төлемді табыңыз.</li>
+        </ol>
+        <div class="discount-example">
+            <h3>Мысал</h3>
+            <p>Данасы 1 200 ₸ тұратын 3 кітаптың жалпы бағасы 3 600 ₸. Жеңілдік 15% болса, <code>3 600 × 15 ÷ 100 = 540</code> ₸ шегеріледі. Соңғы төлем <strong>3 060 ₸</strong> болады.</p>
+        </div>
+    </section>
+
+    <div class="discount-interactive" hidden>
+        <div class="discount-columns">
+            <section class="discount-panel" aria-labelledby="discount-demo-title">
+                <h2 id="discount-demo-title" tabindex="-1">Калькуляторды сынау</h2>
+                <form id="discount-demo" novalidate>
+                    <div class="discount-fields">
+                        <div class="discount-field">
+                            <label for="discount-price">Бір дананың бағасы, ₸</label>
+                            <input id="discount-price" name="price" value="1200" inputmode="numeric" aria-describedby="discount-price-hint" required>
+                            <small id="discount-price-hint">1–1 000 000 теңге</small>
+                        </div>
+                        <div class="discount-field">
+                            <label for="discount-quantity">Тауар саны</label>
+                            <input id="discount-quantity" name="quantity" value="3" inputmode="numeric" aria-describedby="discount-quantity-hint" required>
+                            <small id="discount-quantity-hint">1–100 дана</small>
+                        </div>
+                        <div class="discount-field">
+                            <label for="discount-percent">Жеңілдік, %</label>
+                            <input id="discount-percent" name="percent" value="15" inputmode="numeric" aria-describedby="discount-percent-hint" required>
+                            <small id="discount-percent-hint">0–100 аралығындағы бүтін сан</small>
+                        </div>
+                    </div>
+
+                    <div class="discount-actions">
+                        <button type="submit">Есептеу</button>
+                        <button type="reset">Мысалға оралу</button>
+                    </div>
+                </form>
+                <p class="discount-feedback" id="discount-demo-feedback" role="status"></p>
+
+                <dl class="discount-receipt" id="discount-receipt" aria-label="Есептеу нәтижесі" hidden>
+                    <div><dt>Жалпы баға</dt><dd data-result="subtotal"></dd></div>
+                    <div><dt>Жеңілдік сомасы</dt><dd data-result="discount"></dd></div>
+                    <div><dt>Соңғы төлем</dt><dd data-result="total"></dd></div>
+                </dl>
+            </section>
+
+            <section class="discount-panel" aria-labelledby="discount-cases-title">
+                <h2 id="discount-cases-title">Тексеру жағдайлары</h2>
+                <p>Әр жағдайдағы соңғы төлемді ойша табыңыз, содан кейін мәндерді калькуляторға енгізіп, жауабыңызды салыстырыңыз.</p>
+                <ul class="discount-cases">
+                    <li data-case="regular">
+                        <strong>Кәдімгі жеңілдік</strong>
+                        <span>Бір дәптер 750 ₸ тұрады. 2 дәптерге 15% жеңілдік берілді.</span>
+                        <small hidden>✓ Тексерілді</small>
+                    </li>
+                    <li data-case="zero">
+                        <strong>Жеңілдік жоқ</strong>
+                        <span>Бір қалам 320 ₸ тұрады. 4 қаламға жеңілдік 0%.</span>
+                        <small hidden>✓ Тексерілді</small>
+                    </li>
+                    <li data-case="full">
+                        <strong>Толық жеңілдік</strong>
+                        <span>Бір ашықхат 450 ₸ тұрады. 1 ашықхатқа жеңілдік 100%.</span>
+                        <small hidden>✓ Тексерілді</small>
+                    </li>
+                    <li data-case="invalid">
+                        <strong>Қате мән</strong>
+                        <span>Жеңілдікке 101% енгізіңіз. Калькулятор қандай хабарлама шығарады?</span>
+                        <small hidden>✓ Тексерілді</small>
+                    </li>
+                </ul>
+            </section>
+        </div>
+
+        <section class="discount-panel" aria-labelledby="discount-build-title">
+            <h2 id="discount-build-title">Python кодын құрастыру</h2>
+            <p>Әр жолға сәйкес өрнекті таңдаңыз. Содан кейін бағдарламаны Python редакторында жазып, жоғарыдағы мәндермен тексеріңіз.</p>
+            <form id="discount-build">
+                <div class="discount-formulas">
+                    <div class="discount-field">
+                        <label for="discount-formula-subtotal"><code>жалпы_баға =</code></label>
+                        <select id="discount-formula-subtotal" name="subtotal">
+                            <option value="">Өрнекті таңдаңыз</option>
+                            <option value="add">баға + саны</option>
+                            <option value="multiply">баға * саны</option>
+                            <option value="divide">баға / саны</option>
+                        </select>
+                    </div>
+                    <div class="discount-field">
+                        <label for="discount-formula-saving"><code>жеңілдік =</code></label>
+                        <select id="discount-formula-saving" name="saving">
+                            <option value="">Өрнекті таңдаңыз</option>
+                            <option value="percent-off">жалпы_баға - пайыз</option>
+                            <option value="percent-of-price">баға * пайыз / 100</option>
+                            <option value="percent-of-total">жалпы_баға * пайыз / 100</option>
+                        </select>
+                    </div>
+                    <div class="discount-field">
+                        <label for="discount-formula-total"><code>төлем =</code></label>
+                        <select id="discount-formula-total" name="total">
+                            <option value="">Өрнекті таңдаңыз</option>
+                            <option value="subtract">жалпы_баға - жеңілдік</option>
+                            <option value="add">жалпы_баға + жеңілдік</option>
+                            <option value="divide">жеңілдік / саны</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="discount-actions"><button type="submit">Өрнектерді тексеру</button></div>
+                <p class="discount-feedback" id="discount-build-feedback" role="status"></p>
+            </form>
+            <details class="discount-solution">
+                <summary>Python бағдарламасының үлгісін ашу</summary>
+                <pre><code>try:
+    баға = int(input("Бір дананың бағасы, теңге: "))
+    саны = int(input("Тауар саны: "))
+    пайыз = int(input("Жеңілдік пайызы: "))
+
+    if 1 &lt;= баға &lt;= 1_000_000 and 1 &lt;= саны &lt;= 100 and 0 &lt;= пайыз &lt;= 100:
+        жалпы_баға = баға * саны
+        жеңілдік = жалпы_баға * пайыз / 100
+        төлем = жалпы_баға - жеңілдік
+
+        print(f"Жалпы баға: {жалпы_баға:.2f} ₸")
+        print(f"Жеңілдік сомасы: {жеңілдік:.2f} ₸")
+        print(f"Соңғы төлем: {төлем:.2f} ₸")
+    else:
+        print("Баға, сан немесе пайыз рұқсат етілген аралықтан тыс.")
+except ValueError:
+    print("Барлық мәнді бүтін санмен енгізіңіз.")</code></pre>
+            </details>
+        </section>
+    </div>
+
+    <noscript><p>Калькулятор мен өрнек таңдау тапсырмасын пайдалану үшін браузерде JavaScript қосыңыз.</p></noscript>
+</article>
+{% endblock %}
+
+{% block lesson_scripts %}
+<script>
+(() => {
+    const lessonText = window.courseText;
+    const project = document.querySelector('.discount-project');
+    const demo = document.getElementById('discount-demo');
+    const demoFeedback = document.getElementById('discount-demo-feedback');
+    const receipt = document.getElementById('discount-receipt');
+    const build = document.getElementById('discount-build');
+    const buildFeedback = document.getElementById('discount-build-feedback');
+    const fields = [
+        { name: 'price', min: 1, max: 1000000, label: lessonText('Баға 1–1 000 000 теңге аралығындағы бүтін сан болуы керек.', 'Введите целую цену от 1 до 1 000 000 тенге.') },
+        { name: 'quantity', min: 1, max: 100, label: lessonText('Саны 1–100 аралығындағы бүтін сан болуы керек.', 'Введите целое количество от 1 до 100.') },
+        { name: 'percent', min: 0, max: 100, label: lessonText('Жеңілдік 0–100 аралығындағы бүтін пайыз болуы керек.', 'Введите целый процент скидки от 0 до 100.') }
+    ];
+
+    const cases = {
+        regular: [750, 2, 15],
+        zero: [320, 4, 0],
+        full: [450, 1, 100]
+    };
+
+    function money(tiyn) {
+        const tenge = String(Math.floor(tiyn / 100)).replace(/\B(?=(\d{3})+(?!\d))/g, '\u202f');
+        const fraction = String(tiyn % 100).padStart(2, '0');
+        return tenge + ',' + fraction + ' ₸';
+    }
+
+    function say(element, text, tone = '') {
+        element.dataset.tone = tone;
+        element.textContent = text;
+    }
+
+    function markChecked(key) {
+        project.querySelector('[data-case="' + key + '"] small').hidden = false;
+        window.CourseRewards.practice('project:discount-case:' + key);
+    }
+
+    function clearCalculation() {
+        receipt.hidden = true;
+        say(demoFeedback, '');
+        fields.forEach(({ name }) => demo.elements[name].removeAttribute('aria-invalid'));
+    }
+
+    demo.addEventListener('input', clearCalculation);
+    demo.addEventListener('reset', clearCalculation);
+
+    demo.addEventListener('submit', event => {
+        event.preventDefault();
+        clearCalculation();
+        const amounts = [];
+
+        for (const { name, min, max, label } of fields) {
+            const input = demo.elements[name];
+            const value = input.value.trim();
+            const integer = Number(value);
+            if (!/^[0-9]+$/.test(value) || integer < min || integer > max) {
+                input.setAttribute('aria-invalid', 'true');
+                input.focus();
+                say(demoFeedback, label, 'error');
+                if (name === 'percent' && integer === 101) markChecked('invalid');
+                return;
+            }
+            amounts.push(integer);
+        }
+
+        const [price, quantity, percent] = amounts;
+        const subtotal = price * quantity * 100;
+        const saving = price * quantity * percent;
+        const total = subtotal - saving;
+        const results = { subtotal, discount: saving, total };
+
+        for (const [key, amount] of Object.entries(results)) {
+            receipt.querySelector('[data-result="' + key + '"]').textContent = money(amount);
+        }
+        receipt.hidden = false;
+        say(demoFeedback, lessonText('Соңғы төлем ', 'К оплате ') + money(total) + lessonText(' болды.', '.'));
+
+        for (const [key, values] of Object.entries(cases)) {
+            if (values.every((value, index) => value === amounts[index])) markChecked(key);
+        }
+    });
+
+    build.addEventListener('change', () => say(buildFeedback, ''));
+
+    build.addEventListener('submit', event => {
+        event.preventDefault();
+        const answers = [
+            { name: 'subtotal', correct: 'multiply', hint: lessonText(
+                'Жалпы бағаны табу үшін бір дананың бағасын тауар санына көбейтіңіз.',
+                'Чтобы найти стоимость покупки до скидки, умножьте цену одного товара на количество.'
+            ) },
+            { name: 'saving', correct: 'percent-of-total', hint: lessonText('Жеңілдікті бүкіл сатып алудың жалпы бағасынан есептеңіз.', 'Вычислите скидку от стоимости всей покупки.') },
+            { name: 'total', correct: 'subtract', hint: lessonText('Жалпы бағадан жеңілдік сомасын шегеріңіз.', 'Вычтите сумму скидки из стоимости покупки.') }
+        ];
+
+        const firstError = answers.find(({ name, correct }) => build.elements[name].value !== correct);
+        if (firstError) {
+            build.elements[firstError.name].focus();
+            say(buildFeedback, firstError.hint, 'error');
+            return;
+        }
+        window.CourseRewards.practice('project:discount-formulas');
+        say(buildFeedback, lessonText(
+            'Үш өрнек те дұрыс. Енді калькуляторды Python тілінде іске қосып көріңіз.',
+            'Все три выражения верны. Теперь запустите свой калькулятор на Python.'
+        ), 'success');
+    });
+
+    project.querySelector('.discount-interactive').hidden = false;
+    window.courseLanguage.preserveActivity(
+        () => ({
+            amounts: Object.fromEntries(new FormData(demo)),
+            expressions: Object.fromEntries(new FormData(build)),
+            calculated: Boolean(demoFeedback.textContent),
+            checkedExpressions: Boolean(buildFeedback.textContent),
+            checkedCases: [...project.querySelectorAll('[data-case]')].filter(row => !row.querySelector('small').hidden).map(row => row.dataset.case)
+        }),
+        saved => {
+            window.courseLanguage.restoreFields(demo, saved.amounts);
+            window.courseLanguage.restoreFields(build, saved.expressions);
+            if (saved.calculated) demo.requestSubmit();
+            if (saved.checkedExpressions) build.requestSubmit();
+            if (Array.isArray(saved.checkedCases)) {
+                for (const row of project.querySelectorAll('[data-case]')) {
+                    if (saved.checkedCases.includes(row.dataset.case)) markChecked(row.dataset.case);
+                }
+            }
+        }
+    );
+})();
+</script>
+{% endblock %}

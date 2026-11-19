@@ -1,621 +1,345 @@
 {% extends "base.html" %}
 
-{% block title %}Python-дағы функциялар мен кірістірілген әдістер — Python оқу сайты{% endblock %}
+{% block title %}Python-ның кірістірілген функциялары — Python оқу сайты{% endblock %}
 
-{% block content %}
+{% block page_assets %}
 <style>
-    /* ==========================================
-        Функциялар бетіне арналған стилизация
-    ========================================== */
-    .lesson-title {
-        font-size: 2rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, var(--primary), var(--primary-2));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 20px;
-    }
-
-    .video-wrapper {
-        position: relative;
-        width: 100%;
-        padding-bottom: 56.25%;
-        height: 0;
-        background: #000;
-        border-radius: var(--radius-md);
-        overflow: hidden;
-        box-shadow: var(--shadow-lg);
-        margin-bottom: 30px;
-    }
-
-    .video-wrapper iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: none;
-    }
-
-    /* Теориялық блок */
-    .theory-box {
-        background: var(--surface-strong);
+    .function-reference, .function-video {
+        margin-block: 10px;
         border: 1px solid var(--border);
-        border-left: 5px solid var(--primary-2);
         border-radius: var(--radius-md);
-        padding: 24px;
-        margin: 30px 0;
-        box-shadow: var(--shadow-sm);
+        background: var(--surface-strong);
     }
 
-    .theory-box h3 {
-        color: var(--primary-2);
-        font-size: 1.3rem;
-        font-weight: 800;
-        margin-top: 0;
-        margin-bottom: 15px;
+    .function-reference summary, .function-video summary {
+        padding: 12px 16px;
+        color: var(--heading-2);
+        font-weight: 700;
+        cursor: pointer;
     }
 
-    /* Қараңғы код блогы */
-    .code-pre {
-        background: #0f172a;
-        color: #38bdf8;
-        padding: 16px;
-        border-radius: var(--radius-sm);
-        font-family: 'Fira Code', Consolas, Monaco, monospace;
-        font-size: 14px;
-        line-height: 1.55;
-        overflow-x: auto;
-        border: 1px solid #334155;
-        margin: 12px 0;
-    }
-
-    /* Функциялар каталогі */
+    .function-video .video-wrapper { margin: 0; }
     .catalog-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 18px;
-        margin: 30px 0;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 215px), 1fr));
+        gap: 10px;
+        padding: 0 12px 12px;
     }
 
     .func-card {
-        background: var(--surface-strong);
+        min-width: 0;
+        padding: 14px;
         border: 1px solid var(--border);
-        border-left: 4px solid var(--primary);
-        border-radius: var(--radius-md);
-        padding: 18px;
-        box-shadow: var(--shadow-sm);
-        transition: var(--transition-smooth);
+        border-radius: var(--radius-sm);
     }
 
-    .func-card:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--primary-2);
-    }
-
-    .func-card > code {
-        display: inline-block;
-        color: var(--primary-2);
-        font-weight: 700;
-        font-size: 1.05rem;
-        background: rgba(139, 92, 246, 0.1);
-        padding: 3px 10px;
-        border-radius: 6px;
-    }
-
-    .func-card p {
-        font-size: 0.93rem;
-        margin: 10px 0 8px;
-        line-height: 1.5;
-    }
-
+    .func-card p { margin: 8px 0; font-size: .94rem; }
     .func-card pre {
-        background: #0f172a;
-        color: #34d399;
-        padding: 10px 12px;
-        border-radius: 6px;
-        font-family: 'Fira Code', Consolas, Monaco, monospace;
-        font-size: 13px;
-        margin: 8px 0 0;
-        border: 1px solid #334155;
+        margin: 0;
+        padding: 8px 10px;
         overflow-x: auto;
-    }
-
-    /* Код редакторы мен Sandbox */
-    .editor-container {
-        margin-top: 15px;
-        border-radius: var(--radius-md);
-        overflow: hidden;
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow-sm);
-    }
-
-    #code {
-        width: 100%;
-        box-sizing: border-box;
-        background: #0f172a;
-        color: #38bdf8;
-        font-family: 'Fira Code', Consolas, Monaco, monospace;
-        font-size: 14px;
-        padding: 16px;
-        border: none;
-        outline: none;
-        resize: vertical;
-        line-height: 1.5;
-        tab-size: 4;
-    }
-
-    .btn-row {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-
-    .btn-run {
-        margin-top: 15px;
-        background: linear-gradient(135deg, #22c55e, #16a34a);
-        color: white;
-        border: none;
-        padding: 12px 24px;
-        font-size: 15px;
-        font-weight: 600;
         border-radius: var(--radius-sm);
-        cursor: pointer;
-        box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
-        transition: var(--transition-smooth);
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .btn-run:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
-    }
-
-    .btn-run:disabled {
-        opacity: .6;
-        cursor: wait;
-        transform: none;
-    }
-
-    .btn-clear {
-        margin-top: 15px;
-        background: transparent;
-        color: var(--text-main);
-        border: 1px solid var(--border);
-        padding: 12px 20px;
-        font-size: 15px;
-        font-weight: 600;
-        border-radius: var(--radius-sm);
-        cursor: pointer;
-        transition: var(--transition-smooth);
-    }
-
-    .btn-clear:hover {
-        border-color: var(--primary);
-    }
-
-    .hint {
-        font-size: 13px;
-        opacity: .7;
-        margin-top: 8px;
-    }
-
-    #output {
         background: #0f172a;
-        color: #22c55e;
-        padding: 16px;
-        border-radius: var(--radius-md);
-        font-family: 'Fira Code', Consolas, monospace;
-        font-size: 14px;
-        min-height: 60px;
-        margin-top: 8px;
-        border: 1px solid #334155;
-        white-space: pre-wrap;
-    }
-
-    #output.error {
-        color: #f87171;
-    }
-
-    /* Кеңес карточкасы */
-    .feature-card {
-        background: var(--surface-strong);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-md);
-        padding: 20px;
-        box-shadow: var(--shadow-sm);
-        transition: var(--transition-smooth);
-        color: var(--text-main);
-    }
-
-    .feature-card:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--primary);
-    }
-
-    .card-success {
-        border-left: 5px solid var(--success);
-    }
-
-    .card-success h4 {
-        color: var(--success);
-        font-size: 1.2rem;
-        font-weight: 800;
-        margin-top: 0;
-        margin-bottom: 10px;
-    }
-
-    hr {
-        border: none;
-        height: 1px;
-        background: var(--border);
-        margin: 30px 0;
-    }
-
-    p {
-        line-height: 1.6;
-        color: var(--text-main);
+        color: #d6edff;
+        font: .88rem/1.5 Consolas, monospace;
     }
 </style>
+{% endblock %}
 
-<h1 class="lesson-title">🧩 Python-дағы функциялар және 30 негізгі әдіс</h1>
+{% block content %}
 
-<div class="video-wrapper">
-    <iframe
-        src="https://www.youtube.com/embed/6K5v4--G__U"
-        title="Python функциялары"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen>
-    </iframe>
-</div>
+<h1 class="lesson-title">Python-ның кірістірілген функциялары</h1>
+<p class="course-objective">Бағалар тізіміндегі мәндерді санап, ең жоғары бағаны және орташа мәнді табасыз. Бұл есептерге Python-ның дайын <code>len()</code>, <code>max()</code> және <code>sum()</code> функцияларын қолданамыз.</p>
 
-<p>
-    <b>Функция</b> — бұл белгілі бір логикалық тапсырманы орындайтын және қажет кезде қайта-қайта шақыруға болатын дербес код блогы.
-    Python тілінде функциялар бағдарламаны модульдік бөліктерге бөліп, кодымызды таза, түсінікті әрі қайталанатын қателерден арылтуға мүмкіндік береді.
-</p>
+<section class="course-example" aria-labelledby="builtins-example">
+    <h2 id="builtins-example">Дайын функцияны қалай шақырамыз?</h2>
+    <p>Функция бір әрекетті орындайды. Оны шақыру үшін атауынан кейін жақша жазып, оған қажет мәнді — аргументті — береміз. Мысалы, <code>sum(bagalar)</code> тізімдегі сандардың қосындысын қайтарады. Сол қосындыны тізім ұзындығына бөлсек, орташа баға шығады.</p>
+    <pre class="course-code"><code>bagalar = [70, 85, 90, 75]
+sany = len(bagalar)
+orta = sum(bagalar) / sany
 
-<hr>
+print(sany)           # 4
+print(max(bagalar))   # 90
+print(orta)           # 80.0</code></pre>
+    <p><code>print()</code> мәнді экранға шығарады. <code>max()</code> ең үлкен мәнді қайтарады, сондықтан оны айнымалыға сақтауға немесе бірден <code>print()</code> ішіне жазуға болады.</p>
+</section>
 
-<!-- Пайдаланушы функциялары теориясы -->
-<div class="theory-box">
-    <h3>⚙️ Өз функциямызды қалай жасаймыз? (Custom Functions)</h3>
-    <p>Python тілінде жаңа функция құру үшін міндетті түрде <code>def</code> түйінді сөзі қолданылады. Оның артынан функция аты және жақша ішінде аргументтер (параметрлер) көрсетіледі.</p>
+<section class="course-practice" aria-labelledby="builtins-practice">
+    <h2 id="builtins-practice">Бағалар тізімін талдаңыз</h2>
+    <ol>
+        <li>Кодты іске қосып, орташа бағаның <code>80.0</code> екенін тексеріңіз.</li>
+        <li>Тізімге <code>100</code> қосыңыз. Енді тізімде 5 баға бар және орташа мән <code>84.0</code> шығады.</li>
+        <li><code>min()</code> арқылы ең төмен бағаны шығарыңыз. Осы тізім үшін нәтиже <code>70</code> болуы керек.</li>
+    </ol>
 
-<pre class="code-pre"># Функцияны анықтау
-def salemdesu(at):
-    return "Сәлем, " + at + "! Python әлеміне қош келдің."
+    <label for="code">Python коды</label>
+    <div class="editor-container">
+        <textarea id="code" rows="9" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="editor-keys">
+bagalar = [70, 85, 90, 75]
+sany = len(bagalar)
+orta = sum(bagalar) / sany
 
-# Функцияны шақыру
-nateje = salemdesu("Санжар")
-print(nateje)  # Нәтиже: Сәлем, Санжар! Python әлеміне қош келдің.</pre>
-
-    <p style="margin-bottom: 0;">
-        <b>return</b> операторы функцияның жұмыс нәтижесін сыртқа қайтару үшін қолданылады. Егер return көрсетілмесе, функция әдепкі бойынша <code>None</code> мәнін қайтарады.
-    </p>
-</div>
-
-<hr>
-
-<h2>📚 Толық анықтама: Python-дағы ең маңызды 30 кірістірілген функция</h2>
-<p>Төменде кез келген бағдарламашы білуге тиіс ең көп қолданылатын 30 кірістірілген (built-in) функция жинақталған:</p>
-
-<div class="catalog-grid">
-    <div class="func-card">
-        <code>1. print()</code>
-        <p>Мәліметтерді консольге шығарады.</p>
-        <pre>print("Hello, World!")</pre>
-    </div>
-    <div class="func-card">
-        <code>2. input()</code>
-        <p>Пайдаланушыдан мәтін енгізуді сұрайды.</p>
-        <pre>at = input("Атыңыз кім?")</pre>
-    </div>
-    <div class="func-card">
-        <code>3. len()</code>
-        <p>Жол немесе тізім ұзындығын қайтарады.</p>
-        <pre>len([1, 2, 3, 4])  # 4</pre>
-    </div>
-    <div class="func-card">
-        <code>4. type()</code>
-        <p>Деректер типін анықтайды.</p>
-        <pre>type(15)  # &lt;class 'int'&gt;</pre>
-    </div>
-    <div class="func-card">
-        <code>5. int()</code>
-        <p>Мәнді бүтін санға түрлендіреді.</p>
-        <pre>int("100")  # 100</pre>
-    </div>
-    <div class="func-card">
-        <code>6. float()</code>
-        <p>Мәнді ондық санға айналдырады.</p>
-        <pre>float("3.14")  # 3.14</pre>
-    </div>
-    <div class="func-card">
-        <code>7. str()</code>
-        <p>Мәнді жол (мәтін) форматына өткізеді.</p>
-        <pre>str(45)  # "45"</pre>
-    </div>
-    <div class="func-card">
-        <code>8. list()</code>
-        <p>Басқа құрылымды тізімге айналдырады.</p>
-        <pre>list("abc")  # ['a', 'b', 'c']</pre>
-    </div>
-    <div class="func-card">
-        <code>9. tuple()</code>
-        <p>Өзгермейтін кортеж жасайды.</p>
-        <pre>tuple([1, 2])  # (1, 2)</pre>
-    </div>
-    <div class="func-card">
-        <code>10. dict()</code>
-        <p>Сөздік (dictionary) құрады.</p>
-        <pre>dict(a=1, b=2)</pre>
-    </div>
-    <div class="func-card">
-        <code>11. set()</code>
-        <p>Қайталанбайтын элементтер жиыны.</p>
-        <pre>set([1, 2, 2, 3])  # {1, 2, 3}</pre>
-    </div>
-    <div class="func-card">
-        <code>12. range()</code>
-        <p>Сандар тізбегін генерациялайды.</p>
-        <pre>list(range(1, 5))  # [1, 2, 3, 4]</pre>
-    </div>
-    <div class="func-card">
-        <code>13. sum()</code>
-        <p>Сандардың қосындысын есептейді.</p>
-        <pre>sum([10, 20, 30])  # 60</pre>
-    </div>
-    <div class="func-card">
-        <code>14. max()</code>
-        <p>Ең үлкен элементті табады.</p>
-        <pre>max([5, 9, 2])  # 9</pre>
-    </div>
-    <div class="func-card">
-        <code>15. min()</code>
-        <p>Ең кіші элементті табады.</p>
-        <pre>min([5, 9, 2])  # 2</pre>
-    </div>
-    <div class="func-card">
-        <code>16. abs()</code>
-        <p>Санның модулін қайтарады.</p>
-        <pre>abs(-15)  # 15</pre>
-    </div>
-    <div class="func-card">
-        <code>17. round()</code>
-        <p>Санды дөңгелектейді.</p>
-        <pre>round(3.78)  # 4</pre>
-    </div>
-    <div class="func-card">
-        <code>18. pow()</code>
-        <p>Санды дәрежеге көтереді.</p>
-        <pre>pow(2, 3)  # 8</pre>
-    </div>
-    <div class="func-card">
-        <code>19. sorted()</code>
-        <p>Тізімді реттеп шығарады.</p>
-        <pre>sorted([3, 1, 2])  # [1, 2, 3]</pre>
-    </div>
-    <div class="func-card">
-        <code>20. reversed()</code>
-        <p>Тізімді кері бұрады.</p>
-        <pre>list(reversed([1, 2, 3]))  # [3, 2, 1]</pre>
-    </div>
-    <div class="func-card">
-        <code>21. enumerate()</code>
-        <p>Индекс пен мәнді қатар береді.</p>
-        <pre>list(enumerate(['a', 'b']))</pre>
-    </div>
-    <div class="func-card">
-        <code>22. zip()</code>
-        <p>Тізімдерді жұптастырады.</p>
-        <pre>list(zip([1, 2], ['a', 'b']))</pre>
-    </div>
-    <div class="func-card">
-        <code>23. map()</code>
-        <p>Әр элементке функция қолданады.</p>
-        <pre>list(map(int, ["1", "2"]))</pre>
-    </div>
-    <div class="func-card">
-        <code>24. filter()</code>
-        <p>Шарт бойынша іріктейді.</p>
-        <pre>list(filter(None, [0, 1, 5]))</pre>
-    </div>
-    <div class="func-card">
-        <code>25. all()</code>
-        <p>Барлығы шын болса True береді.</p>
-        <pre>all([True, True])  # True</pre>
-    </div>
-    <div class="func-card">
-        <code>26. any()</code>
-        <p>Біреуі шын болса True береді.</p>
-        <pre>any([False, True])  # True</pre>
-    </div>
-    <div class="func-card">
-        <code>27. chr()</code>
-        <p>Unicode символын қайтарады.</p>
-        <pre>chr(65)  # 'A'</pre>
-    </div>
-    <div class="func-card">
-        <code>28. ord()</code>
-        <p>Символ кодын анықтайды.</p>
-        <pre>ord('A')  # 65</pre>
-    </div>
-    <div class="func-card">
-        <code>29. dir()</code>
-        <p>Объект әдістерін тізімдейді.</p>
-        <pre>dir(list)</pre>
-    </div>
-    <div class="func-card">
-        <code>30. help()</code>
-        <p>Анықтамалық құжаттама шақырады.</p>
-        <pre>help(print)</pre>
-    </div>
-</div>
-
-<hr>
-
-<h2>🧪 Тәжірибелік алаң (Sandbox)</h2>
-<p>Төмендегі кодты өзгертіп немесе өз функцияларыңды жазып, <b>Run Code</b> батырмасын басып тексеріп көр:</p>
-
-<div class="editor-container">
-    <textarea id="code" rows="20" spellcheck="false">
-# 1. Өз функциямызды жазу
-def kvadrat(san):
-    return san ** 2
-
-print("5-тің квадраты:", kvadrat(5))
-
-# 2. Кірістірілген функцияларды біріктіріп қолдану
-sandar = [12, 45, 2, 89, 34, 7]
-print("\nТізім:", sandar)
-print("Ұзындығы:", len(sandar))
-print("Ең үлкен сан:", max(sandar))
-print("Ең кіші сан:", min(sandar))
-print("Барлық элементтер қосындысы:", sum(sandar))
-print("Өсу ретімен сұрыпталған:", sorted(sandar))
+print("Бағалар саны:", sany)
+print("Ең жоғары баға:", max(bagalar))
+print("Орташа баға:", orta)
+# Ең төмен бағаны осы жерден шығарыңыз.
 </textarea>
-</div>
+    </div>
 
-<div class="btn-row">
-    <button class="btn-run" id="run-btn" type="button">▶ Run Code</button>
-    <button class="btn-clear" id="clear-btn" type="button">🗑 Тазалау</button>
-</div>
-<div class="hint">Ctrl + Enter — кодты іске қосу</div>
+    <div class="btn-row">
+        <button class="btn-run" id="run-btn" type="button">Кодты іске қосу</button>
+        <button class="btn-clear" id="clear-btn" type="button">Нәтижені тазалау</button>
+        <button class="btn-clear" id="restore-btn" type="button">Бастапқы кодты қайтару</button>
+    </div>
+    <p class="hint" id="editor-keys">Ctrl немесе ⌘ + Enter — орындау. Tab — төрт бос орын. Редактордан шығу үшін Esc, содан кейін Tab басыңыз.</p>
 
-<div style="margin-top: 15px; color: var(--text-light); font-size: 14px; font-weight: 500;">Нәтиже (Output):</div>
-<pre id="output">Нәтиже осында шығады...</pre>
+    <p class="course-output-label" id="editor-output-label">Нәтиже</p>
+    <pre id="output" role="status" aria-labelledby="editor-output-label">Кодты іске қосқан соң нәтиже осында шығады.</pre>
+</section>
 
-<div class="feature-card card-success" style="margin-top: 35px;">
-    <h4>💡 Жарысқа маңызды кеңес:</h4>
-    <p style="margin-bottom: 0;">
-        Функция ішінде жарияланған айнымалылар (аймақтық / local variables) тек сол функцияның ішінде ғана жұмыс істейді. Егер оларды сыртта қолданғыңыз келсе, міндетті түрде <code>return</code> арқылы сыртқа шығарып алуыңыз қажет!
-    </p>
-</div>
+<section aria-labelledby="builtins-reference">
+    <h2 id="builtins-reference">30 кірістірілген функция</h2>
+    <p>Қажетті топты ашып, функцияның не қайтаратынын және оның қалай шақырылатынын қараңыз.</p>
+    <details class="function-reference">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Енгізу, шығару және түрлендіру</summary>
+        <div class="catalog-grid">
+    <div class="func-card">
+        <code>print()</code>
+        <p>Мәліметтерді консольге шығарады.</p>
+        <pre><code>print("Сәлем, әлем!")</code></pre>
+    </div>
+    <div class="func-card">
+        <code>input()</code>
+        <p>Пайдаланушыдан мәтін енгізуді сұрайды.</p>
+        <pre><code>at = input("Атыңыз кім?")</code></pre>
+    </div>
+    <div class="func-card">
+        <code>len()</code>
+        <p>Жол немесе тізім ұзындығын қайтарады.</p>
+        <pre><code>len([1, 2, 3, 4])  # 4</code></pre>
+    </div>
+    <div class="func-card">
+        <code>type()</code>
+        <p>Мәннің дерек түрін қайтарады.</p>
+        <pre><code>type(15)  # &lt;class 'int'&gt;</code></pre>
+    </div>
+    <div class="func-card">
+        <code>int()</code>
+        <p>Мәнді бүтін санға түрлендіреді.</p>
+        <pre><code>int("100")  # 100</code></pre>
+    </div>
+    <div class="func-card">
+        <code>float()</code>
+        <p>Мәнді ондық санға айналдырады.</p>
+        <pre><code>float("3.14")  # 3.14</code></pre>
+    </div>
+    <div class="func-card">
+        <code>str()</code>
+        <p>Мәнді жол (мәтін) форматына өткізеді.</p>
+        <pre><code>str(45)  # "45"</code></pre>
+    </div>
+    <div class="func-card">
+        <code>list()</code>
+        <p>Басқа құрылымды тізімге айналдырады.</p>
+        <pre><code>list("abc")  # ['a', 'b', 'c']</code></pre>
+    </div>
+    <div class="func-card">
+        <code>tuple()</code>
+        <p>Өзгермейтін кортеж жасайды.</p>
+        <pre><code>tuple([1, 2])  # (1, 2)</code></pre>
+    </div>
+    <div class="func-card">
+        <code>dict()</code>
+        <p>Сөздік (dictionary) құрады.</p>
+        <pre><code>dict(a=1, b=2)</code></pre>
+    </div>
+    <div class="func-card">
+        <code>set()</code>
+        <p>Қайталанбайтын элементтер жиыны.</p>
+        <pre><code>set([1, 2, 2, 3])  # {1, 2, 3}</code></pre>
+    </div>
+    <div class="func-card">
+        <code>range()</code>
+        <p>Сандар тізбегін генерациялайды.</p>
+        <pre><code>list(range(1, 5))  # [1, 2, 3, 4]</code></pre>
+    </div>
+        </div>
+    </details>
+    <details class="function-reference">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Есептеу және реттеу</summary>
+        <div class="catalog-grid">
+    <div class="func-card">
+        <code>sum()</code>
+        <p>Сандардың қосындысын есептейді.</p>
+        <pre><code>sum([10, 20, 30])  # 60</code></pre>
+    </div>
+    <div class="func-card">
+        <code>max()</code>
+        <p>Ең үлкен элементті табады.</p>
+        <pre><code>max([5, 9, 2])  # 9</code></pre>
+    </div>
+    <div class="func-card">
+        <code>min()</code>
+        <p>Ең кіші элементті табады.</p>
+        <pre><code>min([5, 9, 2])  # 2</code></pre>
+    </div>
+    <div class="func-card">
+        <code>abs()</code>
+        <p>Санның модулін қайтарады.</p>
+        <pre><code>abs(-15)  # 15</code></pre>
+    </div>
+    <div class="func-card">
+        <code>round()</code>
+        <p>Санды дөңгелектейді.</p>
+        <pre><code>round(3.78)  # 4</code></pre>
+    </div>
+    <div class="func-card">
+        <code>pow()</code>
+        <p>Санды дәрежеге көтереді.</p>
+        <pre><code>pow(2, 3)  # 8</code></pre>
+    </div>
+    <div class="func-card">
+        <code>sorted()</code>
+        <p>Элементтерден сұрыпталған жаңа тізім жасайды.</p>
+        <pre><code>sorted([3, 1, 2])  # [1, 2, 3]</code></pre>
+    </div>
+    <div class="func-card">
+        <code>reversed()</code>
+        <p>Элементтерді соңынан басына қарай береді.</p>
+        <pre><code>list(reversed([1, 2, 3]))  # [3, 2, 1]</code></pre>
+    </div>
+        </div>
+    </details>
+    <details class="function-reference">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Тізбектермен жұмыс</summary>
+        <div class="catalog-grid">
+    <div class="func-card">
+        <code>enumerate()</code>
+        <p>Индекс пен мәнді қатар береді.</p>
+        <pre><code>list(enumerate(['a', 'b']))</code></pre>
+    </div>
+    <div class="func-card">
+        <code>zip()</code>
+        <p>Тізімдерді жұптастырады.</p>
+        <pre><code>list(zip([1, 2], ['a', 'b']))</code></pre>
+    </div>
+    <div class="func-card">
+        <code>map()</code>
+        <p>Әр элементке функция қолданады.</p>
+        <pre><code>list(map(int, ["1", "2"]))</code></pre>
+    </div>
+    <div class="func-card">
+        <code>filter()</code>
+        <p>Тексеру нәтижесі шын болатын элементтерді қалдырады.</p>
+        <pre><code>list(filter(None, [0, 1, 5]))</code></pre>
+    </div>
+    <div class="func-card">
+        <code>all()</code>
+        <p>Барлығы шын болса True береді.</p>
+        <pre><code>all([True, True])  # True</code></pre>
+    </div>
+    <div class="func-card">
+        <code>any()</code>
+        <p>Кемінде бір мән шын болса, True қайтарады.</p>
+        <pre><code>any([False, True])  # True</code></pre>
+    </div>
+        </div>
+    </details>
+    <details class="function-reference">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Таңбалар және анықтама</summary>
+        <div class="catalog-grid">
+    <div class="func-card">
+        <code>chr()</code>
+        <p>Unicode символын қайтарады.</p>
+        <pre><code>chr(65)  # 'A'</code></pre>
+    </div>
+    <div class="func-card">
+        <code>ord()</code>
+        <p>Символ кодын анықтайды.</p>
+        <pre><code>ord('A')  # 65</code></pre>
+    </div>
+    <div class="func-card">
+        <code>dir()</code>
+        <p>Нысандағы атаулар мен әдістердің тізімін қайтарады.</p>
+        <pre><code>dir(list)</code></pre>
+    </div>
+    <div class="func-card">
+        <code>help()</code>
+        <p>Python-ның анықтамасын ашады. Оны жергілікті Python ортасында іске қосыңыз.</p>
+        <pre><code>help(print)</code></pre>
+    </div>
+        </div>
+    </details>
+</section>
 
+<details class="course-media function-video">
+    <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Бейнесабақты көру</summary>
+    <div class="video-wrapper">
+        <iframe src="https://www.youtube.com/embed/6K5v4--G__U" title="Python функциялары" loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+    </div>
+</details>
+{% endblock %}
+
+{% block lesson_scripts %}
 <script>
-(function () {
-    const codeEl   = document.getElementById("code");
-    const outputEl = document.getElementById("output");
-    const runBtn   = document.getElementById("run-btn");
-    const clearBtn = document.getElementById("clear-btn");
-
-    // Skulpt-ты бірнеше көзден кезекпен жүктеу
-    const SOURCES = [
-        ["https://skulpt.org/js/skulpt.min.js",
-         "https://skulpt.org/js/skulpt-stdlib.js"],
-        ["https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js",
-         "https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"],
-        ["https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt.min.js",
-         "https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt-stdlib.js"]
-    ];
-
-    function loadScript(src) {
-        return new Promise(function (resolve, reject) {
-            const s = document.createElement("script");
-            s.src = src;
-            s.onload = resolve;
-            s.onerror = function () { reject(new Error(src)); };
-            document.head.appendChild(s);
-        });
-    }
-
-    async function loadSkulpt() {
-        if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
-        for (const pair of SOURCES) {
-            try {
-                await loadScript(pair[0]);
-                await loadScript(pair[1]);
-                if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
-            } catch (e) {
-                console.warn("Skulpt жүктелмеді:", e.message);
-            }
-        }
-        throw new Error("Skulpt ешбір көзден жүктелмеді");
-    }
-
-    const skulptReady = loadSkulpt();
-    runBtn.disabled = true;
-    runBtn.textContent = "⏳ Жүктелуде...";
-    function enableBtn() {
-        runBtn.disabled = false;
-        runBtn.textContent = "▶ Run Code";
-    }
-    skulptReady.then(enableBtn).catch(enableBtn);
-
-    function builtinRead(file) {
-        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][file] === undefined) {
-            throw "Файл табылмады: '" + file + "'";
-        }
-        return Sk.builtinFiles["files"][file];
-    }
+(() => {
+    const lessonText = window.courseText;
+    const code = document.getElementById('code');
+    const output = document.getElementById('output');
+    const run = document.getElementById('run-btn');
+    const clear = document.getElementById('clear-btn');
+    const restore = document.getElementById('restore-btn');
+    const starter = code.value;
+    const initialOutput = output.textContent;
+    const runLabel = run.textContent;
+    let tabLeavesEditor = false;
 
     async function runCode() {
-        outputEl.className = "";
-        outputEl.textContent = "";
-        runBtn.disabled = true;
+        if (run.disabled) return;
+        run.disabled = true;
+        run.textContent = lessonText('Іске қосылуда…', 'Выполняется…');
+        output.classList.remove('error');
+        output.textContent = '';
 
         try {
-            await skulptReady;
-        } catch (e) {
-            outputEl.className = "error";
-            outputEl.textContent = "Skulpt жүктелмеді. Интернетті тексеріп, бетті жаңартыңыз (Ctrl+F5).";
-            runBtn.disabled = false;
-            return;
+            await window.PythonRuntime.run(code.value, text => { output.textContent += text; });
+            if (!output.textContent) output.textContent = lessonText('Код орындалды. Экранға еш мән шықпады.', 'Код выполнен. Программа ничего не вывела.');
+        } catch (error) {
+            output.classList.add('error');
+            output.textContent += (output.textContent ? '\n' : '') + lessonText('Қате: ', 'Ошибка: ') + (error.message || String(error));
+        } finally {
+            run.disabled = false;
+            run.textContent = runLabel;
         }
-
-        Sk.configure({
-            output: function (text) { outputEl.textContent += text; },
-            read: builtinRead,
-            __future__: Sk.python3,
-            inputfun: function (prompt) {
-                return window.prompt(prompt || "Мәнді енгізіңіз:") || "";
-            },
-            execLimit: 10000
-        });
-
-        Sk.misceval
-            .asyncToPromise(function () {
-                return Sk.importMainWithBody("<stdin>", false, codeEl.value, true);
-            })
-            .then(function () {
-                if (outputEl.textContent === "") {
-                    outputEl.textContent = "Код сәтті орындалды (экранға ештеңе шықпады).";
-                }
-            })
-            .catch(function (err) {
-                outputEl.className = "error";
-                outputEl.textContent += (outputEl.textContent ? "\n" : "") + "Қате (Error): " + err.toString();
-            })
-            .finally(function () {
-                runBtn.disabled = false;
-            });
     }
 
-    runBtn.addEventListener("click", runCode);
+    function clearOutput() {
+        output.classList.remove('error');
+        output.textContent = initialOutput;
+    }
 
-    clearBtn.addEventListener("click", function () {
-        outputEl.className = "";
-        outputEl.textContent = "Нәтиже осында шығады...";
+    run.addEventListener('click', runCode);
+    clear.addEventListener('click', clearOutput);
+    restore.addEventListener('click', () => {
+        code.value = starter;
+        clearOutput();
+        code.focus();
     });
 
-    // Ctrl+Enter — іске қосу, Tab — шегініс (4 бос орын)
-    codeEl.addEventListener("keydown", function (e) {
-        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-            e.preventDefault();
+    code.addEventListener('keydown', event => {
+        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+            event.preventDefault();
             runCode();
-        } else if (e.key === "Tab") {
-            e.preventDefault();
-            const s = codeEl.selectionStart, end = codeEl.selectionEnd;
-            codeEl.value = codeEl.value.slice(0, s) + "    " + codeEl.value.slice(end);
-            codeEl.selectionStart = codeEl.selectionEnd = s + 4;
+        } else if (event.key === 'Escape') {
+            tabLeavesEditor = true;
+        } else if (event.key === 'Tab' && !event.shiftKey && !tabLeavesEditor) {
+            event.preventDefault();
+            code.setRangeText('    ', code.selectionStart, code.selectionEnd, 'end');
         }
     });
+    code.addEventListener('blur', () => { tabLeavesEditor = false; });
 })();
 </script>
-
 {% endblock %}

@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}{{ text('Күндік тапсырмалар мен марапаттар', 'Задания дня и награды') }} · Python{% endblock %}
+{% block body_class %}rewards-page{% endblock %}
+{% block page_assets %}
+<link rel="stylesheet" href="{{ url_for('static', filename='daily.css') }}">
+<link rel="modulepreload" href="{{ url_for('static', filename='daily-tasks.js') }}">
+<script type="module" src="{{ url_for('static', filename='daily.js') }}"></script>
+{% endblock %}
+{% block content %}
+<article class="daily-hub" id="daily-hub">
+    <header class="daily-header">
+        <div>
+            <time id="daily-date"></time>
+            <h1>{{ text('Күндік практика', 'Практика дня') }}</h1>
+            <p>{{ text('Тапсырмаларды шешіп, монета жинаңыз. Жиналған монеталарға курстың жаңа безендіруін ашуға болады.', 'Решайте задачи и копите монеты, чтобы открывать новые оформления курса.') }}</p>
+        </div>
+        <div class="daily-wallet">
+            <span class="course-coin wallet-coin" aria-hidden="true">✦</span>
+            <div><span>{{ text('Монеталарым', 'Мои монеты') }}</span><strong data-coin-balance>…</strong></div>
+        </div>
+    </header>
+    <nav class="daily-tabs" aria-label="{{ text('Практика бөлімдері', 'Разделы практики') }}">
+        <a href="#tasks" data-tab="tasks" aria-current="page">{{ text('Тапсырмалар', 'Задания') }}</a>
+        <a href="#achievements" data-tab="achievements">{{ text('Жетістіктер', 'Достижения') }}</a>
+        <a href="#shop" data-tab="shop">{{ text('Дүкен', 'Магазин') }}</a>
+    </nav>
+    <noscript><p>{{ text('Тапсырманы тексеру және марапаттарды сақтау үшін JavaScript қосыңыз.', 'Включите JavaScript, чтобы проверять ответы и сохранять награды.') }}</p></noscript>
+    <p id="reward-storage-issue" role="status" hidden>{{ text('Браузер марапаттарды сақтай алмады. Деректерді сақтауға рұқсат беріп, қайта көріңіз.', 'Браузеру не удалось сохранить награды. Разрешите сохранение данных сайта и попробуйте ещё раз.') }}</p>
+
+    <section id="tasks" data-panel="tasks" aria-label="{{ text('Бүгінгі тапсырмалар', 'Сегодняшние задания') }}">
+        <p id="daily-announcement" class="daily-feedback" role="status"></p>
+        <div class="daily-overview">
+            <div><strong id="daily-progress"></strong><progress id="daily-meter" max="5" value="0" aria-labelledby="daily-progress"></progress></div>
+            <div class="daily-reset"><span>{{ text('Жаңаруына дейін', 'До обновления') }}</span><strong id="daily-clock">--:--:--</strong></div>
+        </div>
+        <div class="daily-workspace">
+            <nav class="daily-levels" aria-label="{{ text('Тапсырма деңгейі', 'Уровень задачи') }}">
+                {% for level in levels %}
+                <button type="button" data-daily-level="{{ loop.index }}" aria-pressed="{{ 'true' if loop.first else 'false' }}" aria-controls="daily-exercise">
+                    <span class="level-number">{{ loop.index }}</span>
+                    <span><strong>{{ level.short }}</strong><small class="level-status"></small></span>
+                </button>
+                {% endfor %}
+            </nav>
+            <section class="daily-exercise" id="daily-exercise" aria-labelledby="daily-task-title">
+                <div class="exercise-line"><span id="daily-level-title"></span><b id="task-value"></b></div>
+                <h2 id="daily-task-title"></h2>
+                <p id="daily-prompt"></p>
+                <pre class="daily-code" tabindex="0" aria-label="{{ text('Python коды', 'Код Python') }}"><code id="daily-code"></code></pre>
+                <form id="daily-answer-form">
+                    <label for="daily-answer">{{ text('Жауабыңыз', 'Ваш ответ') }}</label>
+                    <div class="daily-answer-row">
+                        <input id="daily-answer" name="answer" type="text" maxlength="80" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="daily-feedback" required>
+                        <button class="daily-action" type="submit">{{ text('Тексеру', 'Проверить') }}</button>
+                    </div>
+                </form>
+                <p id="daily-feedback" class="daily-feedback" role="status" aria-live="polite"></p>
+                <div class="exercise-links">
+                    <a id="daily-lesson" class="daily-lesson-link">{{ text('Тақырыпты қайталау', 'Повторить тему') }} ↗</a>
+                    <button type="button" id="daily-next" class="daily-secondary" hidden>{{ text('Келесі тапсырма', 'Следующая задача') }} →</button>
+                </div>
+            </section>
+        </div>
+        <p class="daily-note">{{ text('Әр деңгейде күніне бір тапсырма беріледі. Жаңа жинақ күн сайын 00:00-де (UTC+5) ашылады.', 'Каждый день доступна одна задача на уровень. Новый набор открывается в 00:00 (UTC+5).') }}</p>
+    </section>
+
+    <section id="achievements" data-panel="achievements" aria-labelledby="achievement-title" hidden>
+        <div class="streak-card">
+            <div class="streak-info">
+                <h2 id="achievement-title">{{ text('Күндер сериясы', 'Дни подряд') }}</h2>
+                <strong id="streak-count" class="streak-count">0</strong>
+                <p id="streak-best"></p>
+            </div>
+            <div class="streak-calendar"><ol id="streak-week" aria-label="{{ text('Соңғы жеті күн', 'Последние семь дней') }}"></ol>
+            <p>{{ text('Күн есептелуі үшін кемінде бір тапсырманы дұрыс шешіңіз немесе бір сабақты аяқтаңыз.', 'Чтобы день засчитался, решите хотя бы одну задачу верно или завершите урок.') }}</p></div>
+        </div>
+        <h2 class="panel-heading">{{ text('Модуль белгілері', 'Значки за модули') }}</h2>
+        <div class="achievement-grid">
+            {% for level in levels %}
+            <article class="achievement" data-module="{{ loop.index }}">
+                <span class="module-emblem" aria-hidden="true">{{ level.icon }}</span>
+                <div><h3>{{ level.short }}</h3><p class="module-progress"></p></div>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section id="shop" data-panel="shop" aria-labelledby="shop-title" hidden>
+        <h2 class="panel-heading" id="shop-title">{{ text('Безендіру дүкені', 'Магазин оформлений') }}</h2>
+        <p class="panel-intro">{{ text('Безендіруді бір рет сатып алыңыз. Содан кейін оны кез келген уақытта бүкіл сайтқа қоса аласыз.', 'Купите оформление один раз и включайте его на всём сайте, когда захотите.') }}</p>
+        <div class="skin-shelf">
+            {% for skin, title, description in [
+                ('beach', text('Жағажай', 'Пляж'), text('Құм түсті беттер, көгілдір толқындар мен күн батардағы жағалау.', 'Песочные страницы, бирюзовые волны и берег на закате.')),
+                ('newyear', text('Жаңа жыл', 'Новый год'), text('Қар басқан орман, жылы шамдар және түнгі аспан.', 'Заснеженный лес, тёплые огни и небо зимней ночи.')),
+                ('sakura', 'Сакура', text('Жапон бағы, қызғылт шие гүлдері және желмен ұшқан күлтелер.', 'Японский сад, розовые ветви в цвету и лепестки на ветру.')),
+                ('aurora', 'Аврора', text('Түнгі көлдің үстіндегі жасыл және көгілдір поляр шұғыласы.', 'Изумрудные и бирюзовые переливы северного сияния над озером.')),
+                ('glass', 'Glass', text('Күміс реңктер, мөлдір панельдер және шыны қырларындағы жарық.', 'Серебристые оттенки, полупрозрачные панели и блики на гранях стекла.')),
+                ('cyberpunk', 'Киберпанк', text('Неон шамдары, цифрлық тор және жаңбырлы түнгі қала.', 'Неоновые огни, цифровая сетка и город под ночным дождём.')),
+                ('ocean', 'Deep Ocean', text('Терең көк мұхит, жарқыраған медузалар және су астындағы жарық.', 'Глубокий океан, светящиеся медузы и бирюзовые лучи под водой.'))
+            ] %}
+            <article class="skin-card" data-shop-skin="{{ skin }}">
+                <img src="{{ url_for('static', filename='skins/' ~ skin ~ '.jpg') }}" loading="lazy" width="1536" height="1024" alt="">
+                <div class="skin-body">
+                    <div class="skin-heading"><h3>{{ title }}</h3><span class="skin-price"><span class="course-coin" aria-hidden="true">✦</span><b data-price></b><span class="rewards-sr">{{ text('монета', 'монет') }}</span></span></div>
+                    <p>{{ description }}</p>
+                    <button type="button" class="daily-action" data-skin-action></button>
+                    <small data-skin-note></small>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        <div class="classic-skin" data-shop-skin="classic">
+            <div><h3>{{ text('Классикалық безендіру', 'Классическое оформление') }}</h3><small>{{ text('Бастапқы безендіру · тегін', 'Исходный дизайн · бесплатно') }}</small></div>
+            <button type="button" class="daily-secondary" data-skin-action></button>
+        </div>
+        <p id="shop-feedback" class="daily-feedback" role="status" aria-live="polite"></p>
+        <p class="daily-note">{{ text('Күндік тапсырмаларға 10–30 монета беріледі. Жаттықтырғышта және жобаларда әр тексерілетін тапсырманың алғашқы дұрыс шешімі үшін 5 монета аласыз. Монеталар мен сатып алулар осы браузерде сақталады.', 'Ежедневные задачи приносят 10–30 монет. В тренажёре и проектах первое верное решение каждого проверяемого задания приносит ещё 5 монет. Баланс и покупки сохраняются в этом браузере.') }}</p>
+    </section>
+</article>
+{% endblock %}

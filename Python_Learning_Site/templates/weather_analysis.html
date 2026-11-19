@@ -1,0 +1,414 @@
+{% extends "base.html" %}
+{% block title %}Ауа райы деректерін талдау — Python оқу сайты{% endblock %}
+{% block page_assets %}
+<style>
+    .weather-project {
+        --weather-dark: #11415b;
+        --weather-teal: #087271;
+        --weather-surface: #edf8f7;
+        --weather-border: #c9e2e1;
+        container-type: inline-size;
+    }
+
+    .weather-project [hidden] { display: none; }
+    .weather-project .weather-lead { max-width: 67ch; }
+    .weather-project h2 { margin: 0 0 10px; }
+    .weather-project h3 { margin: 0 0 8px; }
+    .weather-project p { margin: 0 0 12px; }
+
+    .weather-explanation, .weather-practice {
+        margin-top: 24px;
+        padding: clamp(16px, 3.5vw, 28px);
+        border: 1px solid var(--weather-border);
+        border-radius: var(--radius-lg);
+        background: white;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .weather-explanation {
+        background: var(--weather-surface);
+    }
+
+    .weather-explanation ol {
+        margin: 8px 0 18px 21px;
+    }
+
+    .weather-example {
+        padding: 13px 15px;
+        border-radius: var(--radius-md);
+        background: white;
+    }
+
+    .weather-example p:last-child { margin-bottom: 0; }
+
+    .weather-workspace {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+        gap: clamp(18px, 3vw, 32px);
+        margin-top: 18px;
+    }
+
+    .weather-workspace > * { min-width: 0; }
+    .weather-project label { display: block; font-weight: 650; color: var(--weather-dark); }
+    .weather-project input, .weather-project select, .weather-project button {
+        min-height: 44px;
+        border: 1px solid var(--weather-border);
+        border-radius: var(--radius-sm);
+        font: inherit;
+    }
+
+    .weather-project input, .weather-project select {
+        width: 100%;
+        color: var(--weather-dark);
+        background: white;
+        padding: 6px 10px;
+    }
+
+    .weather-project :is(button, input, select, summary):focus-visible {
+        outline: 3px solid var(--weather-teal);
+        outline-offset: 2px;
+    }
+
+    .weather-project label + input, .weather-project label + select { margin-top: 5px; }
+    .weather-project select { cursor: pointer; }
+
+    .weather-project ul.weather-readings {
+        display: grid;
+        gap: 3px;
+        margin: 12px 0 0;
+        padding: 9px 12px;
+        border-radius: var(--radius-md);
+        background: var(--weather-surface);
+        list-style: none;
+        font-size: .87rem;
+        color: var(--weather-dark);
+    }
+
+    .weather-readings li {
+        display: grid;
+        grid-template-columns: 5.2em minmax(0, 1fr) 4em;
+        align-items: center;
+        gap: 8px;
+        min-height: 30px;
+        margin: 0;
+    }
+
+    .weather-temp {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .weather-track {
+        position: relative;
+        height: 12px;
+        border-radius: 8px;
+        background: linear-gradient(to right, #dcebf1, #dcebf1 49.5%, #758c99 49.5%, #758c99 50.5%, #e2eae7 50.5%, #e2eae7);
+    }
+
+    .weather-bar {
+        position: absolute;
+        top: 2px;
+        height: 8px;
+        border-radius: 4px;
+        background: #16807b;
+    }
+
+    .weather-bar[data-sign="negative"] { background: #336ab4; }
+    .weather-bar[data-sign="zero"] { background: #415b68; }
+
+    .weather-fields {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin: 0 0 12px;
+        border: 0;
+        padding: 0;
+    }
+
+    .weather-fields legend { margin-bottom: 8px; font-weight: 700; color: var(--weather-dark); }
+    .weather-fields label { font-size: .9rem; }
+    .weather-project input[aria-invalid="true"] { border-color: #ad3f27; background: #fff6f2; }
+    .weather-project input[data-correct="true"] { border-color: #187552; background: #f3fcf7; }
+
+    .weather-project .weather-form-note, .weather-project .weather-feedback {
+        font-size: .9rem;
+    }
+
+    .weather-project button {
+        padding: 7px 14px;
+        cursor: pointer;
+    }
+
+    .weather-project button[type="submit"] {
+        background: var(--weather-teal);
+        border-color: var(--weather-teal);
+        color: white;
+    }
+
+    .weather-project button[type="reset"] {
+        background: white;
+        color: var(--weather-dark);
+    }
+
+    .weather-project button:hover { box-shadow: inset 0 0 0 1px currentColor; }
+    .weather-controls { display: flex; flex-wrap: wrap; gap: 8px; }
+    .weather-project .weather-feedback { min-height: 2em; margin: 8px 0 0; }
+    .weather-project .weather-feedback[data-state="success"] { color: #166446; }
+    .weather-project .weather-feedback[data-state="error"] { color: #94402e; }
+
+    .weather-code {
+        margin-top: 14px;
+        padding: 12px 14px;
+        border-radius: var(--radius-md);
+        background: var(--weather-surface);
+    }
+
+    .weather-code summary { cursor: pointer; color: var(--weather-dark); font-weight: 700; }
+    .weather-code pre {
+        margin: 8px 0 12px;
+        padding: 14px;
+        border-radius: var(--radius-sm);
+        background: #112c3f;
+        color: #f0f8ff;
+        font: .9rem/1.55 Consolas, monospace;
+        overflow-x: auto;
+    }
+
+    .weather-code p:last-child { margin-bottom: 0; }
+
+    @container (max-width: 650px) {
+        .weather-workspace { grid-template-columns: minmax(0, 1fr); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<article class="weather-project" aria-labelledby="weather-title">
+    <h1 id="weather-title">Ауа райы деректерін талдау</h1>
+    <p class="weather-lead course-objective">Бір аптадағы температураларды Python тізіміне сақтап, ең суық және ең жылы күннің температурасын, аптадағы орташа мәнді және жылы күндер санын есептеңіз.</p>
+    <a class="course-jump" href="#weather-practice-title">Апталық деректерге өту <span aria-hidden="true">↓</span></a>
+
+    <section class="weather-explanation" aria-labelledby="weather-explanation-title">
+        <h2 id="weather-explanation-title">Талдауды қалай жүргіземіз?</h2>
+        <ol>
+            <li>Әр күннің температурасын өлшенген ретімен тізімге жазыңыз.</li>
+            <li>Ең кіші мәнді <code>min()</code>, ең үлкен мәнді <code>max()</code> арқылы табыңыз.</li>
+            <li>Орташа мәнді табу үшін температуралардың қосындысын <code>sum()</code> арқылы есептеп, күндер санына <code>len()</code> арқылы бөліңіз.</li>
+            <li>Күндерді <code>for</code> циклімен қарап шығыңыз. Температура <code>0</code>-ден жоғары болған сайын есептегішті біреуге арттырыңыз. <code>0 °C</code> жылы күнге жатпайды.</li>
+        </ol>
+        <div class="weather-example">
+            <h3>Үш күндік мысал</h3>
+            <p>Температуралар <code>[-3, 0, 6]</code> болса, ең төменгі мән <strong>−3 °C</strong>, ең жоғарғы мән <strong>6 °C</strong>.</p>
+            <p>Орташа мән <code>(-3 + 0 + 6) / 3</code> арқылы шығады, яғни <strong>1 °C</strong>. Нөлден жоғары температура <strong>бір күнде</strong> байқалды.</p>
+        </div>
+    </section>
+
+    <section class="weather-practice" aria-labelledby="weather-practice-title" hidden>
+        <h2 id="weather-practice-title" tabindex="-1">Апта деректерін талдаңыз</h2>
+        <p>Бір аптаны таңдап, жеті күннің көрсеткіштерін талдаңыз. Нәтижелеріңізді тексерген соң, Python кодымен салыстырыңыз.</p>
+        <div class="weather-workspace">
+            <div>
+                <label for="weather-week">Оқу деректерінің аптасы</label>
+                <select id="weather-week">
+                    <option value="0">1-апта</option>
+                    <option value="1">2-апта</option>
+                    <option value="2">3-апта</option>
+                </select>
+                <ul class="weather-readings" aria-label="Күнделікті температуралар"></ul>
+            </div>
+            <form novalidate>
+                <fieldset class="weather-fields">
+                    <legend>Есептеу нәтижелері</legend>
+                    <div>
+                        <label for="weather-min">Ең төменгі мән, °C</label>
+                        <input id="weather-min" name="minimum" type="text" inputmode="decimal" required>
+                    </div>
+                    <div>
+                        <label for="weather-max">Ең жоғарғы мән, °C</label>
+                        <input id="weather-max" name="maximum" type="text" inputmode="decimal" required>
+                    </div>
+                    <div>
+                        <label for="weather-mean">Орташа мән, °C</label>
+                        <input id="weather-mean" name="mean" type="text" inputmode="decimal" aria-describedby="weather-rounding" required>
+                    </div>
+                    <div>
+                        <label for="weather-warm">Жылы күндер саны</label>
+                        <input id="weather-warm" name="warm" type="text" inputmode="numeric" required>
+                    </div>
+                </fieldset>
+                <p class="weather-form-note" id="weather-rounding">Орташа мәнді ондық үлеске дейін дөңгелектеңіз. Мысалы, 2,43 → 2,4.</p>
+                <div class="weather-controls">
+                    <button type="submit">Жауаптарды тексеру</button>
+                    <button type="reset">Тазарту</button>
+                </div>
+                <p class="weather-feedback" role="status"></p>
+            </form>
+        </div>
+
+        <details class="weather-code" hidden>
+            <summary>Python шешімін көру</summary>
+            <pre><code></code></pre>
+            <p>Кодты іске қосып, нәтижені өз жауабыңызбен салыстырыңыз. Содан кейін тізімдегі бір температураны өзгертіп, қай нәтиже өзгеретінін тексеріңіз.</p>
+            <p><strong>Қосымша тапсырма.</strong> Нөлден төмен температура тіркелген күндердің санын да шығарыңыз.</p>
+        </details>
+    </section>
+
+    <noscript><p>Тапсырмаларды тексеру үшін браузерде JavaScript қосыңыз.</p></noscript>
+</article>
+{% endblock %}
+
+{% block lesson_scripts %}
+<script>
+(() => {
+    const lessonText = window.courseText;
+    const project = document.querySelector('.weather-project');
+    const practice = project.querySelector('.weather-practice');
+    const week = project.querySelector('#weather-week');
+    const readings = project.querySelector('.weather-readings');
+    const form = project.querySelector('form');
+    const feedback = project.querySelector('.weather-feedback');
+    const solution = project.querySelector('.weather-code');
+    const python = solution.querySelector('code');
+
+    const weeks = [
+        [-4, -1, 0, 2, 5, 3, 1],
+        [-6, -3, -2, 0, 1, 2, -1],
+        [3, 5, 7, 4, 0, -2, 2]
+    ];
+    const days = [lessonText('Дүйсенбі', 'Понедельник'), lessonText('Сейсенбі', 'Вторник'), lessonText('Сәрсенбі', 'Среда'), lessonText('Бейсенбі', 'Четверг'), lessonText('Жұма', 'Пятница'), lessonText('Сенбі', 'Суббота'), lessonText('Жексенбі', 'Воскресенье')];
+
+    function createReading(value, index, scale) {
+        const row = document.createElement('li');
+        const name = document.createElement('span');
+        name.textContent = days[index];
+
+        const track = document.createElement('span');
+        track.className = 'weather-track';
+        track.setAttribute('aria-hidden', 'true');
+
+        const bar = document.createElement('span');
+        bar.className = 'weather-bar';
+        bar.dataset.sign = value < 0 ? 'negative' : value > 0 ? 'positive' : 'zero';
+        const distance = Math.abs(value) / scale * 46;
+        bar.style.left = value < 0 ? `${50 - distance}%` : '50%';
+        bar.style.width = value === 0 ? '3px' : `${distance}%`;
+        track.append(bar);
+
+        const temperature = document.createElement('span');
+        temperature.className = 'weather-temp';
+        const reading = value < 0 ? `−${Math.abs(value)}` : value;
+        temperature.textContent = `${reading} °C`;
+        row.append(name, track, temperature);
+        return row;
+    }
+
+    function clearValidation() {
+        for (const field of form.querySelectorAll('input')) {
+            field.removeAttribute('aria-invalid');
+            delete field.dataset.correct;
+        }
+        feedback.textContent = '';
+        delete feedback.dataset.state;
+        solution.open = false;
+        solution.hidden = true;
+    }
+
+    function showWeek() {
+        const temperatures = weeks[Number(week.value)];
+        const scale = Math.max(...temperatures.map(value => Math.abs(value)));
+        readings.replaceChildren(...temperatures.map((value, index) => createReading(value, index, scale)));
+        form.reset();
+    }
+
+    function readNumber(input) {
+        const value = input.value.trim().replace(',', '.').replace('−', '-');
+        return /^[+-]?\d+(?:\.\d+)?$/.test(value) ? Number(value) : NaN;
+    }
+
+    function expectedResults(temperatures) {
+        const sum = temperatures.reduce((total, value) => total + value, 0);
+        return {
+            minimum: Math.min(...temperatures),
+            maximum: Math.max(...temperatures),
+            mean: Number((sum / temperatures.length).toFixed(1)),
+            warm: temperatures.filter(value => value > 0).length
+        };
+    }
+
+    function pythonExample(temperatures) {
+        return [
+            lessonText(`температуралар = [${temperatures.join(', ')}]`, `температуры = [${temperatures.join(', ')}]`),
+            lessonText('ең_төмен = min(температуралар)', 'минимум = min(температуры)'),
+            lessonText('ең_жоғары = max(температуралар)', 'максимум = max(температуры)'),
+            lessonText('орташа = sum(температуралар) / len(температуралар)', 'средняя = sum(температуры) / len(температуры)'),
+            '',
+            lessonText('жылы_күндер = 0', 'тёплые_дни = 0'),
+            lessonText('for температура in температуралар:', 'for температура in температуры:'),
+            '    if температура > 0:',
+            lessonText('        жылы_күндер += 1', '        тёплые_дни += 1'),
+            '',
+            lessonText('print(f"Ең төменгі мән: {ең_төмен} °C")', 'print(f"Минимальная температура: {минимум} °C")'),
+            lessonText('print(f"Ең жоғарғы мән: {ең_жоғары} °C")', 'print(f"Максимальная температура: {максимум} °C")'),
+            lessonText('print(f"Орташа мән: {орташа:.1f} °C")', 'print(f"Средняя температура: {средняя:.1f} °C")'),
+            lessonText('print(f"Жылы күндер саны: {жылы_күндер}")', 'print(f"Количество тёплых дней: {тёплые_дни}")')
+        ].join('\n');
+    }
+
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+        const temperatures = weeks[Number(week.value)];
+        const expected = expectedResults(temperatures);
+        const fields = Array.from(form.querySelectorAll('input'));
+
+        let firstIncorrect = null;
+        let hasMissingNumber = false;
+        for (const field of fields) {
+            const answer = readNumber(field);
+            const correct = answer === expected[field.name];
+            field.setAttribute('aria-invalid', String(!correct));
+            field.dataset.correct = String(correct);
+            if (!correct && !firstIncorrect) firstIncorrect = field;
+            if (Number.isNaN(answer)) hasMissingNumber = true;
+        }
+
+        if (firstIncorrect) {
+            feedback.dataset.state = 'error';
+            feedback.textContent = hasMissingNumber
+                ? lessonText('Төрт өріске де сан енгізіңіз.', 'Введите число в каждом из четырёх полей.')
+                : lessonText('Кейбір жауаптар сәйкес келмеді. Белгіленген өрістерді қайта есептеңіз.', 'Проверьте расчёты в отмеченных полях.');
+            solution.open = false;
+            solution.hidden = true;
+            firstIncorrect.focus();
+        } else {
+            feedback.dataset.state = 'success';
+            window.CourseRewards.practice('project:weather:' + week.value);
+            feedback.textContent = lessonText('Дұрыс! Енді нәтижені Python кодымен салыстырыңыз.', 'Верно! Теперь сравните свои ответы с результатом программы на Python.');
+            python.textContent = pythonExample(temperatures);
+            solution.hidden = false;
+        }
+    });
+
+    form.addEventListener('input', clearValidation);
+    form.addEventListener('reset', clearValidation);
+    week.addEventListener('change', showWeek);
+    showWeek();
+    practice.hidden = false;
+    window.courseLanguage.preserveActivity(
+        () => ({
+            week: week.value, answers: Object.fromEntries(new FormData(form)),
+            checked: Boolean(feedback.dataset.state), solutionOpen: solution.open
+        }),
+        saved => {
+            if (![...week.options].some(option => option.value === saved.week)) return;
+            week.value = saved.week;
+            showWeek();
+            window.courseLanguage.restoreFields(form, saved.answers);
+            if (saved.checked) form.requestSubmit();
+            solution.open = !solution.hidden && saved.solutionOpen === true;
+        }
+    );
+})();
+</script>
+{% endblock %}

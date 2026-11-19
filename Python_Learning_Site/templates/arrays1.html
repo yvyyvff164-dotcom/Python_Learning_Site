@@ -1,66 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Бірөлшемді массивтер (Lists) - Python оқу сайты{% endblock %}
+{% block title %}Бірөлшемді массив: тізім — Python оқу сайты{% endblock %}
 
-{% block content %}
+{% block page_assets %}
 <style>
     /* ==========================================
         Бетке арналған қосымша стилизация
     ========================================== */
-    .lesson-title {
-        font-size: 2rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, var(--primary), var(--primary-2));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 20px;
-    }
-
-    /* YouTube видеосын бейімдеу (Responsive iframe) */
-    .video-wrapper {
-        position: relative;
-        width: 100%;
-        padding-bottom: 56.25%; /* 16:9 пропорция */
-        height: 0;
-        background: #000;
-        border-radius: var(--radius-md);
-        overflow: hidden;
-        box-shadow: var(--shadow-lg);
-        margin-bottom: 30px;
-    }
-
-    .video-wrapper iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: none;
-    }
-
-    /* Карточкалар торы (Feature Grid) */
-    .feature-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 20px;
-        margin: 25px 0;
-    }
-
-    .feature-card {
-        background: var(--surface-strong);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-md);
-        padding: 20px;
-        box-shadow: var(--shadow-sm);
-        transition: var(--transition-smooth);
-        color: var(--text-main);
-    }
-
-    .feature-card:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--primary);
-    }
 
     /* Ерекше карточка стильдері */
     .card-primary {
@@ -96,155 +42,56 @@
         margin-bottom: 10px;
     }
 
-    /* Код редакторы мен Sandbox стилі */
-    .editor-container {
-        margin-top: 15px;
-        border-radius: var(--radius-md);
-        overflow: hidden;
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow-sm);
-    }
+    .course-answer { margin-top: 16px; }
+    .course-answer summary { font-weight: 700; cursor: pointer; }
 
-    #code {
+    .data-index-table {
         width: 100%;
-        box-sizing: border-box;
-        background: #0f172a;
-        color: #38bdf8;
-        font-family: 'Fira Code', Consolas, Monaco, monospace;
-        font-size: 14px;
-        padding: 16px;
-        border: none;
-        outline: none;
-        resize: vertical;
-        line-height: 1.5;
-        tab-size: 4;
-    }
-
-    .btn-row {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-
-    .btn-run {
-        margin-top: 15px;
-        background: linear-gradient(135deg, #22c55e, #16a34a);
-        color: white;
-        border: none;
-        padding: 12px 24px;
-        font-size: 15px;
-        font-weight: 600;
-        border-radius: var(--radius-sm);
-        cursor: pointer;
-        box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
-        transition: var(--transition-smooth);
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .btn-run:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
-    }
-
-    .btn-run:disabled {
-        opacity: .6;
-        cursor: wait;
-        transform: none;
-    }
-
-    .btn-clear {
-        margin-top: 15px;
-        background: transparent;
+        border-collapse: collapse;
+        text-align: center;
         color: var(--text-main);
+    }
+
+    .data-index-table th,
+    .data-index-table td {
         border: 1px solid var(--border);
-        padding: 12px 20px;
-        font-size: 15px;
-        font-weight: 600;
-        border-radius: var(--radius-sm);
-        cursor: pointer;
-        transition: var(--transition-smooth);
+        padding: .55rem .65rem;
+        white-space: nowrap;
     }
 
-    .btn-clear:hover {
-        border-color: var(--primary);
-    }
-
-    .hint {
-        font-size: 13px;
-        opacity: .7;
-        margin-top: 8px;
-    }
-
-    #output {
-        background: #0f172a;
-        color: #22c55e;
-        padding: 16px;
-        border-radius: var(--radius-md);
-        font-family: 'Fira Code', Consolas, monospace;
-        font-size: 14px;
-        min-height: 60px;
-        margin-top: 8px;
-        border: 1px solid #334155;
-        white-space: pre-wrap;
-    }
-
-    #output.error {
-        color: #f87171;
-    }
-
-    .btn-primary-action {
-        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-        color: white;
-        padding: 12px 20px;
-        border-radius: var(--radius-sm);
-        font-weight: 600;
-        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
-        transition: var(--transition-smooth);
-        text-decoration: none;
+    .data-index-table th { background: var(--surface-strong); }
+    .data-index-table strong {
         display: inline-block;
-        margin-top: 25px;
-    }
-
-    .btn-primary-action:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
-        color: white;
-    }
-
-    hr {
-        border: none;
-        height: 1px;
-        background: var(--border);
-        margin: 30px 0;
-    }
-
-    p {
-        line-height: 1.6;
-        color: var(--text-main);
+        min-width: 2ch;
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: #dbeafe;
+        color: #1e3a8a;
     }
 </style>
+{% endblock %}
 
-<h1 class="lesson-title">📦 Бірөлшемді массивтер (Lists)</h1>
+{% block content %}
 
-<div class="video-wrapper">
-    <iframe
-        src="https://www.youtube.com/embed/Zg_gXzHFNlI"
-        title="Бірөлшемді массив Python"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen>
-    </iframe>
-</div>
+<h1 class="lesson-title">Бірөлшемді массив: тізім</h1>
 
-<p>
-    Python-да массивтерді <b>Тізімдер (Lists)</b> деп атайды. Бұл — бір айнымалының ішінде көптеген мәндерді (сандарды, мәтіндерді) сақтауға мүмкіндік беретін деректер құрылымы.
-</p>
+<p class="course-objective">Python тіліндегі тізім (<code>list</code>) бірнеше мәнді ретімен сақтайды. Бұл сабақта тізімдегі мәнді индекс арқылы оқып, оны басқа мәнмен ауыстырасыз.</p>
 
-<hr>
+<details class="course-media">
+    <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Бейнесабақты көру</summary>
+    <div class="video-wrapper">
+        <iframe
+            loading="lazy"
+            src="https://www.youtube.com/embed/Zg_gXzHFNlI"
+            title="Python тізімі туралы бейнесабақ"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+    </div>
+</details>
 
-<h2>🔢 Индекстеу: Элементтерге қалай қол жеткізуге болады?</h2>
+
+<h2>Элементтің индексін табу</h2>
 <p>Тізімдегі әрбір элементтің өз орны (нөмірі) болады. Назар аударыңыз: <b>санау 0-ден басталады!</b></p>
 
 <div class="feature-grid">
@@ -259,13 +106,35 @@
     </div>
 </div>
 
-<hr>
 
-<h2>🧪 Тәжірибелік алаң (Sandbox)</h2>
-<p>Тізімді өзгертіп, индекстермен жұмыс істеп көр:</p>
+<section class="course-example" aria-labelledby="worked-example">
+    <h3 id="worked-example">Мысал. Бір мәнді екі индекспен оқу</h3>
+    <p><code>jemister[1]</code> мен <code>jemister[-3]</code> бір элементті көрсетеді. Оң индекс басынан, ал теріс индекс соңынан саналады.</p>
+    <div class="course-table table-scroll" tabindex="0" role="region" aria-label="Жемістердің индекстері">
+        <table class="data-index-table" aria-label="Жемістердің индекстері">
+            <tbody>
+                <tr><th scope="row">Жеміс</th><td>Алма</td><td>Алмұрт</td><td>Банан</td><td>Шие</td></tr>
+                <tr><th scope="row">Оң индекс</th><td>0</td><td><strong>1</strong></td><td>2</td><td>3</td></tr>
+                <tr><th scope="row">Теріс индекс</th><td>−4</td><td><strong>−3</strong></td><td>−2</td><td>−1</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <pre class="course-code"><code>jemister = ["Алма", "Алмұрт", "Банан", "Шие"]
+print(jemister[1], jemister[-3])  # Алмұрт Алмұрт</code></pre>
+</section>
 
+<section class="course-practice" aria-labelledby="practice-title">
+    <h2 id="practice-title">Практика</h2>
+    <h3>Жемістер тізімін жаңарту</h3>
+    <ol>
+        <li>Үлгіні орындап, екінші жемістің индексін анықтаңыз.</li>
+        <li>Кодтың соңында екінші жемісті <code>"Өрік"</code> мәнімен ауыстырып, жаңартылған тізімді және соңғы жемісті екі бөлек жолмен шығарыңыз.</li>
+    </ol>
+    <p><strong>Күтілетін нәтиже</strong> <code>[&#x27;Алма&#x27;, &#x27;Өрік&#x27;, &#x27;Қауын&#x27;, &#x27;Шие&#x27;] және келесі жолда Шие</code></p>
+
+<label class="course-output-label" for="code">Python редакторы</label>
 <div class="editor-container">
-    <textarea id="code" rows="14" spellcheck="false">
+    <textarea id="code" aria-describedby="code-hint" rows="13" autocomplete="off" autocapitalize="off" spellcheck="false">
 # Тізім құру
 jemister = ["Алма", "Алмұрт", "Банан", "Шие"]
 
@@ -283,16 +152,23 @@ print("Жаңартылған тізім:", jemister)
 </div>
 
 <div class="btn-row">
-    <button class="btn-run" id="run-btn" type="button">▶ Run Code</button>
-    <button class="btn-clear" id="clear-btn" type="button">🗑 Тазалау</button>
+    <button class="btn-run" id="run-btn" type="button">Кодты іске қосу</button>
+    <button class="btn-clear" id="clear-btn" type="button">Нәтижені тазалау</button>
 </div>
-<div class="hint">Ctrl + Enter — кодты іске қосу</div>
+<p class="hint" id="code-hint">Пернетақтамен іске қосу үшін Ctrl + Enter немесе ⌘ + Enter басыңыз.</p>
 
-<div style="margin-top: 15px; color: var(--text-light); font-size: 14px; font-weight: 500;">Нәтиже (Output):</div>
-<pre id="output">Нәтиже осында шығады...</pre>
+<p class="course-output-label" id="output-label">Нәтиже</p>
+<pre id="output" role="status" aria-labelledby="output-label" tabindex="0">Нәтиже осында шығады...</pre>
+    <details class="course-answer">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Шешім үлгісін көру</summary>
+        <pre class="course-code"><code>jemister[1] = "Өрік"
+print(jemister)
+print(jemister[-1])</code></pre>
+    </details>
+</section>
 
 <div class="feature-card card-danger" style="margin-top: 30px;">
-    <h4>⚠️ Жиі кездесетін қате:</h4>
+    <h4><span data-float-icon aria-hidden="true">⚠️</span> Жиі кездесетін қате:</h4>
     <p style="margin-bottom: 0;">Егер сіз тізімде жоқ индексті шақырсаңыз (мысалы, 3 элементі бар тізімнен 10-шыны сұрасаңыз), Python <code>IndexError</code> қатесін береді.</p>
 </div>
 
@@ -300,128 +176,57 @@ print("Жаңартылған тізім:", jemister)
    target="_blank"
    rel="noopener"
    class="btn-primary-action">
-    🚀 Бірөлшемді массив тапсырмаларын орындау
+    <span data-float-icon aria-hidden="true">🚀</span> Бірөлшемді массив тапсырмаларын орындау
 </a>
+{% endblock %}
 
+{% block lesson_scripts %}
 <script>
 (function () {
+    const lessonText = window.courseText;
     const codeEl   = document.getElementById("code");
     const outputEl = document.getElementById("output");
     const runBtn   = document.getElementById("run-btn");
     const clearBtn = document.getElementById("clear-btn");
 
-    // Skulpt-ты бірнеше көзден кезекпен жүктеу
-    const SOURCES = [
-        ["https://skulpt.org/js/skulpt.min.js",
-         "https://skulpt.org/js/skulpt-stdlib.js"],
-        ["https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js",
-         "https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"],
-        ["https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt.min.js",
-         "https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt-stdlib.js"]
-    ];
-
-    function loadScript(src) {
-        return new Promise(function (resolve, reject) {
-            const s = document.createElement("script");
-            s.src = src;
-            s.onload = resolve;
-            s.onerror = function () { reject(new Error(src)); };
-            document.head.appendChild(s);
-        });
-    }
-
-    async function loadSkulpt() {
-        if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
-        for (const pair of SOURCES) {
-            try {
-                await loadScript(pair[0]);
-                await loadScript(pair[1]);
-                if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
-            } catch (e) {
-                console.warn("Skulpt жүктелмеді:", e.message);
-            }
-        }
-        throw new Error("Skulpt ешбір көзден жүктелмеді");
-    }
-
-    const skulptReady = loadSkulpt();
-    runBtn.disabled = true;
-    runBtn.textContent = "⏳ Жүктелуде...";
-    function enableBtn() {
-        runBtn.disabled = false;
-        runBtn.textContent = "▶ Run Code";
-    }
-    skulptReady.then(enableBtn).catch(enableBtn);
-
-    function builtinRead(file) {
-        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][file] === undefined) {
-            throw "Файл табылмады: '" + file + "'";
-        }
-        return Sk.builtinFiles["files"][file];
-    }
+    const runLabel = runBtn.textContent;
 
     async function runCode() {
-        outputEl.className = "";
-        outputEl.textContent = "";
+        if (runBtn.disabled) return;
+        const program = codeEl.value;
+
         runBtn.disabled = true;
+        runBtn.textContent = lessonText("Іске қосылуда…", "Выполняется…");
+        outputEl.classList.remove("error");
+        outputEl.textContent = "";
 
         try {
-            await skulptReady;
-        } catch (e) {
-            outputEl.className = "error";
-            outputEl.textContent = "Skulpt жүктелмеді. Интернетті тексеріп, бетті жаңартыңыз (Ctrl+F5).";
+            await window.PythonRuntime.run(program, text => { outputEl.textContent += text; });
+            if (!outputEl.textContent) {
+                outputEl.textContent = lessonText("Код сәтті орындалды (экранға ештеңе шықпады).", "Код выполнен (программа ничего не вывела).");
+            }
+        } catch (error) {
+            outputEl.classList.add("error");
+            outputEl.textContent += (outputEl.textContent ? "\n" : "") + lessonText("Қате: ", "Ошибка: ") + String(error);
+        } finally {
             runBtn.disabled = false;
-            return;
+            runBtn.textContent = runLabel;
         }
-
-        Sk.configure({
-            output: function (text) { outputEl.textContent += text; },
-            read: builtinRead,
-            __future__: Sk.python3,
-            inputfun: function (prompt) {
-                return window.prompt(prompt || "Мәнді енгізіңіз:") || "";
-            },
-            execLimit: 10000
-        });
-
-        Sk.misceval
-            .asyncToPromise(function () {
-                return Sk.importMainWithBody("<stdin>", false, codeEl.value, true);
-            })
-            .then(function () {
-                if (outputEl.textContent === "") {
-                    outputEl.textContent = "Код сәтті орындалды (экранға ештеңе шықпады).";
-                }
-            })
-            .catch(function (err) {
-                outputEl.className = "error";
-                outputEl.textContent += (outputEl.textContent ? "\n" : "") + "Қате (Error): " + err.toString();
-            })
-            .finally(function () {
-                runBtn.disabled = false;
-            });
     }
 
     runBtn.addEventListener("click", runCode);
 
     clearBtn.addEventListener("click", function () {
         outputEl.className = "";
-        outputEl.textContent = "Нәтиже осында шығады...";
+        outputEl.textContent = lessonText("Нәтиже осында шығады...", "Здесь появится результат...");
     });
 
-    // Ctrl+Enter — іске қосу, Tab — шегініс (4 бос орын)
     codeEl.addEventListener("keydown", function (e) {
         if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
             e.preventDefault();
-            runCode();
-        } else if (e.key === "Tab") {
-            e.preventDefault();
-            const s = codeEl.selectionStart, end = codeEl.selectionEnd;
-            codeEl.value = codeEl.value.slice(0, s) + "    " + codeEl.value.slice(end);
-            codeEl.selectionStart = codeEl.selectionEnd = s + 4;
+            if (!runBtn.disabled) runCode();
         }
     });
 })();
 </script>
-
 {% endblock %}

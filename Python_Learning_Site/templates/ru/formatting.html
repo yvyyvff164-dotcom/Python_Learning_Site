@@ -1,0 +1,168 @@
+{% extends "formatting.html" %}
+
+{% block title %}Форматирование строк (f-строки) | Курс Python{% endblock %}
+
+{% block content %}
+
+<h1 class="lesson-title">Форматирование строк (f-string)</h1>
+
+<p class="course-objective">С помощью f-строки можно вставить в текст значение переменной или результат вычисления. Поставьте <code>f</code> перед кавычками и запишите выражение в фигурных скобках <code>{ }</code>.</p>
+
+<details class="course-media">
+    <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Посмотреть видеоурок</summary>
+    <div class="video-wrapper">
+        <iframe
+            loading="lazy"
+            src="https://www.youtube.com/embed/DOxzzkjTcgI?hl=ru&amp;cc_lang_pref=ru"
+            title="Видеоурок о форматировании с помощью f-строк"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+    </div>
+</details>
+
+<pre class="code-pre">name = "Аружан"
+print(f"Привет, {name}!")   # Привет, Аружан!</pre>
+
+
+<h2>Что можно сделать с помощью f-строки?</h2>
+
+<div class="feature-grid">
+    <div class="feature-card card-primary">
+        <h4>1. Подстановка переменной</h4>
+        <p style="margin-bottom: 0;"><code>{name}</code> — на месте этого выражения появится значение переменной.</p>
+    </div>
+
+    <div class="feature-card card-purple">
+        <h4>2. Вычисления</h4>
+        <p style="margin-bottom: 0;">В фигурных скобках можно записать выражение, например: <code>{a + b}</code>, <code>{a * b}</code>.</p>
+    </div>
+
+    <div class="feature-card card-success">
+        <h4>3. Форматирование чисел</h4>
+        <p style="margin-bottom: 0;">После двоеточия укажите формат. Например, <code>{price:.2f}</code> выводит число с двумя знаками после десятичной точки.</p>
+    </div>
+</div>
+
+<h3>Примеры форматов</h3>
+<div class="course-table table-scroll" tabindex="0" role="region" aria-label="Примеры форматов">
+<table class="spec-table">
+    <tr>
+        <th scope="col">Формат</th>
+        <th scope="col">Значение</th>
+        <th scope="col">Пример</th>
+    </tr>
+    <tr>
+        <td><code>:.2f</code></td>
+        <td>Два знака после десятичной точки</td>
+        <td><code>f"{3.14159:.2f}"</code> → 3.14</td>
+    </tr>
+    <tr>
+        <td><code>:03d</code></td>
+        <td>Целое число из трёх или более знаков с нулями слева</td>
+        <td><code>f"{7:03d}"</code> → 007</td>
+    </tr>
+    <tr>
+        <td><code>:&lt;5</code></td>
+        <td>Выравнивание влево (поле шириной 5 символов)</td>
+        <td><code>f"{'a':&lt;5}|"</code> → a&nbsp;&nbsp;&nbsp;&nbsp;|</td>
+    </tr>
+    <tr>
+        <td><code>:&gt;5</code></td>
+        <td>Выравнивание вправо (поле шириной 5 символов)</td>
+        <td><code>f"{'a':&gt;5}|"</code> → &nbsp;&nbsp;&nbsp;&nbsp;a|</td>
+    </tr>
+    <tr>
+        <td><code>:^5</code></td>
+        <td>Выравнивание по центру (поле шириной 5 символов)</td>
+        <td><code>f"{'a':^5}|"</code> → &nbsp;&nbsp;a&nbsp;&nbsp;|</td>
+    </tr>
+</table>
+</div>
+
+
+<section class="course-example" aria-labelledby="worked-example">
+    <h3 id="worked-example">Пример. Вывод стоимости покупки</h3>
+    <p>Сначала Python вычислит выражение <code>2 * 49.5</code> в фигурных скобках. Затем формат <code>:.2f</code> выведет результат с двумя знаками после десятичной точки.</p>
+    <pre class="course-code"><code>print(f"Стоимость: {2 * 49.5:.2f} тг")
+# Стоимость: 99.00 тг</code></pre>
+</section>
+
+<section class="course-practice" aria-labelledby="practice-title">
+    <h2 id="practice-title">Практика</h2>
+    <h3>Составьте сообщение о заказе</h3>
+    <ol>
+        <li>В конце программы задайте переменные <code>quantity = 3</code> и <code>price = 149.9</code>.</li>
+        <li>В f-строке укажите количество товаров и вычислите общую стоимость. Выведите стоимость с двумя знаками после десятичной точки.</li>
+    </ol>
+    <p><strong>Ожидаемый результат</strong> <code>3 шт. — 449.70 тг</code></p>
+
+<label class="course-output-label" for="code">Редактор Python</label>
+<div class="editor-container">
+    <textarea id="code" aria-describedby="code-hint" rows="14" autocomplete="off" autocapitalize="off" spellcheck="false">
+# 1. Простая f-string
+name = "Аружан"
+age = 14
+print(f"Меня зовут {name}, мне {age} лет.")
+
+# 2. Вычисления в фигурных скобках
+a = 7
+b = 3
+print(f"{a} + {b} = {a + b}")
+print(f"{a} * {b} = {a * b}")
+
+# 3. Форматируем дробное число
+price = 1234.5678
+print(f"Цена: {price:.2f} тг")
+
+# 4. Выравнивание (как в таблице)
+m1 = "Яблоко"
+m2 = "Банан"
+m3 = "Вишня"
+print(f"|{m1:<10}|{m2:^10}|{m3:>10}|")
+
+# 5. Добавляем нули слева
+print(f"Номер: {7:03d}")
+
+# 6. Сравниваем три способа
+print("Сложение:", "Привет, " + name + "!")
+print("format():   ", "Привет, {}!".format(name))
+print("f-string:   ", f"Привет, {name}!")
+</textarea>
+</div>
+
+<div class="btn-row">
+    <button class="btn-run" id="run-btn" type="button">Запустить код</button>
+    <button class="btn-clear" id="clear-btn" type="button">Очистить вывод</button>
+</div>
+<p class="hint" id="code-hint">Чтобы запустить код с клавиатуры, нажмите Ctrl + Enter или ⌘ + Enter.</p>
+
+<p class="course-output-label" id="output-label">Результат</p>
+<pre id="output" role="status" aria-labelledby="output-label" tabindex="0">Здесь появится результат...</pre>
+    <details class="course-answer">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Показать пример решения</summary>
+        <pre class="course-code"><code>quantity = 3
+price = 149.9
+print(f"{quantity} шт. — {quantity * price:.2f} тг")</code></pre>
+    </details>
+</section>
+
+
+<h2><span data-float-icon aria-hidden="true">⚠️</span> Частые ошибки</h2>
+<div class="feature-grid">
+    <div class="feature-card card-danger">
+        <h4>1. Пропущена буква f</h4>
+        <p style="margin-bottom: 0;"><code>"Привет, {name}"</code> выведет фигурные скобки и имя переменной как обычный текст. Чтобы подставить значение переменной, добавьте перед строкой <code>f</code>.</p>
+    </div>
+
+    <div class="feature-card card-danger">
+        <h4>2. Кавычки внутри f-строки</h4>
+        <p style="margin-bottom: 0;">Если сама f-строка заключена в двойные кавычки, строку внутри выражения можно взять в одинарные. Например, <code>f"{'яблоко'.upper()}"</code>.</p>
+    </div>
+
+    <div class="feature-card card-success">
+        <h4><span data-float-icon aria-hidden="true">💡</span> Как вывести фигурные скобки</h4>
+        <p style="margin-bottom: 0;">Чтобы вывести сами фигурные скобки, удвойте их: <code>&#123;&#123;</code> и <code>&#125;&#125;</code>.</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "sorting.html" %}
+
+{% block title %}Сортировка данных | Курс Python{% endblock %}
+
+{% block content %}
+
+<h1 class="lesson-title">Сортировка данных</h1>
+
+<p class="course-objective">Сортировка располагает значения в заданном порядке. На этом уроке вы сравните два способа работы со списком: создание отсортированной копии и сортировку на месте.</p>
+
+<details class="course-media">
+    <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Посмотреть видеоурок</summary>
+    <div class="video-wrapper">
+        <iframe
+            loading="lazy"
+            src="https://www.youtube.com/embed/Qi5HEyla4_U?hl=ru&amp;cc_lang_pref=ru"
+            title="Видеоурок о сортировке в Python"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+    </div>
+</details>
+
+
+<h2>Порядок сортировки</h2>
+
+<div class="feature-grid">
+    <div class="feature-card card-purple">
+        <h4>1. По возрастанию</h4>
+        <p>От меньшего числа к большему. Такой порядок используется по умолчанию.</p>
+        <span class="code-chip" style="color: #38bdf8;">sandar.sort()</span>
+    </div>
+
+    <div class="feature-card card-danger">
+        <h4>2. По убыванию</h4>
+        <p>От большего числа к меньшему.</p>
+        <span class="code-chip" style="color: #f87171;">sandar.sort(reverse=True)</span>
+    </div>
+</div>
+
+
+<section class="course-example" aria-labelledby="worked-example">
+    <h3 id="worked-example">Пример. Два варианта порядка для одного списка</h3>
+    <p>Сохраните результат <code>sorted()</code> в отдельной переменной. Параметр <code>reverse=True</code> задаёт сортировку по убыванию. В исходном списке элементы остаются на своих местах.</p>
+    <pre class="course-code"><code>numbers = [5, 2, 9]
+print(sorted(numbers))                # [2, 5, 9]
+print(sorted(numbers, reverse=True))  # [9, 5, 2]
+print(numbers)                        # [5, 2, 9]</code></pre>
+</section>
+
+<section class="course-practice" aria-labelledby="practice-title">
+    <h2 id="practice-title">Практика</h2>
+    <h3>Отсортируйте баллы и сохраните исходный список</h3>
+    <ol>
+        <li>Добавьте в конец программы строку <code>scores = [12, 7, 12, 19]</code>.</li>
+        <li>Создайте новый список с баллами в порядке убывания. Выведите его, а на следующей строке — исходный список.</li>
+    </ol>
+    <p><strong>Ожидаемый результат</strong> <code>[19, 12, 12, 7]</code>, на следующей строке — <code> [12, 7, 12, 19]</code></p>
+
+<label class="course-output-label" for="code">Редактор Python</label>
+<div class="editor-container">
+    <textarea id="code" aria-describedby="code-hint" rows="13" autocomplete="off" autocapitalize="off" spellcheck="false">
+# 1. Список чисел
+sandar = [42, 7, 100, 23, 1]
+sandar.sort()
+print("По возрастанию:", sandar)
+
+# 2. Сортировка в обратном порядке
+sandar.sort(reverse=True)
+print("По убыванию:", sandar)
+
+# 3. Сортировка строк по порядку символов
+esimder = ["Sanzhar", "Arman", "Zere", "Bolat"]
+print("Имена после сортировки:", sorted(esimder))
+
+# 4. sorted() сохраняет порядок элементов в исходном списке
+print("Исходный список:", esimder)
+</textarea>
+</div>
+
+<div class="btn-row">
+    <button class="btn-run" id="run-btn" type="button">Запустить код</button>
+    <button class="btn-clear" id="clear-btn" type="button">Очистить вывод</button>
+</div>
+<p class="hint" id="code-hint">Чтобы запустить код с клавиатуры, нажмите Ctrl + Enter или ⌘ + Enter.</p>
+
+<p class="course-output-label" id="output-label">Результат</p>
+<pre id="output" role="status" aria-labelledby="output-label" tabindex="0">Здесь появится результат...</pre>
+    <details class="course-answer">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Показать пример решения</summary>
+        <pre class="course-code"><code>scores = [12, 7, 12, 19]
+print(sorted(scores, reverse=True))
+print(scores)</code></pre>
+    </details>
+</section>
+
+<div class="feature-card card-warning" style="margin-top: 30px;">
+    <h4><span data-float-icon aria-hidden="true">⚠️</span> Обратите внимание:</h4>
+    <p style="margin-bottom: 0;">Метод <code>sort()</code> меняет порядок элементов в самом списке, а функция <code>sorted()</code> возвращает новый отсортированный список.</p>
+</div>
+
+<a href="https://codepen.io/zlreibuh-the-sasster/pen/ogzvzje"
+   target="_blank"
+   rel="noopener"
+   class="btn-primary-action">
+    <span data-float-icon aria-hidden="true">🔀</span> Задания по сортировке на CodePen
+</a>
+{% endblock %}

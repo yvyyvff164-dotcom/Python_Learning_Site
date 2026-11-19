@@ -1,418 +1,169 @@
 {% extends "base.html" %}
 
-{% block title %}Өз функцияларың (def) - Python оқу сайты{% endblock %}
+{% block title %}Өз функцияңызды жазыңыз — Python оқу сайты{% endblock %}
+
+{% block page_assets %}
+<style>
+    .function-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+        gap: 12px;
+        margin-block: 14px;
+    }
+
+    .function-steps .feature-card { padding: 16px; }
+    .function-steps h3 { margin-top: 0; }
+    .function-video {
+        margin-top: 18px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        background: var(--surface-strong);
+    }
+
+    .function-video summary { padding: 12px 16px; color: var(--heading-2); font-weight: 700; cursor: pointer; }
+    .function-video .video-wrapper { margin: 0; }
+</style>
+{% endblock %}
 
 {% block content %}
-<style>
-    /* ==========================================
-       Бетке арналған қосымша стилизация
-    ========================================== */
-    .lesson-title {
-        font-size: 2rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, var(--primary), var(--primary-2));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 20px;
-    }
 
-    /* YouTube видеосын бейімдеу (Responsive iframe) */
-    .video-wrapper {
-        position: relative;
-        width: 100%;
-        padding-bottom: 56.25%; /* 16:9 пропорция */
-        height: 0;
-        background: #000;
-        border-radius: var(--radius-md);
-        overflow: hidden;
-        box-shadow: var(--shadow-lg);
-        margin-bottom: 30px;
-    }
+<h1 class="lesson-title">Өз функцияңызды жазыңыз</h1>
+<p class="course-objective">Тіктөртбұрыштың ауданын есептейтін функция анықтап, оны әртүрлі өлшемдермен шақырасыз. Есептеу бір жерде жазылады, ал нәтижені басқа есепте қолдануға болады.</p>
 
-    .video-wrapper iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: none;
-    }
-
-    /* Карточкалар торы (Feature Grid) */
-    .feature-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 20px;
-        margin: 25px 0;
-    }
-
-    .feature-card {
-        background: var(--surface-strong);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-md);
-        padding: 20px;
-        box-shadow: var(--shadow-sm);
-        transition: var(--transition-smooth);
-        color: var(--text-main);
-    }
-
-    .feature-card:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--primary);
-    }
-
-    .feature-card h4 {
-        margin-top: 0;
-        margin-bottom: 10px;
-        font-size: 1.2rem;
-        font-weight: 800;
-    }
-
-    .card-primary { border-left: 5px solid var(--primary); }
-    .card-primary h4 { color: var(--primary); }
-
-    .card-purple { border-left: 5px solid var(--primary-2); }
-    .card-purple h4 { color: var(--primary-2); }
-
-    .card-success { border-left: 5px solid var(--success); }
-    .card-success h4 { color: var(--success); }
-
-    /* Қараңғы код блогы */
-    .code-pre {
-        background: #0f172a;
-        color: #38bdf8;
-        padding: 16px;
-        border-radius: var(--radius-sm);
-        font-family: 'Fira Code', Consolas, Monaco, monospace;
-        font-size: 14px;
-        line-height: 1.55;
-        overflow-x: auto;
-        border: 1px solid #334155;
-        margin: 12px 0 0;
-    }
-
-    /* Код редакторы мен Sandbox стилі */
-    .editor-container {
-        margin-top: 15px;
-        border-radius: var(--radius-md);
-        overflow: hidden;
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow-sm);
-    }
-
-    #code {
-        width: 100%;
-        box-sizing: border-box;
-        background: #0f172a;
-        color: #38bdf8;
-        font-family: 'Fira Code', Consolas, Monaco, monospace;
-        font-size: 14px;
-        padding: 16px;
-        border: none;
-        outline: none;
-        resize: vertical;
-        line-height: 1.5;
-        tab-size: 4;
-    }
-
-    .btn-row {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-
-    .btn-run {
-        margin-top: 15px;
-        background: linear-gradient(135deg, #22c55e, #16a34a);
-        color: white;
-        border: none;
-        padding: 12px 24px;
-        font-size: 15px;
-        font-weight: 600;
-        border-radius: var(--radius-sm);
-        cursor: pointer;
-        box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
-        transition: var(--transition-smooth);
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .btn-run:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
-    }
-
-    .btn-run:disabled {
-        opacity: .6;
-        cursor: wait;
-        transform: none;
-    }
-
-    .btn-clear {
-        margin-top: 15px;
-        background: transparent;
-        color: var(--text-main);
-        border: 1px solid var(--border);
-        padding: 12px 20px;
-        font-size: 15px;
-        font-weight: 600;
-        border-radius: var(--radius-sm);
-        cursor: pointer;
-        transition: var(--transition-smooth);
-    }
-
-    .btn-clear:hover {
-        border-color: var(--primary);
-    }
-
-    .hint {
-        font-size: 13px;
-        opacity: .7;
-        margin-top: 8px;
-    }
-
-    #output {
-        background: #0f172a;
-        color: #22c55e;
-        padding: 16px;
-        border-radius: var(--radius-md);
-        font-family: 'Fira Code', Consolas, monospace;
-        font-size: 14px;
-        min-height: 60px;
-        margin-top: 8px;
-        border: 1px solid #334155;
-        white-space: pre-wrap;
-    }
-
-    #output.error {
-        color: #f87171;
-    }
-
-    hr {
-        border: none;
-        height: 1px;
-        background: var(--border);
-        margin: 30px 0;
-    }
-
-    p {
-        line-height: 1.6;
-        color: var(--text-main);
-    }
-</style>
-
-<h1 class="lesson-title">🛠️ Өз функцияларыңыз (Custom Functions)</h1>
-
-<div class="video-wrapper">
-    <iframe
-        src="https://www.youtube.com/embed/DJAlfolEv9A"
-        title="Python өз функцияларын құру"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen>
-    </iframe>
-</div>
-
-<p>
-    Өз функцияларыңызды құру — бұл кодты қайталамаудың ең жақсы жолы. <code>def</code> (define) операторы арқылы сіз бағдарламаға жаңа команда үйретесіз, ал ол команданы кодтың кез келген жерінде бір жолмен шақыра аласыз.
-</p>
-
-<hr>
-
-<h2>📚 Өз функциямызды қалай құрамыз?</h2>
-
-<div class="feature-grid">
-    <div class="feature-card card-primary">
-        <h4>1. def операторы</h4>
-        <p style="margin-bottom: 0;">Функцияны жариялау әрқашан <code>def</code> сөзінен басталады. Одан кейін функцияның аты мен жақша <code>()</code> қойылады және жолдың соңына қос нүкте <code>:</code> жазылады.</p>
+<section class="course-example" aria-labelledby="function-structure">
+    <h2 id="function-structure">Функцияның құрылымы</h2>
+    <div class="function-steps">
+        <article class="feature-card">
+            <h3><code>def</code> — анықтау</h3>
+            <p>Функцияның аты мен параметрлерін жақшаға жазыңыз. Жолды қос нүктемен аяқтап, денесін төрт бос орынға шегіндіріңіз.</p>
+        </article>
+        <article class="feature-card">
+            <h3>Параметр және аргумент</h3>
+            <p><code>eni</code> мен <code>uzyndygy</code> — параметрлер. <code>audan(3, 4)</code> шақыруындағы 3 пен 4 — соларға берілетін аргументтер.</p>
+        </article>
+        <article class="feature-card">
+            <h3><code>return</code> — мән қайтару</h3>
+            <p>Функцияны аяқтап, нәтижені оны шақырған жерге қайтарады. Қайтарылған мәнді айнымалыға сақтауға немесе есептеуге пайдалануға болады.</p>
+        </article>
     </div>
+    <pre class="course-code"><code>def audan(eni, uzyndygy):
+    return eni * uzyndygy
 
-    <div class="feature-card card-purple">
-        <h4>2. Аргументтер (Параметрлер)</h4>
-        <p style="margin-bottom: 0;">Жақша ішіне функция жұмыс істеу үшін сырттан қабылдайтын айнымалыларды (мәліметтерді) жазамыз.</p>
-    </div>
+birinshi = audan(3, 4)
+ekinshi = audan(2, 5)
+print(birinshi + ekinshi)  # 22</code></pre>
+    <p><code>eni</code> және <code>uzyndygy</code> тек функцияның ішінде қолданылады. Функциядан тыс жерде <code>birinshi</code> және <code>ekinshi</code> айнымалыларын пайдаланамыз.</p>
 
-    <div class="feature-card card-success">
-        <h4>3. return операторы</h4>
-        <p style="margin-bottom: 0;">Функция орындаған есептеу нәтижесін негізгі бағдарламаға қайтару үшін қолданылады. <code>return</code>-нен кейін функция жұмысын тоқтатады.</p>
-    </div>
-</div>
+    <h3>Әдепкі мән</h3>
+    <p>Параметрге бастапқы мән беруге болады. Мысалы, <code>def darezhe(san, korsetkish=2)</code> түріндегі функцияны тек бір аргументпен шақырсаңыз, екінші параметр 2-ге тең болады.</p>
+</section>
 
-<h3>🧩 Функцияның құрылымы</h3>
-<pre class="code-pre">def funksiya_aty(parametr1, parametr2):
-    # функцияның денесі (4 бос орын шегініспен)
-    nateje = parametr1 + parametr2
-    return nateje
+<section class="course-practice" aria-labelledby="function-practice">
+    <h2 id="function-practice">Өлшемдерді өзгертіп көріңіз</h2>
+    <ol>
+        <li>Кодты іске қосып, екі ауданның қосындысы <code>22</code> екенін тексеріңіз.</li>
+        <li><code>audan(5, 7)</code> шақыруын қосыңыз. Шығатын мән <code>35</code> болуы керек.</li>
+        <li><code>perimetr(eni, uzyndygy)</code> функциясын жазып, <code>2 * (eni + uzyndygy)</code> мәнін қайтарыңыз. <code>perimetr(3, 4)</code> үшін нәтиже <code>14</code>.</li>
+        <li><code>darezhe(4)</code> және <code>darezhe(4, 3)</code> шақыруларының нәтижелерін салыстырыңыз.</li>
+    </ol>
 
-# Функцияны шақыру
-print(funksiya_aty(3, 4))   # 7</pre>
+    <label for="code">Python коды</label>
+    <div class="editor-container">
+        <textarea id="code" rows="13" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="editor-keys">
+def audan(eni, uzyndygy):
+    return eni * uzyndygy
 
-<hr>
+print("Аудандардың қосындысы:", audan(3, 4) + audan(2, 5))
 
-<h2>🧪 Тәжірибелік алаң (Sandbox)</h2>
-<p>Төмендегі кодта екі санның көбейтіндісін табатын және мәтінмен сәлемдесетін өз функцияларымыз жазылған. Кодты өзгертіп, <b>▶ Run Code</b> батырмасын басыңыз:</p>
+def darezhe(san, korsetkish=2):
+    return san ** korsetkish
 
-<div class="editor-container">
-    <textarea id="code" rows="18" spellcheck="false">
-# 1. Ең қарапайым функцияны құру
-def salem_ber(esim):
-    return "Сәлем, " + esim + "! Бағдарламалау әлеміне қош келдің!"
+print("4 санының квадраты:", darezhe(4))
+print("4 санының кубы:", darezhe(4, 3))
 
-# 2. Сандармен жұмыс істейтін функция
-def kubeytu(a, b):
-    natizhe = a * b
-    return natizhe
-
-# 3. Әдепкі мәні бар параметр
-def kasiet(san, dәrezhe=2):
-    return san ** dәrezhe
-
-# Функцияларды шақыру және нәтижесін шығару
-print(salem_ber("Асхат"))
-
-zhauap = kubeytu(5, 6)
-print("Көбейтіндінің нәтижесі:", zhauap)
-
-print("4 санының квадраты:", kasiet(4))
-print("2 санының 5-ші дәрежесі:", kasiet(2, 5))
+# Периметрді есептейтін функцияны осында жазыңыз.
 </textarea>
-</div>
+    </div>
 
-<div class="btn-row">
-    <button class="btn-run" id="run-btn" type="button">▶ Run Code</button>
-    <button class="btn-clear" id="clear-btn" type="button">🗑 Тазалау</button>
-</div>
-<div class="hint">Ctrl + Enter — кодты іске қосу</div>
+    <div class="btn-row">
+        <button class="btn-run" id="run-btn" type="button">Кодты іске қосу</button>
+        <button class="btn-clear" id="clear-btn" type="button">Нәтижені тазалау</button>
+        <button class="btn-clear" id="restore-btn" type="button">Бастапқы кодты қайтару</button>
+    </div>
+    <p class="hint" id="editor-keys">Ctrl немесе ⌘ + Enter — орындау. Tab — төрт бос орын. Редактордан шығу үшін Esc, содан кейін Tab басыңыз.</p>
 
-<div style="margin-top: 15px; color: var(--text-light); font-size: 14px; font-weight: 500;">Нәтиже (Output):</div>
-<pre id="output">Нәтиже осында шығады...</pre>
+    <p class="course-output-label" id="editor-output-label">Нәтиже</p>
+    <pre id="output" role="status" aria-labelledby="editor-output-label">Кодты іске қосқан соң нәтиже осында шығады.</pre>
+</section>
 
-<div class="feature-card card-purple" style="margin-top: 35px;">
-    <h4>💡 Маңызды ереже:</h4>
-    <p style="margin-bottom: 0;">Функцияның ішінде жасалған айнымалылар тек сол функцияның ішінде ғана өмір сүреді. Оны бағдарламалауда <b>"Жергілікті көріну аймағы" (Local Scope)</b> деп атайды.</p>
-</div>
+<details class="course-media function-video">
+    <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Бейнесабақты көру</summary>
+    <div class="video-wrapper">
+        <iframe src="https://www.youtube.com/embed/DJAlfolEv9A" title="Python тілінде өз функцияңызды жазу" loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+    </div>
+</details>
+{% endblock %}
 
+{% block lesson_scripts %}
 <script>
-(function () {
-    const codeEl   = document.getElementById("code");
-    const outputEl = document.getElementById("output");
-    const runBtn   = document.getElementById("run-btn");
-    const clearBtn = document.getElementById("clear-btn");
-
-    // Skulpt-ты бірнеше көзден кезекпен жүктеу
-    const SOURCES = [
-        ["https://skulpt.org/js/skulpt.min.js",
-         "https://skulpt.org/js/skulpt-stdlib.js"],
-        ["https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js",
-         "https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"],
-        ["https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt.min.js",
-         "https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt-stdlib.js"]
-    ];
-
-    function loadScript(src) {
-        return new Promise(function (resolve, reject) {
-            const s = document.createElement("script");
-            s.src = src;
-            s.onload = resolve;
-            s.onerror = function () { reject(new Error(src)); };
-            document.head.appendChild(s);
-        });
-    }
-
-    async function loadSkulpt() {
-        if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
-        for (const pair of SOURCES) {
-            try {
-                await loadScript(pair[0]);
-                await loadScript(pair[1]);
-                if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
-            } catch (e) {
-                console.warn("Skulpt жүктелмеді:", e.message);
-            }
-        }
-        throw new Error("Skulpt ешбір көзден жүктелмеді");
-    }
-
-    const skulptReady = loadSkulpt();
-    runBtn.disabled = true;
-    runBtn.textContent = "⏳ Жүктелуде...";
-    function enableBtn() {
-        runBtn.disabled = false;
-        runBtn.textContent = "▶ Run Code";
-    }
-    skulptReady.then(enableBtn).catch(enableBtn);
-
-    function builtinRead(file) {
-        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][file] === undefined) {
-            throw "Файл табылмады: '" + file + "'";
-        }
-        return Sk.builtinFiles["files"][file];
-    }
+(() => {
+    const lessonText = window.courseText;
+    const code = document.getElementById('code');
+    const output = document.getElementById('output');
+    const run = document.getElementById('run-btn');
+    const clear = document.getElementById('clear-btn');
+    const restore = document.getElementById('restore-btn');
+    const starter = code.value;
+    const initialOutput = output.textContent;
+    const runLabel = run.textContent;
+    let tabLeavesEditor = false;
 
     async function runCode() {
-        outputEl.className = "";
-        outputEl.textContent = "";
-        runBtn.disabled = true;
+        if (run.disabled) return;
+        run.disabled = true;
+        run.textContent = lessonText('Іске қосылуда…', 'Выполняется…');
+        output.classList.remove('error');
+        output.textContent = '';
 
         try {
-            await skulptReady;
-        } catch (e) {
-            outputEl.className = "error";
-            outputEl.textContent = "Skulpt жүктелмеді. Интернетті тексеріп, бетті жаңартыңыз (Ctrl+F5).";
-            runBtn.disabled = false;
-            return;
+            await window.PythonRuntime.run(code.value, text => { output.textContent += text; });
+            if (!output.textContent) output.textContent = lessonText('Код орындалды. Экранға еш мән шықпады.', 'Код выполнен. Программа ничего не вывела.');
+        } catch (error) {
+            output.classList.add('error');
+            output.textContent += (output.textContent ? '\n' : '') + lessonText('Қате: ', 'Ошибка: ') + (error.message || String(error));
+        } finally {
+            run.disabled = false;
+            run.textContent = runLabel;
         }
-
-        Sk.configure({
-            output: function (text) { outputEl.textContent += text; },
-            read: builtinRead,
-            __future__: Sk.python3,
-            inputfun: function (prompt) {
-                return window.prompt(prompt || "Мәнді енгізіңіз:") || "";
-            },
-            execLimit: 10000
-        });
-
-        Sk.misceval
-            .asyncToPromise(function () {
-                return Sk.importMainWithBody("<stdin>", false, codeEl.value, true);
-            })
-            .then(function () {
-                if (outputEl.textContent === "") {
-                    outputEl.textContent = "Код сәтті орындалды (экранға ештеңе шықпады).";
-                }
-            })
-            .catch(function (err) {
-                outputEl.className = "error";
-                outputEl.textContent += (outputEl.textContent ? "\n" : "") + "Қате (Error): " + err.toString();
-            })
-            .finally(function () {
-                runBtn.disabled = false;
-            });
     }
 
-    runBtn.addEventListener("click", runCode);
+    function clearOutput() {
+        output.classList.remove('error');
+        output.textContent = initialOutput;
+    }
 
-    clearBtn.addEventListener("click", function () {
-        outputEl.className = "";
-        outputEl.textContent = "Нәтиже осында шығады...";
+    run.addEventListener('click', runCode);
+    clear.addEventListener('click', clearOutput);
+    restore.addEventListener('click', () => {
+        code.value = starter;
+        clearOutput();
+        code.focus();
     });
 
-    // Ctrl+Enter — іске қосу, Tab — шегініс (4 бос орын)
-    codeEl.addEventListener("keydown", function (e) {
-        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-            e.preventDefault();
+    code.addEventListener('keydown', event => {
+        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+            event.preventDefault();
             runCode();
-        } else if (e.key === "Tab") {
-            e.preventDefault();
-            const s = codeEl.selectionStart, end = codeEl.selectionEnd;
-            codeEl.value = codeEl.value.slice(0, s) + "    " + codeEl.value.slice(end);
-            codeEl.selectionStart = codeEl.selectionEnd = s + 4;
+        } else if (event.key === 'Escape') {
+            tabLeavesEditor = true;
+        } else if (event.key === 'Tab' && !event.shiftKey && !tabLeavesEditor) {
+            event.preventDefault();
+            code.setRangeText('    ', code.selectionStart, code.selectionEnd, 'end');
         }
     });
+    code.addEventListener('blur', () => { tabLeavesEditor = false; });
 })();
 </script>
-
 {% endblock %}

@@ -1,0 +1,75 @@
+{% extends "practice_hub.html" %}
+
+{% block title %}Тренажёр Python | Курс Python{% endblock %}
+{% block body_class %}practice-page{% endblock %}
+
+{% block content %}
+<article class="practice" aria-labelledby="practice-title">
+    <header class="practice-heading">
+        <h1 id="practice-title">Тренажёр Python</h1>
+        <p>Предскажите вывод программы, исправьте ошибку и сверьте решение с объяснением. В каждом разделе по четыре задания.</p>
+        <p class="practice-storage" data-practice-storage hidden>Сохранение в браузере недоступно. Результаты будут видны, пока открыта эта страница.</p>
+    </header>
+    <noscript><p>Чтобы открыть тренажёр, включите JavaScript в браузере.</p></noscript>
+
+    <div data-practice-app hidden>
+        <section data-practice-menu aria-labelledby="practice-menu-title">
+            <h2 id="practice-menu-title" tabindex="-1">Выберите раздел</h2>
+            <div class="practice-track-grid" data-practice-tracks></div>
+
+            <section class="practice-pending" aria-labelledby="practice-pending-title">
+                <div>
+                    <h3 id="practice-pending-title">Работа над ошибками</h3>
+                    <p data-practice-pending-text>Пока нет заданий для повторения.</p>
+                </div>
+                <button type="button" class="practice-button practice-button-alt" data-practice-start-review hidden>Повторить задания с ошибками</button>
+                <details data-practice-pending-details hidden>
+                    <summary>Посмотреть ошибки</summary>
+                    <div class="practice-review-list" data-practice-pending-list></div>
+                </details>
+            </section>
+        </section>
+
+        <section class="practice-card" data-practice-round aria-labelledby="practice-round-title" hidden>
+            <div class="practice-card-bar">
+                <button type="button" class="practice-button practice-button-alt" data-practice-menu-link>‹ К разделам</button>
+                <p data-practice-position></p>
+            </div>
+            <progress class="practice-progress" data-practice-progress aria-label="Ход тренировки"></progress>
+
+            <p class="practice-kind" data-practice-kind></p>
+            <h2 id="practice-round-title" tabindex="-1"></h2>
+            <pre class="practice-code" tabindex="0" aria-label="Код Python"><code data-practice-code></code></pre>
+
+            <form data-practice-form>
+                <fieldset>
+                    <legend>Выберите ответ</legend>
+                    <div class="practice-options" data-practice-options></div>
+                </fieldset>
+                <button type="submit" class="practice-button" data-practice-submit disabled>Проверить ответ</button>
+            </form>
+
+            <div class="practice-feedback" data-practice-feedback aria-labelledby="practice-verdict" role="region" tabindex="-1" hidden>
+                <h3 id="practice-verdict"></h3>
+                <p data-practice-detail></p>
+                <a data-practice-lesson></a>
+            </div>
+            <button type="button" class="practice-button" data-practice-next hidden>Следующее задание</button>
+        </section>
+
+        <section class="practice-card" data-practice-summary aria-labelledby="practice-summary-title" hidden>
+            <h2 id="practice-summary-title" tabindex="-1">Итог тренировки</h2>
+            <p class="practice-score" data-practice-score></p>
+            <p>Правильные ответы</p>
+            <div class="practice-summary-actions">
+                <button type="button" class="practice-button" data-practice-menu-link>К разделам</button>
+                <button type="button" class="practice-button practice-button-alt" data-practice-start-review hidden>Повторить задания с ошибками</button>
+            </div>
+            <section data-practice-summary-errors aria-labelledby="practice-summary-errors-title" hidden>
+                <h3 id="practice-summary-errors-title">Разбор ошибок</h3>
+                <div class="practice-review-list" data-practice-summary-list></div>
+            </section>
+        </section>
+    </div>
+</article>
+{% endblock %}

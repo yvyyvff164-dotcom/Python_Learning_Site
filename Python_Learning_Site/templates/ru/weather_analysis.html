@@ -1,0 +1,77 @@
+{% extends "weather_analysis.html" %}
+{% block title %}Анализ данных о погоде — Курс Python{% endblock %}
+{% block content %}
+
+<article class="weather-project" aria-labelledby="weather-title">
+    <h1 id="weather-title">Анализ данных о погоде</h1>
+    <p class="weather-lead course-objective">Сохраните температуры за неделю в списке Python. Найдите самую низкую, самую высокую и среднюю температуру за неделю. Посчитайте, сколько дней температура поднималась выше нуля.</p>
+    <a class="course-jump" href="#weather-practice-title">Перейти к данным за неделю <span aria-hidden="true">↓</span></a>
+
+    <section class="weather-explanation" aria-labelledby="weather-explanation-title">
+        <h2 id="weather-explanation-title">Как проанализировать данные?</h2>
+        <ol>
+            <li>Запишите в список температуру каждого дня в порядке измерения.</li>
+            <li>Чтобы найти наименьшее значение, используйте <code>min()</code>, а для наибольшего — <code>max()</code>.</li>
+            <li>Сложите температуры с помощью <code>sum()</code> и разделите сумму на количество дней, которое вернёт <code>len()</code>. Получится средняя температура.</li>
+            <li>Переберите значения в цикле <code>for</code>. Каждый раз, когда температура выше <code>0</code>, увеличивайте счётчик на единицу. День с температурой <code>0 °C</code> в число тёплых не входит.</li>
+        </ol>
+        <div class="weather-example">
+            <h3>Пример за три дня</h3>
+            <p>В списке температур <code>[-3, 0, 6]</code> наименьшее значение равно <strong>−3 °C</strong>, а наибольшее — <strong>6 °C</strong>.</p>
+            <p>Средняя температура равна <code>(-3 + 0 + 6) / 3</code>, то есть <strong>1 °C</strong>. Выше нуля температура была <strong>один день</strong>.</p>
+        </div>
+    </section>
+
+    <section class="weather-practice" aria-labelledby="weather-practice-title" hidden>
+        <h2 id="weather-practice-title" tabindex="-1">Изучите данные за неделю</h2>
+        <p>Выберите неделю и рассмотрите показания за все семь дней. Проверьте свои расчёты, а затем сравните их с результатом программы на Python.</p>
+        <div class="weather-workspace">
+            <div>
+                <label for="weather-week">Выберите неделю</label>
+                <select id="weather-week">
+                    <option value="0">Неделя 1</option>
+                    <option value="1">Неделя 2</option>
+                    <option value="2">Неделя 3</option>
+                </select>
+                <ul class="weather-readings" aria-label="Температуры по дням"></ul>
+            </div>
+            <form novalidate>
+                <fieldset class="weather-fields">
+                    <legend>Результаты расчёта</legend>
+                    <div>
+                        <label for="weather-min">Минимальная температура, °C</label>
+                        <input id="weather-min" name="minimum" type="text" inputmode="decimal" required>
+                    </div>
+                    <div>
+                        <label for="weather-max">Максимальная температура, °C</label>
+                        <input id="weather-max" name="maximum" type="text" inputmode="decimal" required>
+                    </div>
+                    <div>
+                        <label for="weather-mean">Средняя температура, °C</label>
+                        <input id="weather-mean" name="mean" type="text" inputmode="decimal" aria-describedby="weather-rounding" required>
+                    </div>
+                    <div>
+                        <label for="weather-warm">Количество тёплых дней</label>
+                        <input id="weather-warm" name="warm" type="text" inputmode="numeric" required>
+                    </div>
+                </fieldset>
+                <p class="weather-form-note" id="weather-rounding">Округлите среднюю температуру до десятых. Например, 2,43 → 2,4.</p>
+                <div class="weather-controls">
+                    <button type="submit">Проверить ответы</button>
+                    <button type="reset">Очистить</button>
+                </div>
+                <p class="weather-feedback" role="status"></p>
+            </form>
+        </div>
+
+        <details class="weather-code" hidden>
+            <summary>Показать решение на Python</summary>
+            <pre><code></code></pre>
+            <p>Запустите программу и сравните результат со своим ответом. Затем измените в списке температуру одного дня и посмотрите, какие из результатов изменятся.</p>
+            <p><strong>Дополнительное задание.</strong> Посчитайте и выведите, сколько дней температура держалась ниже нуля.</p>
+        </details>
+    </section>
+
+    <noscript><p>Чтобы проверить ответы, включите JavaScript в браузере.</p></noscript>
+</article>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ text('Бағдарламашы профилі', 'Профиль программиста') }} · Python{% endblock %}
+{% block body_class %}arcade-page profile-page{% endblock %}
+{% block page_assets %}
+<link rel="stylesheet" href="{{ url_for('static', filename='arcade.css') }}">
+<script type="module" src="{{ url_for('static', filename='programmer-profile.js') }}"></script>
+{% endblock %}
+{% block content %}
+<article class="arcade-shell" id="programmer-profile">
+    <h1 class="profile-heading">{{ text('Бағдарламашы профилі', 'Профиль программиста') }}</h1>
+    <header class="profile-pass">
+        <div class="profile-person"><span class="coder-avatar large-avatar" aria-hidden="true"><i></i></span>
+            <div><small id="profile-level"></small><h2 id="profile-rank"></h2><p id="active-title" hidden></p></div></div>
+        <div class="profile-experience"><strong id="profile-xp">… XP</strong><progress id="xp-progress" max="1" value="0" aria-labelledby="profile-next"></progress><span id="profile-next"></span></div>
+    </header>
+    <noscript>{{ text('Профильді көру үшін JavaScript қосыңыз.', 'Включите JavaScript, чтобы увидеть профиль.') }}</noscript>
+    <p id="profile-storage" class="game-feedback" data-tone="error" hidden>{{ text('Браузер профиль деректерін сақтай алмады.', 'Браузеру не удалось сохранить данные профиля.') }}</p>
+    <dl class="profile-stats">
+        {% for id, label in [('lessons',text('Аяқталған сабақтар','Пройдено уроков')),('games',text('Ойын раундтары','Раундов в играх')),('daily',text('Күндік тапсырмалар','Решено задач дня')),('practice',text('Практика жауаптары','Решено в практике')),('streak',text('Қатарынан күн','Дней подряд')),('coins',text('Монеталар','Монеты'))] %}
+        <div><dt>{{ label }}</dt><dd id="stat-{{ id }}">…</dd></div>
+        {% endfor %}
+    </dl>
+    <section class="profile-titles" aria-labelledby="title-heading">
+        <h2 id="title-heading">{{ text('Менің атақтарым', 'Мои титулы') }}</h2>
+        <p>{{ text('Шартты орындап, ашылған атақты профиліңізге тағыңыз.', 'Выполните условие и выберите открытый титул для профиля.') }}</p>
+        <div class="title-grid">
+        {% for id, symbol, name, description in [
+            ('hunter','⌖',text('Қате іздеуші','Охотник за ошибками'),text('Үш түрлі ойын алаңындағы қозғалысты түзетіңіз.','Исправьте движение во всех трёх сценах охоты на баги.')),
+            ('loops','↻',text('Циклдер шебері','Мастер циклов'),text('«Циклдер» сабағын аяқтап, цикл туралы бір шағын ойын раундын шешіңіз.','Пройдите урок «Циклы» и решите один игровой раунд по циклам.')),
+            ('perfect','✦',text('Қатесіз','Без единой ошибки'),text('Үш раундты алғашқы тексеруде дұрыс орындаңыз. Кеңес қолдануға болады.','Пройдите три раунда с первой проверки. Подсказками пользоваться можно.')),
+            ('architect','▦',text('Сәулетші','Архитектор'),text('Блоктардан үш түрлі бағдарламаны құрастырыңыз.','Соберите все три разные программы из блоков.'))
+        ] %}
+        <article class="title-card" data-title="{{ id }}"><div class="title-mark" aria-hidden="true">{{ symbol }}</div>
+            <div><h3>{{ name }}</h3><p>{{ description }}</p><div class="title-actions"><small data-counter></small><button type="button" class="arc-small" data-wear hidden></button></div></div></article>
+        {% endfor %}
+        </div><p id="title-notice" role="status" class="game-feedback"></p>
+    </section>
+    <details class="game-hint xp-guide"><summary>{{ text('XP қалай беріледі?', 'Как начисляется XP?') }}</summary>
+        <p>{{ text('Аяқталған сабақ үшін 20 XP, күндік тапсырма үшін 15 XP, ойын раунды үшін 10 XP беріледі. Жаттықтырғыш пен жобалардағы әр тексерілетін тапсырма 5 XP әкеледі. Әр нәтиже бір рет есепке алынады. Профиль осы браузерде сақталады.', 'Пройденный урок приносит 20 XP, задача дня — 15 XP, игровой раунд — 10 XP. За проверяемое задание тренажёра или проекта начисляется 5 XP. Каждый результат засчитывается один раз. Профиль хранится в этом браузере.') }}</p>
+        <ol id="rank-ladder"></ol>
+    </details>
+    <nav class="profile-links"><a class="arc-button primary" href="{{ url_for('games') }}">{{ text('Шағын ойындар', 'Мини-игры') }} →</a><a class="arc-link" href="{{ url_for('daily') }}#shop">{{ text('Безендіру дүкені', 'Магазин оформлений') }} ↗</a></nav>
+</article>
+{% endblock %}

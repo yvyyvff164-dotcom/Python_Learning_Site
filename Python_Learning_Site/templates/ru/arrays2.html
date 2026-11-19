@@ -1,0 +1,117 @@
+{% extends "arrays2.html" %}
+
+{% block title %}Двумерный массив — матрица | Курс Python{% endblock %}
+
+{% block content %}
+
+<h1 class="lesson-title">Двумерный массив — матрица</h1>
+
+<p class="course-objective">Матрицу можно представить как список списков. Каждый элемент внешнего списка — это строка матрицы, а внутренний список хранит значения этой строки.</p>
+
+<details class="course-media">
+    <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Посмотреть видеоурок</summary>
+    <div class="video-wrapper">
+        <iframe
+            loading="lazy"
+            src="https://www.youtube.com/embed/snP9qFu9tbo?hl=ru&amp;cc_lang_pref=ru"
+            title="Видеоурок о матрицах в Python"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+    </div>
+</details>
+
+
+<h2>Как выбрать строку и столбец</h2>
+<p>Чтобы получить элемент двумерного массива, укажите два индекса:</p>
+
+<div class="feature-grid">
+    <div class="feature-card card-purple">
+        <h4>Первый индекс [i]</h4>
+        <p style="margin-bottom: 0;">Указывает, какую <b>строку</b> выбрать.</p>
+    </div>
+
+    <div class="feature-card card-success">
+        <h4>Второй индекс [j]</h4>
+        <p style="margin-bottom: 0;">Указывает, какой <b>столбец</b> выбрать в этой строке.</p>
+    </div>
+</div>
+
+
+<section class="course-example" aria-labelledby="worked-example">
+    <h3 id="worked-example">Пример. Как прочитать число в центре матрицы</h3>
+    <p>Нумерация строк и столбцов начинается с нуля. <code>matrix[1]</code> выбирает вторую строку, а <code>matrix[1][1]</code> возвращает её второй элемент.</p>
+    <div class="course-table table-scroll" tabindex="0" role="region" aria-label="Индексы элементов матрицы">
+        <table class="data-index-table" aria-label="Индексы элементов матрицы">
+            <thead>
+                <tr><td></td><th scope="col">Столбец 0</th><th scope="col">Столбец 1</th><th scope="col">Столбец 2</th></tr>
+            </thead>
+            <tbody>
+                <tr><th scope="row">Строка 0</th><td>10</td><td>20</td><td>30</td></tr>
+                <tr><th scope="row">Строка 1</th><td>40</td><td><strong>50</strong></td><td>60</td></tr>
+                <tr><th scope="row">Строка 2</th><td>70</td><td>80</td><td>90</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="course-practice" aria-labelledby="practice-title">
+    <h2 id="practice-title">Практика</h2>
+    <h3>Найдите два элемента матрицы</h3>
+    <ol>
+        <li>Возьмите матрицу <code>matrix</code> из примера. По индексам найдите третий элемент первой строки и первый элемент третьей строки.</li>
+        <li>Сложите эти значения и выведите сумму.</li>
+    </ol>
+    <p><strong>Ожидаемый результат</strong> <code>100</code></p>
+
+<label class="course-output-label" for="code">Редактор Python</label>
+<div class="editor-container">
+    <textarea id="code" aria-describedby="code-hint" rows="14" autocomplete="off" autocapitalize="off" spellcheck="false">
+# Создаём матрицу 3 × 3
+matrix = [
+    [10, 20, 30],  # строка 0
+    [40, 50, 60],  # строка 1
+    [70, 80, 90]   # строка 2
+]
+
+# Число 50 находится в строке 1, столбце 1
+print("Число в центре:", matrix[1][1])
+
+# Число 90 находится в строке 2, столбце 2
+print("Последнее число:", matrix[2][2])
+
+# Выводим всю матрицу
+print("Матрица целиком:")
+for row in matrix:
+    print(row)
+</textarea>
+</div>
+
+<div class="btn-row">
+    <button class="btn-run" id="run-btn" type="button">Запустить код</button>
+    <button class="btn-clear" id="clear-btn" type="button">Очистить вывод</button>
+</div>
+<p class="hint" id="code-hint">Чтобы запустить код с клавиатуры, нажмите Ctrl + Enter или ⌘ + Enter.</p>
+
+<p class="course-output-label" id="output-label">Результат</p>
+<pre id="output" role="status" aria-labelledby="output-label" tabindex="0">Здесь появится результат...</pre>
+    <details class="course-answer">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Показать пример решения</summary>
+        <pre class="course-code"><code>first = matrix[0][2]
+second = matrix[2][0]
+print(first + second)</code></pre>
+    </details>
+</section>
+
+<div class="feature-card card-warning" style="margin-top: 30px;">
+    <h4><span data-float-icon aria-hidden="true">💡</span> Запомните:</h4>
+    <p style="margin-bottom: 0;"><code>matrix[0]</code> возвращает <b>первую строку целиком</b>. Чтобы прочитать число, укажите также индекс столбца.</p>
+</div>
+
+<a href="https://codepen.io/zlreibuh-the-sasster/pen/RNGbGQY"
+   target="_blank"
+   rel="noopener"
+   class="btn-primary-action">
+    <span data-float-icon aria-hidden="true">🚀</span> Задания по двумерным массивам
+</a>
+{% endblock %}

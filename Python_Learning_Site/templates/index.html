@@ -1,180 +1,481 @@
 {% extends "base.html" %}
 
-{% block title %}Python оқу сайты{% endblock %}
+{% block title %}{{ text('Python оқу сайты', 'Курс Python') }}{% endblock %}
 {% block body_class %}home{% endblock %}
 
 {% block content %}
 <style>
-  .hero {
-    display: grid; grid-template-columns: 1.1fr .9fr; gap: 32px; align-items: center;
-    padding: 48px 44px; border-radius: 28px; color: #fff;
-    background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 60%, #38bdf8 120%);
-    box-shadow: 0 20px 45px rgba(16, 37, 68, .25);
+  body.home .content-inner { max-width: 1140px; }
+  .home-hero {
+    --hero-bg: #f1edff;
+    --hero-glow: #d3c7ff;
+    --hero-end: #fff0db;
+    --hero-pattern: #5e3ca51c;
+    --hero-keyword: #5b3ac0;
+    --terminal-shadow: #493e8360;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1.04fr) minmax(0, .96fr);
+    gap: clamp(24px, 5vw, 62px);
+    align-items: center;
+    padding: clamp(29px, 4.25vw, 57px) clamp(28px, 5vw, 66px);
+    border: 1px solid var(--border-strong, var(--border));
+    border-radius: clamp(22px, 3vw, 36px);
+    background:
+      radial-gradient(ellipse at 77% 19%, var(--hero-glow), transparent 65%),
+      linear-gradient(141deg, var(--hero-bg) 25%, var(--hero-end));
+    box-shadow: var(--shadow-lg);
   }
-  .content .hero h1 { background: none; -webkit-text-fill-color: #fff; color: #fff; margin-bottom: 14px; }
-  .hero p { color: #dbeafe; font-size: 1.15rem; max-width: 46ch; }
-  .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
-  .hero-btn { padding: 14px 26px; border-radius: 12px; font-weight: 700; text-decoration: none; background: #fff; color: #1d4ed8 !important; }
-  .hero-btn.ghost { background: transparent; color: #fff !important; border: 2px solid rgba(255,255,255,.6); }
+  html[data-theme="dark"] .home-hero {
+    --hero-bg: #16152a;
+    --hero-glow: #302357;
+    --hero-end: #182034;
+    --hero-pattern: #b9a3fc20;
+    --hero-keyword: #c8b8ff;
+    --terminal-shadow: #050510b0;
+  }
+  .home-hero::before {
+    z-index: -1;
+    position: absolute;
+    inset: 0 0 0 46%;
+    background: radial-gradient(circle, var(--hero-pattern) 1.4px, transparent 1.5px) 0 0 / 21px 21px;
+    mask-image: linear-gradient(90deg, transparent, #000 38%);
+    pointer-events: none;
+    content: "";
+  }
+  .content .home-hero h1 {
+    margin: 0;
+    max-width: 11ch;
+    color: var(--text-main);
+    font-size: clamp(2.4rem, 5.45vw, 4.8rem);
+    font-weight: 800;
+    line-height: 1.03;
+    letter-spacing: -.047em;
+    overflow-wrap: normal;
+  }
+  .home-hero h1 span {
+    display: block;
+    color: var(--hero-keyword);
+  }
+  .content .home-hero-copy p {
+    margin: 23px 0 0;
+    max-width: 40ch;
+    color: var(--text-body);
+    font-size: clamp(.99rem, 1.6vw, 1.12rem);
+    line-height: 1.6;
+  }
+  .home-hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 27px; }
+  .home-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 10px 16px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    font-weight: 750;
+    font-size: .93rem;
+    line-height: 1.3;
+    text-decoration: none;
+    transition: background-color .18s ease, border-color .18s ease;
+  }
+  .home-action-primary { background: var(--primary); color: var(--on-primary, #fff); }
+  .home-action-primary:hover { background: color-mix(in srgb, var(--primary) 87%, var(--text-main)); }
+  .home-action-secondary {
+    background: color-mix(in srgb, var(--surface-raised, var(--surface)) 77%, transparent);
+    color: var(--text-main);
+    border-color: var(--border-strong, var(--border));
+  }
+  .home-action-secondary:hover { border-color: var(--primary); }
+  .content .home-hero-stats {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 20px;
+    row-gap: 4px;
+    list-style: none;
+    margin: 23px 0 0;
+    padding: 0;
+    color: var(--text-body);
+    font-size: .85rem;
+  }
+  .home-hero-stats li { margin: 0; }
+  .home-hero-stats strong { color: var(--text-main); font-variant-numeric: tabular-nums; }
 
-  .hero-art { background: #0b1220; border-radius: 16px; padding: 18px 20px; font-family: 'Fira Code', Consolas, monospace; font-size: 14px; line-height: 1.7; box-shadow: 0 12px 30px rgba(0,0,0,.35); }
-  .hero-art .dots span { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 6px; }
-  .hero-art .k { color: #c084fc; } .hero-art .s { color: #4ade80; } .hero-art .f { color: #38bdf8; } .hero-art .c { color: #64748b; }
+  .home-terminal {
+    min-width: 0;
+    position: relative;
+    overflow: hidden;
+    transform: rotate(-1.25deg);
+    color: #eef0ff;
+    border: 1px solid #998cdd7a;
+    border-radius: 20px;
+    background: #17182d;
+    box-shadow: 0 18px 40px var(--terminal-shadow), 0 4px 15px #05061545;
+  }
+  .home-terminal-header {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 14px 16px;
+    border-bottom: 1px solid #343550;
+    background: #202139;
+    color: #d3d4ef;
+    font: .81rem/1.35 var(--code-font);
+  }
+  .home-terminal-lights { display: flex; gap: 5px; }
+  .home-terminal-lights i { width: 7px; height: 7px; border-radius: 50%; background: #f49aaf; }
+  .home-terminal-lights i:nth-child(2) { background: #f9ce91; }
+  .home-terminal-lights i:nth-child(3) { background: #7ce4be; }
+  .home-terminal-lang { margin-inline-start: auto; color: #a7a9c9; font-size: .73rem; }
+  .content .home-terminal pre {
+    overflow: auto;
+    display: block;
+    padding: 20px 16px 21px;
+    margin: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    color: #eef0ff;
+    font: clamp(.675rem, 1.25vw, .95rem)/1.9 var(--code-font);
+    tab-size: 4;
+  }
+  .content .home-terminal code { color: inherit; }
+  .home-terminal pre:focus-visible { outline-color: #ccafff; outline-offset: -3px; }
+  .home-terminal-code .k { color: #ccafff; }
+  .home-terminal-code .f { color: #85caff; }
+  .home-terminal-code .s { color: #9ce3bc; }
+  .home-terminal-code .c { color: #b5b7d6; }
+  .home-terminal-result {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    padding: 13px 16px;
+    border-top: 1px solid #343550;
+    background: #111325;
+    color: #b7bbdd;
+    font-size: .83rem;
+  }
+  .home-terminal-result samp { font: .88rem/1.3 var(--code-font); color: #a4ebc4; }
 
-  .resume { display: none; margin-top: 28px; padding: 22px 26px; background: #fff; border: 1px solid #e2e8f0; border-radius: 20px; box-shadow: 0 8px 30px rgba(16,37,68,.07); align-items: center; gap: 18px; flex-wrap: wrap; }
-  .resume.show { display: flex; }
-  .resume-text { flex: 1; min-width: 200px; }
-  .resume-text small { color: #64748b; }
-  .resume-text b { display: block; font-size: 1.2rem; color: #0f172a; }
-  .bar { height: 10px; background: #e2e8f0; border-radius: 99px; overflow: hidden; margin-top: 10px; }
-  .bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #22c55e, #38bdf8); transition: width .5s; }
+  .home-resume {
+    display: flex;
+    gap: 16px;
+    margin-top: 22px;
+    padding: clamp(15px, 3vw, 23px);
+    align-items: center;
+    flex-wrap: wrap;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+  }
+  .home-resume-text { flex: 1 1 230px; min-width: 0; }
+  .home-resume-text span, .home-resume-text small { color: var(--text-light); font-size: .83rem; }
+  .home-resume-text b { display: block; color: var(--text-main); font-size: 1.14rem; line-height: 1.38; }
+  .home-resume-progress { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 11px; margin-top: 8px; }
+  .home-resume-progress progress {
+    appearance: none;
+    height: 7px;
+    width: min(230px, 100%);
+    border: 0;
+    border-radius: 999px;
+    background: var(--bg-soft);
+    accent-color: var(--primary);
+  }
+  .home-resume-progress progress::-webkit-progress-bar { background: var(--bg-soft); border-radius: 999px; }
+  .home-resume-progress progress::-webkit-progress-value { background: var(--primary); border-radius: 999px; }
+  .home-resume-progress progress::-moz-progress-bar { background: var(--primary); border-radius: 999px; }
 
-  .about h2 { margin-top: 56px; }
-
-  .lv-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 28px; padding: 8px 24px; box-shadow: 0 8px 30px rgba(16,37,68,.06); }
-  .lv { border-top: 1px solid #eef0f3; }
-  .lv:first-child { border-top: none; }
-  .lv summary { display: flex; align-items: center; gap: 18px; padding: 22px 0; cursor: pointer; list-style: none; }
+  .home-section { margin-top: clamp(48px, 6.2vw, 79px); }
+  .content .home-section h2 { margin: 0 0 8px; font-size: clamp(1.8rem, 4vw, 2.65rem); letter-spacing: -.035em; }
+  .content .home-section-lead { color: var(--text-body); margin: 0 0 21px; }
+  .lv-card { display: grid; gap: 10px; }
+  .lv {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm);
+  }
+  .lv[open] { border-color: color-mix(in srgb, var(--c) 40%, var(--border)); }
+  .lv summary {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 13px;
+    padding: 13px 17px;
+    cursor: pointer;
+    list-style: none;
+    border-radius: 15px;
+    transition: background-color .18s ease;
+  }
+  .lv summary::marker { content: ""; }
   .lv summary::-webkit-details-marker { display: none; }
-  .lv-icon { flex: none; width: 56px; height: 56px; border-radius: 16px; background: #f4f4f5; display: grid; place-items: center; font-size: 26px; }
-  .lv-text { flex: 1; min-width: 0; }
-  .lv-title { font-size: 1.25rem; font-weight: 800; color: #111827; line-height: 1.3; }
-  .lv-desc { margin-top: 4px; color: #6b7280; line-height: 1.5; }
-  .lv-prog { margin-top: 8px; font-size: .85rem; color: #64748b; }
-  .lv-arrow { flex: none; color: #9ca3af; transition: transform .25s; }
+  .lv summary:hover { background: var(--bg-soft); }
+  .lv-icon {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border: 1px solid color-mix(in srgb, var(--c) 33%, var(--border));
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--c) 15%, var(--surface-raised, var(--surface)));
+    font-size: 1.22rem;
+  }
+  .lv-title { display: block; color: var(--text-main); font-size: clamp(.99rem, 2vw, 1.09rem); font-weight: 750; line-height: 1.3; }
+  .lv-desc { display: block; margin-top: 3px; color: var(--text-light); font-size: .86rem; line-height: 1.4; }
+  .lv-prog {
+    color: var(--text-body);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 4px 9px;
+    white-space: nowrap;
+    font-size: .76rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .lv-arrow { color: var(--primary-dark); font: 1.5rem/1 var(--code-font); transition: transform .18s ease; }
   .lv[open] .lv-arrow { transform: rotate(90deg); }
-  .lv-list { list-style: none; margin: 0; padding: 0 0 18px 74px; }
+  .content .lv-list { margin: 0; padding: 2px 15px 13px 75px; list-style: none; }
   .lv-list li { margin: 0; }
-  .lv-list a { display: flex; gap: 12px; padding: 10px 14px; border-radius: 10px; color: #163b65; font-weight: 600; text-decoration: none; }
-  .lv-list a:hover { background: #eef5ff; }
-  .lv-list a.done::after { content: "✓"; margin-left: auto; color: #22c55e; font-weight: 800; }
-  .lv-num { min-width: 38px; font-weight: 800; color: var(--c); }
-  .lv-soon { margin: 0; padding: 0 0 20px 74px; color: #9ca3af; font-style: italic; }
-
-  @media (max-width: 800px) {
-    .hero { grid-template-columns: 1fr; padding: 32px 24px; }
-    .hero-art { display: none; }
-    .lv-card { padding: 4px 14px; border-radius: 22px; }
-    .lv-list, .lv-soon { padding-left: 0; }
+  .lv-list li + li { margin-top: 2px; }
+  .lv-list a {
+    display: grid;
+    grid-template-columns: 2.3rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 7px;
+    min-height: 42px;
+    padding: 7px 10px;
+    border-radius: 9px;
+    color: var(--text-main);
+    font-size: .94rem;
+    font-weight: 650;
+    text-decoration: none;
+  }
+  .lv-list a:hover { background: var(--primary-soft, var(--bg-soft)); }
+  .lv-list a.done::after { color: var(--success); font-weight: 800; content: "✓"; }
+  .lv-num { color: var(--text-light); font: .78rem/1 var(--code-font); }
+  .content .lv-soon { margin: 0 17px 14px 75px; color: var(--text-light); }
+  @media (max-width: 760px) {
+    .home-hero { grid-template-columns: minmax(0, 1fr); gap: 23px; }
+    .content .home-hero h1 { max-width: 13ch; font-size: clamp(2.25rem, 8.8vw, 4.2rem); }
+    .home-terminal { transform: none; }
+  }
+  @media (max-width: 460px) {
+    .home-hero { padding: 21px; }
+    .home-hero-actions { gap: 8px; margin-top: 20px; }
+    .home-hero-actions .home-action { padding-inline: 11px; font-size: .87rem; }
+    .content .home-hero-copy p { margin-top: 16px; }
+    .content .home-hero-stats { margin-top: 16px; }
+    .home-terminal-header, .home-terminal-result, .content .home-terminal pre { padding-inline: 10px; }
+    .lv summary { grid-template-columns: auto minmax(0, 1fr) auto; gap: 6px 10px; padding: 12px; }
+    .lv-icon { grid-row: span 2; width: 37px; height: 37px; }
+    .lv-prog { grid-column: 2; grid-row: 2; justify-self: start; padding: 0 6px; }
+    .lv-arrow { grid-column: 3; grid-row: 1 / 3; }
+    .content .lv-list { padding: 0 9px 10px; }
+    .content .lv-soon { margin-inline-start: 59px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .home-action, .lv summary, .lv-arrow { transition: none; }
   }
 </style>
 
-<!-- ШАПКА -->
-<section class="hero">
-  <div>
-    <h1>Python-ға қош келдіңіз! 🐍</h1>
-    <p>Бағдарламалауды нөлден бастап, қазақ тілінде, қадам-қадаммен үйреніңіз. Әр сабақта түсініктеме, мысал және өз кодыңызды іске қосатын орын бар.</p>
-    <div class="hero-actions">
-      <a class="hero-btn" href="#levels">Оқуды бастау</a>
-      <a class="hero-btn ghost" href="#about">Сайт туралы</a>
+{% set course = namespace(first=none, lessons=0) %}
+{% for level in levels %}
+  {% set course.lessons = course.lessons + (level.lessons | length) %}
+  {% if course.first is none and level.lessons %}
+    {% set course.first = level.lessons[0].url %}
+  {% endif %}
+{% endfor %}
+
+<section class="home-hero" aria-labelledby="home-title">
+  <div class="home-hero-copy">
+    <h1 id="home-title">{% if language == 'ru' %}Изучайте Python <span>на русском языке</span>{% else %}Python-ды <span>қазақ тілінде</span> үйреніңіз.{% endif %}</h1>
+    <p>{{ text('Алғашқы кодтан өз жобаңызға дейін. Python негіздерін оқып, мысалдарды браузерде іске қосыңыз және тапсырмаларды орындаңыз.', 'От первой строки кода до собственного проекта. Изучайте основы Python, запускайте примеры в браузере и решайте задачи.') }}</p>
+    <div class="home-hero-actions">
+      {% if course.first %}
+        <a class="home-action home-action-primary" id="resume-link" href="{{ course.first }}"><span id="home-primary-label">{{ text('Оқуды бастау', 'Начать обучение') }}</span> <span aria-hidden="true">→</span></a>
+      {% endif %}
+      <a class="home-action home-action-secondary" href="{{ url_for('practice') }}">{{ text('Жаттықтырғышты ашу', 'Открыть тренажёр') }}</a>
     </div>
+    <ul class="home-hero-stats" aria-label="{{ text('Курстың көлемі', 'Объём курса') }}">
+      <li><strong>{{ levels | length }}</strong> {{ text('деңгей', 'уровней') }}</li>
+      <li><a class="hero-lesson-count" href="#levels" aria-label="{{ text('Курс бағдарламасындағы %s сабақты көру', 'Посмотреть все уроки курса (%s)') | format(course.lessons) }}"><strong>{{ course.lessons }}</strong> {{ text('сабақ', lesson_word(course.lessons)) }} ↓</a></li>
+    </ul>
   </div>
-  <div class="hero-art">
-    <div class="dots"><span style="background:#ef4444"></span><span style="background:#eab308"></span><span style="background:#22c55e"></span></div>
-    <div><span class="c"># менің алғашқы бағдарламам</span></div>
-    <div><span class="k">name</span> = <span class="f">input</span>(<span class="s">"Атың кім? "</span>)</div>
-    <div><span class="f">print</span>(<span class="s">f"Сәлем, {name}!"</span>)</div>
-    <div><span class="k">for</span> i <span class="k">in</span> <span class="f">range</span>(3):</div>
-    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="f">print</span>(<span class="s">"Python 🚀"</span>)</div>
-  </div>
+  <figure class="home-terminal" aria-labelledby="home-terminal-caption">
+    <figcaption class="home-terminal-header" id="home-terminal-caption">
+      <span class="home-terminal-lights" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span>main.py</span>
+      <span class="home-terminal-lang">Python</span>
+    </figcaption>
+    <pre tabindex="0"><code class="home-terminal-code"><span class="c"># {{ text('Алғашқы бағдарлама', 'Первая программа') }}</span>
+<span class="k">def</span> <span class="f">{{ text('salem', 'greet') }}</span>({{ text('esim', 'name') }}):
+    <span class="k">return</span> <span class="s">f"{{ text('Сәлем,', 'Привет,') }} {{ text('{esim}', '{name}') }}!"</span>
+
+<span class="f">print</span>({{ text('salem', 'greet') }}(<span class="s">"{{ text('Әлем', 'мир') }}"</span>))</code></pre>
+    <div class="home-terminal-result"><span>{{ text('Нәтиже', 'Результат') }}</span><samp>{{ text('Сәлем, Әлем!', 'Привет, мир!') }}</samp></div>
+  </figure>
 </section>
 
-<!-- ЖАЛҒАСТЫРУ (прогресс болса ғана көрінеді) -->
-<section class="resume" id="resume">
-  <div class="resume-text">
-    <small>Сіз тоқтаған жер</small>
+<section class="home-resume" id="resume" aria-label="{{ text('Оқу барысы', 'Ваш прогресс') }}" hidden>
+  <div class="home-resume-text">
+    <span id="resume-caption">{{ text('Соңғы ашылған сабақ', 'Последний открытый урок') }}</span>
     <b id="resume-title"></b>
-    <div class="bar"><i id="total-bar"></i></div>
-    <small id="total-text"></small>
-  </div>
-  <a class="hero-btn" id="resume-link" href="#" style="background:#1d4ed8;color:#fff !important;">Жалғастыру →</a>
-</section>
-
-<!-- САЙТ ТУРАЛЫ -->
-<section class="about" id="about">
-  <h2>Сайт туралы</h2>
-  <div class="feature-grid">
-    <div class="feature-card card-primary">
-      <h4>🇰🇿 Қазақ тілінде</h4>
-      <p>Барлық сабақтар түсінікті тілде жазылған, күрделі терминдер мысалмен түсіндіріледі.</p>
-    </div>
-    <div class="feature-card card-success">
-      <h4>⌨️ Практика</h4>
-      <p>Кодты тікелей сайтта жазып, нәтижесін бірден көресіз. Ештеңе орнатудың қажеті жоқ.</p>
-    </div>
-    <div class="feature-card card-secondary">
-      <h4>🤖 AI көмекші</h4>
-      <p>Түсінбеген жеріңіз болса, оң жақ жоғарыдағы көмекшіден сұраңыз.</p>
+    <div class="home-resume-progress">
+      <progress id="total-bar" value="0" max="{{ course.lessons or 1 }}" aria-labelledby="total-text"></progress>
+      <small id="total-text"></small>
     </div>
   </div>
 </section>
 
-<!-- ДЕҢГЕЙЛЕР -->
-<section id="levels">
-  <h2>Деңгейлер</h2>
-  <div class="lv-card">
+<nav class="home-activities" aria-label="{{ text('Практиканы таңдау', 'Выбор практики') }}">
+  <a class="home-daily-link" href="{{ url_for('daily') }}">
+    <span class="course-coin" aria-hidden="true">✦</span>
+    <span><strong>{{ text('Күндік тапсырмалар', 'Задания дня') }}</strong><small>{{ text('Бес деңгей. Дұрыс жауаптарға монеталар беріледі.', 'Пять уровней. За правильные ответы начисляются монеты.') }}</small></span>
+    <span aria-hidden="true">→</span>
+  </a>
+  <a class="home-daily-link home-games-link" href="{{ url_for('games') }}">
+    <span aria-hidden="true" class="home-game-mark">✜</span>
+    <span><strong>{{ text('Шағын ойындар', 'Мини-игры') }}</strong><small>{{ text('Қатені түзетіңіз, кодты болжаңыз немесе бағдарлама құрастырыңыз.', 'Исправьте баг, предскажите вывод или соберите программу.') }}</small></span>
+    <span aria-hidden="true">→</span>
+  </a>
+</nav>
+<section class="home-section" id="levels" aria-labelledby="home-levels-title">
+  <h2 id="home-levels-title">{{ text('Курс бағдарламасы', 'Программа курса') }}</h2>
+  <form class="library-filters" id="lesson-filters" role="search" aria-label="{{ text('Курстан сабақ іздеу', 'Поиск уроков по курсу') }}" hidden>
+    <label for="lesson-search">{{ text('Сабақты іздеу', 'Найти урок') }}
+      <input type="search" id="lesson-search" placeholder="{{ text('Мысалы, цикл немесе range', 'Например, цикл или range') }}" autocomplete="off" aria-controls="course-levels-list">
+    </label>
+    <label for="lesson-filter">{{ text('Көрсетілетін сабақтар', 'Показать уроки') }}
+      <select id="lesson-filter" aria-controls="course-levels-list">
+        <option value="all">{{ text('Барлық сабақ', 'Все уроки') }}</option>
+        <option value="saved">{{ text('Сақталған', 'Сохранённые') }}</option>
+        <option value="unfinished">{{ text('Аяқталмаған', 'Непройденные') }}</option>
+        <option value="done">{{ text('Аяқталған', 'Пройденные') }}</option>
+      </select>
+    </label>
+    <button id="library-reset" type="reset" hidden>{{ text('Сүзгіні тазарту', 'Сбросить фильтр') }}</button>
+  </form>
+  <p id="library-results" role="status" aria-live="polite"></p>
+  <div class="lv-card" id="course-levels-list">
     {% for level in levels %}
     {% set lvl = loop.index %}
-    <details class="lv" data-level="{{ loop.index0 }}" style="--c: {{ level.color }}">
+    <details class="lv" id="level-{{ lvl }}" data-level="{{ loop.index0 }}" style="--c: {{ level.color }}">
       <summary>
-        <span class="lv-icon">{{ level.icon }}</span>
+        <span class="lv-icon" aria-hidden="true">{{ level.icon }}</span>
         <span class="lv-text">
-          <div class="lv-title">{{ level.title }}</div>
-          <div class="lv-desc">{{ level.desc }}</div>
-          {% if level.lessons %}<div class="lv-prog" data-prog></div>{% endif %}
+          <span class="lv-title">{{ level.title }}</span>
+          <span class="lv-desc">{{ level.desc }}</span>
         </span>
-        <span class="lv-arrow">▶</span>
+        {% if level.lessons %}<span class="lv-prog" data-prog>{{ level.lessons | length }} {{ text('сабақ', lesson_word(level.lessons | length)) }}</span>{% endif %}
+        <span class="lv-arrow" aria-hidden="true">›</span>
       </summary>
-
       {% if level.lessons %}
       <ul class="lv-list">
         {% for lesson in level.lessons %}
-        <li>
+        <li data-keywords="{{ lesson.keywords }}">
           <a href="{{ lesson.url }}" data-url="{{ lesson.url }}">
             <span class="lv-num">{{ lvl }}.{{ loop.index }}</span>
-            {{ lesson.title }}
+            <span>{{ lesson.title }}</span>
           </a>
         </li>
         {% endfor %}
       </ul>
       {% else %}
-      <p class="lv-soon">Жақында қосылады</p>
+      <p class="lv-soon">{{ text('Жақында қосылады', 'Скоро здесь появятся уроки') }}</p>
       {% endif %}
     </details>
     {% endfor %}
   </div>
 </section>
 
+<details id="about" class="library-help">
+  <summary>{{ text('Оқу барысы қалай сақталады?', 'Как сохраняется прогресс?') }}</summary>
+  <p>{{ text('Аяқталған сабақтар, сақталған сабақтар және код нобайлары осы браузерде сақталады. Сабақты кейін қайталау үшін оның жоғарғы жағындағы «Сақтау» батырмасын басыңыз. Оны курс бағдарламасындағы «Сақталған» сүзгісі арқылы қайта табасыз.', 'Этот браузер хранит отметки о пройденных уроках, закладки и черновики кода. Чтобы вернуться к уроку позже, нажмите «Сохранить» вверху страницы. Потом выберите «Сохранённые» в программе курса.') }}</p>
+</details>
+
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  var P = window.PLS.load();
-  var LEVELS = window.PLS.LEVELS;
-  var total = 0, doneCount = 0, lastInfo = null, lastLevelIdx = -1;
+document.addEventListener("DOMContentLoaded", () => {
+  if (!window.PLS) return;
+  const { LEVELS, load } = window.PLS;
+  const levels = document.querySelectorAll(".lv[data-level]");
+  const defaultLabels = Array.from(levels, level => level.querySelector("[data-prog]")?.textContent);
+  const lessonLinks = document.querySelectorAll(".lv-list a[data-url]");
+  const resume = document.getElementById("resume");
+  const resumeTitle = document.getElementById("resume-title");
+  const resumeLink = document.getElementById("resume-link");
+  const progress = document.getElementById("total-bar");
+  const totalText = document.getElementById("total-text");
 
-  LEVELS.forEach(function (lv, li) {
-    var d = 0;
-    lv.lessons.forEach(function (ls, i) {
-      total++;
-      if (P.done[ls.url]) { d++; doneCount++; }
-      if (ls.url === P.last) { lastInfo = { num: (li + 1) + "." + (i + 1), title: ls.title, url: ls.url }; lastLevelIdx = li; }
+  const label = document.getElementById("home-primary-label");
+  const caption = document.getElementById("resume-caption");
+  const ordered = LEVELS.flatMap((level, levelIndex) =>
+    level.lessons.map((lesson, lessonIndex) => ({...lesson, levelIndex, lessonIndex})));
+
+  function sync() {
+    const state = load();
+    const done = state.done || {};
+    let doneCount = 0;
+    let last = null;
+
+    LEVELS.forEach((level, levelIndex) => {
+      let levelDone = 0;
+      level.lessons.forEach((lesson, lessonIndex) => {
+        if (done[lesson.url]) levelDone++;
+        if (state.last === lesson.url) {
+          last = { ...lesson, levelIndex, lessonIndex };
+        }
+      });
+      doneCount += levelDone;
+      const badge = levels[levelIndex]?.querySelector("[data-prog]");
+      if (badge) {
+        badge.textContent = levelDone
+          ? window.courseText(levelDone + " / " + level.lessons.length + " аяқталды", "Пройдено " + levelDone + " из " + level.lessons.length)
+          : defaultLabels[levelIndex];
+      }
     });
-    var el = document.querySelector('.lv[data-level="' + li + '"] [data-prog]');
-    if (el) el.textContent = d + " / " + lv.lessons.length + " сабақ аяқталды";
-  });
 
-  document.querySelectorAll(".lv-list a").forEach(function (a) {
-    if (P.done[a.dataset.url]) a.classList.add("done");
-  });
-
-  if (lastInfo) {
-    document.getElementById("resume").classList.add("show");
-    document.getElementById("resume-title").textContent = lastInfo.num + " " + lastInfo.title;
-    document.getElementById("resume-link").href = lastInfo.url;
-    document.getElementById("total-bar").style.width = Math.round(doneCount / total * 100) + "%";
-    document.getElementById("total-text").textContent = doneCount + " / " + total + " сабақ аяқталды";
-    var d = document.querySelector('.lv[data-level="' + lastLevelIdx + '"]');
-    if (d) d.open = true;
+    lessonLinks.forEach(link => {
+      link.classList.toggle("done", Boolean(done[link.dataset.url]));
+    });
+    progress.value = doneCount;
+    totalText.textContent = window.courseText(doneCount + " / " + progress.max + " сабақ аяқталды", "Пройдено " + doneCount + " из " + progress.max);
+    resume.hidden = !last;
+    if (!last) {
+      if (resumeLink && ordered.length) {
+        label.textContent = window.courseText("Оқуды бастау", "Начать обучение");
+        resumeLink.href = ordered[0].url;
+      }
+      return null;
+    }
+    if (doneCount === ordered.length) {
+      caption.textContent = window.courseText("Оқу барысы", "Ваш прогресс");
+      resumeTitle.textContent = window.courseText("Курсты аяқтадыңыз!", "Вы прошли весь курс!");
+      label.textContent = window.courseText("Сабақтарды қайталау", "Повторить уроки");
+      resumeLink.href = "#levels";
+      return levels[last.levelIndex];
+    }
+    const position = ordered.findIndex(lesson => lesson.url === last.url);
+    const upcoming = ordered.slice(position + 1).concat(ordered.slice(0, position));
+    const next = done[last.url] ? upcoming.find(lesson => !done[lesson.url]) : last;
+    caption.textContent = done[last.url] ? window.courseText("Келесі сабақ", "Следующий урок") : window.courseText("Соңғы ашылған сабақ", "Последний открытый урок");
+    resumeTitle.textContent = (next.levelIndex + 1) + "." + (next.lessonIndex + 1) + " " + next.title;
+    resumeLink.href = next.url;
+    label.textContent = window.courseText("Оқуды жалғастыру", "Продолжить обучение");
+    return levels[next.levelIndex];
   }
+
+  const lastLevel = sync();
+  if (lastLevel) lastLevel.open = true;
+  window.addEventListener("storage", event => {
+    if (!event.key || event.key === "pls_progress_v1") sync();
+  });
+  window.addEventListener("pageshow", event => {
+    if (event.persisted) sync();
+  });
 });
 </script>
 {% endblock %}

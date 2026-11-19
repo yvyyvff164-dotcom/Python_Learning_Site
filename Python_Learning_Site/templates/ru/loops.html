@@ -1,0 +1,87 @@
+{% extends "loops.html" %}
+
+{% block title %}Циклы — Курс Python{% endblock %}
+
+{% block content %}
+<header class="course-lesson-header">
+    <h1 class="lesson-title">Циклы</h1>
+    <p class="course-objective">Вы научитесь повторять команды с помощью for и while: получите последовательность чисел, переберёте элементы списка и запустите обратный отсчёт.</p>
+</header>
+<section aria-labelledby="loops-how">
+    <h2 id="loops-how">Как записать повторение?</h2>
+    <p>Цикл повторяет блок кода, записанный с отступом. Цикл <code>for</code> перебирает значения, например элементы списка или числа из <code>range()</code>. Цикл <code>while</code> проверяет условие перед каждым повторением.</p>
+    <div class="feature-grid">
+        <div class="feature-card course-example">
+            <h3><code>for</code> перебирает значения по порядку</h3>
+            <pre class="course-code"><code>for number in range(1, 4):
+    print(number)</code></pre>
+            <p><code>range(1, 4)</code> даёт числа 1, 2, 3. Правая граница диапазона, 4, в него не входит.</p>
+        </div>
+        <div class="feature-card course-example">
+            <h3><code>while</code> повторяет действия, пока условие истинно</h3>
+            <pre class="course-code"><code>number = 1
+while number &lt; 4:
+    print(number)
+    number += 1</code></pre>
+            <p>Значение <code>number</code> растёт при каждом повторении. Когда оно достигнет 4, условие станет ложным и цикл завершится.</p>
+        </div>
+    </div>
+    <p>Оба примера выводят каждое число с новой строки. Заголовок цикла заканчивается двоеточием. Если забыть изменить число внутри <code>while</code>, его условие может остаться истинным и цикл будет повторяться бесконечно.</p>
+</section>
+<section class="course-practice" aria-labelledby="loops-practice">
+    <h2 id="loops-practice">Выведите числа и запустите обратный отсчёт</h2>
+    <ol>
+        <li>Запустите исходный код. Объясните, почему при обратном отсчёте программа не выводит 0.</li>
+        <li>Измените первый цикл <code>for</code>, чтобы он выводил чётные числа от 2 до 20 включительно. Передайте шаг <code>2</code> третьим аргументом <code>range()</code>.</li>
+        <li>Измените цикл <code>while</code> так, чтобы отсчёт шёл от 10 до 1. Объясните, как связаны условие и строка, которая уменьшает число.</li>
+    </ol>
+
+        <label class="course-output-label" for="code">Код Python</label>
+        <div class="editor-container">
+            <textarea id="code" rows="16" spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off" aria-describedby="editor-shortcuts">print("Числа:")
+for number in range(1, 6):
+    print(number)
+
+print("Фрукты:")
+fruits = ["яблоко", "банан", "вишня"]
+for fruit in fruits:
+    print(fruit)
+
+print("Обратный отсчёт:")
+remaining = 3
+while remaining > 0:
+    print(remaining)
+    remaining -= 1
+</textarea>
+        </div>
+        <div class="btn-row">
+            <button class="btn-run" id="run-btn" type="button">Запустить код</button>
+            <button class="btn-clear" id="clear-btn" type="button">Очистить результат</button>
+        </div>
+        <p class="hint" id="editor-shortcuts"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Enter</kbd> — запуск. <kbd>Tab</kbd> — отступ. Чтобы выйти из редактора, нажмите <kbd>Esc</kbd>, затем <kbd>Tab</kbd>.</p>
+        <p class="course-output-label" id="editor-result">Результат</p>
+        <pre id="output" role="status" aria-labelledby="editor-result" aria-atomic="true">Здесь появится результат.</pre>
+    <details class="course-media">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Посмотреть вариант решения</summary>
+        <pre class="course-code"><code>for number in range(2, 21, 2):
+    print(number)
+
+remaining = 10
+while remaining &gt; 0:
+    print(remaining)
+    remaining -= 1</code></pre>
+        <p>Первая последовательность начинается с 2 и заканчивается 20. Вторая убывает от 10 до 1. Когда <code>remaining</code> становится равным 0, условие <code>while</code> ложно.</p>
+    </details>
+</section>
+<section aria-labelledby="loops-more">
+    <h2 id="loops-more">Дополнительные материалы</h2>
+    <details class="course-media">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Открыть видеоурок</summary>
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/6iF8Xb7Z3wQ?hl=ru&amp;cc_lang_pref=ru" title="Циклы for и while в Python" loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+    </details>
+</section>
+{% endblock %}

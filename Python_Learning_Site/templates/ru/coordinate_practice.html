@@ -1,0 +1,72 @@
+{% extends "coordinate_practice.html" %}
+{% block title %}Координаты и циклы — Курс Python{% endblock %}
+{% block content %}
+
+<section class="coord-lesson" aria-labelledby="coord-title">
+    <h1 id="coord-title">Координаты и циклы</h1>
+    <p class="coord-intro course-objective">В этом проекте вы спланируете сад на сетке 5 × 5. Выберите клетки для пруда, деревьев и скамеек, а затем опишите их положение в программе на Python с помощью координат и циклов.</p>
+    <a class="course-jump" href="#coord-practice-title">Перейти к заданиям на сетке <span aria-hidden="true">↓</span></a>
+
+    <section class="coord-study" aria-labelledby="coord-study-title">
+        <h2 id="coord-study-title">Как построить план?</h2>
+        <div class="coord-study-grid">
+            <article class="coord-study-card">
+                <h3>1. Прочитайте координаты</h3>
+                <p>Положение клетки задаёт пара <code>(x, y)</code>. Клетка <code>(0, 0)</code> находится в левом нижнем углу. Отсюда отсчитывайте шаги вправо по оси <code>x</code> и вверх по оси <code>y</code>. Например, чтобы попасть в <code>(2, 1)</code>, пройдите две клетки вправо и одну вверх.</p>
+            </article>
+            <article class="coord-study-card">
+                <h3>2. Вычислите новое положение</h3>
+                <p>При движении вправо <code>x</code> увеличивается, влево — уменьшается. При движении вверх увеличивается <code>y</code>, вниз — уменьшается. Например, если из <code>(2, 2)</code> пройти одну клетку вправо и две вниз, вы окажетесь в <code>(3, 0)</code>.</p>
+                <pre><code>x, y = (2, 2)
+новая_позиция = (x + 1, y - 2)
+print(новая_позиция)</code></pre>
+            </article>
+            <article class="coord-study-card">
+                <h3>3. Постройте ряд с помощью цикла</h3>
+                <p>В одном горизонтальном ряду у всех клеток одинаковый <code>y</code>. В цикле с <code>range(0, 3)</code> переменная <code>x</code> по очереди принимает значения 0, 1 и 2. Программа добавляет в список точки <code>(0, 2)</code>, <code>(1, 2)</code> и <code>(2, 2)</code>.</p>
+                <pre><code>точки = []
+for x in range(0, 3):
+    точки.append((x, 2))
+print(точки)</code></pre>
+            </article>
+        </div>
+    </section>
+
+    <section class="coord-practice" aria-labelledby="coord-practice-title">
+        <h2 id="coord-practice-title" tabindex="-1">Составьте план сада</h2>
+        <p>В первых трёх заданиях потренируйтесь работать с координатами. В четвёртом соберите план сада и посмотрите, как вывести его на экран с помощью Python.</p>
+        <div class="coord-shell" hidden>
+            <nav class="coord-nav" aria-label="Практические задания"></nav>
+            <div class="coord-workspace">
+                <div class="coord-brief">
+                    <h3 id="coord-task-title"></h3>
+                    <p class="coord-task-text"></p>
+                    <p class="coord-instructions">Перетащите фигуру на клетку или нажмите сначала на фигуру, а затем на клетку.</p>
+                    <details class="coord-hint">
+                        <summary>Подсказка</summary>
+                        <p></p>
+                        <p id="coord-keyboard">Чтобы поставить фигуру с клавиатуры, выберите её и перейдите на сетку. Перемещайтесь между клетками стрелками и нажмите Enter на нужной клетке.</p>
+                    </details>
+                </div>
+                <div class="coord-lab">
+                    <p class="coord-palette-title" id="coord-palette-title">Фигуры</p>
+                    <div class="coord-palette" role="group" aria-labelledby="coord-palette-title"></div>
+                    <div class="coord-grid" role="group" aria-label="Координатная сетка" aria-describedby="coord-keyboard"></div>
+                    <div class="coord-controls">
+                        <button type="button" class="coord-check">Проверить</button>
+                        <button type="button" class="coord-reset">Начать заново</button>
+                        <button type="button" class="coord-next" hidden>Следующее задание →</button>
+                    </div>
+                    <p class="coord-feedback" role="status"></p>
+                    <div class="coord-example" hidden>
+                        <h4>Код на Python</h4>
+                        <pre><code></code></pre>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <noscript><p>Чтобы выполнять задания, включите JavaScript в браузере.</p></noscript>
+    </section>
+</section>
+{% endblock %}

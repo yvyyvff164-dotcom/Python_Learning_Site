@@ -1,0 +1,56 @@
+.matrix-effect {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483100;
+    overflow: hidden;
+    pointer-events: none;
+    user-select: none;
+    background: radial-gradient(ellipse at 50% 40%, #002b1026, #00160985);
+    -webkit-backdrop-filter: grayscale(1) sepia(1) hue-rotate(76deg) saturate(3) brightness(.65);
+    backdrop-filter: grayscale(1) sepia(1) hue-rotate(76deg) saturate(3) brightness(.65);
+}
+.matrix-effect::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent 0 3px, #00250d2b 3px 4px);
+}
+.matrix-stream {
+    position: absolute;
+    top: 0;
+    white-space: pre;
+    text-align: center;
+    font: 600 15px/1.08 var(--code-font, monospace);
+    color: transparent;
+    background: linear-gradient(transparent, #18ce61 54%, #61ff91 94%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: matrix-rain var(--fall-time) linear var(--fall-delay) infinite;
+}
+.matrix-stream::after {
+    content: attr(data-head);
+    display: block;
+    color: #c9ffd9;
+    text-shadow: 0 0 6px #59ff8b;
+}
+@keyframes matrix-rain {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(100vh); transform: translateY(100dvh); }
+}
+.matrix-active :is(.content-inner, .course-topbar, .sidebar > nav, #ai-chat-header) {
+    animation: matrix-jitter 2.15s steps(1, end) infinite;
+}
+@keyframes matrix-jitter {
+    0%, 19%, 24%, 70%, 74%, 100% { translate: none; }
+    20% { translate: 2px 0; }
+    22% { translate: -1px 1px; }
+    72% { translate: -1px 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .matrix-stream { animation: none; top: var(--still-y); }
+    .matrix-active :is(.content-inner, .course-topbar, .sidebar > nav, #ai-chat-header) { animation: none; }
+}
+@media print {
+    .matrix-effect { display: none; }
+    .matrix-active :is(.content-inner, .course-topbar, .sidebar > nav, #ai-chat-header) { animation: none; }
+}

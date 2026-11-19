@@ -1,0 +1,114 @@
+{% extends "python.html" %}
+
+{% block title %}Что такое Python? — Курс Python{% endblock %}
+
+{% block content %}
+
+<header class="course-lesson-header">
+    <h1 class="lesson-title">Что такое Python?</h1>
+    <p class="course-objective">Вы напишете первые команды на Python и увидите результат их работы прямо в браузере.</p>
+</header>
+<section aria-labelledby="python-how">
+    <h2 id="python-how">Как выполняется код на Python?</h2>
+    <p>Программа — это набор команд, которые выполняет компьютер. В примере ниже две команды. Python выполняет их по порядку сверху вниз.</p>
+    <div class="feature-grid">
+        <div class="feature-card course-example">
+            <h3>Код</h3>
+            <pre class="course-code"><code>print("Привет, мир!")
+print(3 + 4)</code></pre>
+        </div>
+        <div class="feature-card course-example">
+            <h3>Результат</h3>
+            <pre class="course-code"><code>Привет, мир!
+7</code></pre>
+        </div>
+    </div>
+    <p>Первый вызов <code>print()</code> выводит текст в кавычках. Во второй строке Python сначала вычисляет <code>3 + 4</code>, а затем выводит результат.</p>
+</section>
+
+<section class="course-practice" id="sandbox" aria-labelledby="python-practice">
+    <h2 id="python-practice">Запустите свою первую программу</h2>
+    <ol>
+        <li>Нажмите <strong>Запустить код</strong> и посмотрите на результат.</li>
+        <li>Во второй команде <code>print()</code> замените текст своим именем. Оставьте имя в кавычках.</li>
+        <li>Выберите пример <strong>Вычисления</strong>. Измените числа и попробуйте предсказать новый результат.</li>
+    </ol>
+
+<div class="foundation-presets" role="group" aria-label="Примеры для редактора">
+    <button class="btn-clear" type="button" data-example="hello">Приветствие</button>
+    <button class="btn-clear" type="button" data-example="calc">Вычисления</button>
+    <button class="btn-clear" type="button" data-example="vars">Переменные</button>
+    <button class="btn-clear" type="button" data-example="loop">Цикл</button>
+</div>
+        <label class="course-output-label" for="code">Код Python</label>
+        <div class="editor-container">
+            <textarea id="code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off" aria-describedby="editor-shortcuts"># Выводим на экран две строки
+print("Привет, мир!")
+print("Я изучаю Python.")
+</textarea>
+        </div>
+        <div class="btn-row">
+            <button class="btn-run" id="run-btn" type="button">Запустить код</button>
+            <button class="btn-clear" id="clear-btn" type="button">Очистить результат</button>
+        </div>
+        <p class="hint" id="editor-shortcuts"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Enter</kbd> — запуск. <kbd>Tab</kbd> — отступ. Чтобы выйти из редактора, нажмите <kbd>Esc</kbd>, затем <kbd>Tab</kbd>.</p>
+        <p class="course-output-label" id="editor-result">Результат</p>
+        <pre id="output" role="status" aria-labelledby="editor-result" aria-atomic="true">Здесь появится результат.</pre>
+</section>
+<section aria-labelledby="python-use">
+    <h2 id="python-use">Для чего используют Python?</h2>
+    <div class="feature-grid">
+        <div class="feature-card">
+            <h3>Анализ данных</h3>
+            <p>Можно прочитать данные из таблицы, вычислить среднее значение и построить график.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Автоматизация</h3>
+            <p>Программа может взять на себя повторяющуюся работу. Например, переименовать сразу несколько файлов.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Веб-приложения</h3>
+            <p>С помощью Python веб-сервер может обрабатывать запросы и передавать данные на страницу.</p>
+        </div>
+    </div>
+    <details class="course-media">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Краткая история Python</summary>
+        <p>Язык создал Гвидо ван Россум. Первая версия вышла в 1991 году. Название отсылает к британской комик-группе Monty Python. В этом курсе вы будете использовать синтаксис Python 3.</p>
+    </details>
+    <details class="course-media">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Как пользоваться редактором в браузере?</summary>
+        <p>На этой странице можно запускать код без установки Python на компьютер. Если возникнет ошибка, проверьте строку, указанную в сообщении. Например, посмотрите, все ли кавычки и скобки закрыты.</p>
+    </details>
+</section>
+
+<section aria-labelledby="python-course-plan">
+    <h2 id="python-course-plan">План курса</h2>
+    <p>Проходите темы по порядку. На пятом уровне вы примените изученное в небольших проектах.</p>
+    {% for level in levels %}
+    <details class="course-media">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> {{ level.title }}</summary>
+        <ul>
+        {% for lesson in level.lessons %}
+            {% if lesson.url == request.path %}
+            <li>{{ lesson.title }} (этот урок)</li>
+            {% else %}
+            <li><a href="{{ lesson.url }}">{{ lesson.title }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </details>
+    {% endfor %}
+</section>
+
+<section aria-labelledby="python-more">
+    <h2 id="python-more">Дополнительные материалы</h2>
+    <details class="course-media">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Открыть видеоурок</summary>
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/SqrVSgATmrU?hl=ru&amp;cc_lang_pref=ru" title="Что такое Python?" loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+    </details>
+</section>
+{% endblock %}

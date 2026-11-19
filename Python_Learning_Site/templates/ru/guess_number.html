@@ -1,0 +1,103 @@
+{% extends "guess_number.html" %}
+
+{% block title %}Игра «Угадай число» — Курс Python{% endblock %}
+
+{% block content %}
+
+<article class="guess-lesson" aria-labelledby="guess-title">
+    <h1 id="guess-title">Игра «Угадай число»</h1>
+    <p class="guess-lead course-objective">Вы напишете на Python игру, в которой программа загадывает число от 1 до 20, а игрок пытается угадать его за пять попыток.</p>
+    <a class="course-jump" href="#guess-test">Перейти к игре <span aria-hidden="true">↓</span></a>
+
+    <section class="guess-section" aria-labelledby="guess-how">
+        <h2 id="guess-how">Как устроена игра?</h2>
+        <ol class="guess-steps">
+            <li><strong>1. Загадайте число</strong><p>Функция <code>randint(1, 20)</code> выбирает случайное целое число от 1 до 20 включительно.</p></li>
+            <li><strong>2. Сравните числа</strong><p>С помощью <code>if</code> проверьте, угадал ли игрок загаданное число. Если ответ неверный, подскажите, в какую сторону продолжать поиск.</p></li>
+            <li><strong>3. Посчитайте попытки</strong><p>Цикл <code>while</code> продолжается, пока остаются попытки. Каждое новое допустимое число расходует одну попытку. Как только игрок угадает число, игра закончится.</p></li>
+        </ol>
+        <div class="guess-example">
+            <h3>Пример</h3>
+            <p>Допустим, программа загадала <strong>13</strong>. Если игрок введёт <strong>8</strong>, он получит подсказку «Попробуйте число побольше». Если введёт <strong>17</strong> — «Попробуйте число поменьше». Теперь имеет смысл проверять только числа от 9 до 16.</p>
+        </div>
+    </section>
+
+    <section class="guess-section" aria-labelledby="guess-test">
+        <h2 id="guess-test" tabindex="-1">Попробуйте сыграть</h2>
+        <p>Начните с числа 10. После каждой подсказки выбирайте число ближе к середине оставшегося диапазона. Если ввести недопустимое значение или повторить число, попытка сохранится.</p>
+        <div class="guess-game" hidden>
+            <dl class="guess-stats">
+                <div><dt>Осталось попыток</dt><dd data-guess-attempts></dd></div>
+                <div><dt>Диапазон поиска</dt><dd data-guess-range></dd></div>
+            </dl>
+            <form class="guess-form" novalidate>
+                <label for="guess-input">Ваше число</label>
+                <div class="guess-actions">
+                    <input id="guess-input" type="number" min="1" max="20" step="1" inputmode="numeric">
+                    <button class="guess-submit" type="submit">Проверить</button>
+                    <button class="guess-reset" type="button">Новая игра</button>
+                </div>
+            </form>
+            <p class="guess-feedback" role="status">Введите целое число от 1 до 20.</p>
+            <div class="guess-history" hidden>
+                <h3>История попыток</h3>
+                <ol></ol>
+            </div>
+        </div>
+        <noscript><p>Чтобы сыграть, включите JavaScript в браузере.</p></noscript>
+    </section>
+
+    <section class="guess-section" aria-labelledby="guess-build">
+        <h2 id="guess-build">Напишите свою игру</h2>
+        <ol>
+            <li>Для начала загадайте постоянное число 13, а ответ игрока получите с помощью <code>input()</code>.</li>
+            <li>Обработайте три случая: число угадано, ответ меньше загаданного, ответ больше загаданного. Используйте <code>if</code>, <code>elif</code> и <code>else</code>. Проверьте программу на числах 8, 17 и 13.</li>
+            <li>Добавьте цикл <code>while</code> и счётчик попыток. Проверьте, как игра обрабатывает пустую строку, текст и повторный ввод одного и того же числа.</li>
+            <li>Закончив проверку, замените постоянное число на случайное с помощью <code>randint(1, 20)</code>.</li>
+        </ol>
+        <p><strong>Дополнительное задание.</strong> Предложите игроку выбрать сложность. На лёгком уровне дайте четыре попытки, чтобы найти число от 1 до 10, а на сложном — шесть попыток для диапазона от 1 до 50.</p>
+
+        <details class="guess-reference">
+            <summary>Показать пример программы на Python</summary>
+            <pre><code>from random import randint
+
+секрет = randint(1, 20)
+попытки = 5
+ответы = []
+нижняя_граница, верхняя_граница = 1, 20
+
+while попытки &gt; 0:
+    print(f"Диапазон поиска: {нижняя_граница}–{верхняя_граница}")
+    try:
+        ответ = int(input("Введите число от 1 до 20: "))
+    except ValueError:
+        print("Введите целое число.")
+        continue
+
+    if not 1 &lt;= ответ &lt;= 20:
+        print("Число должно быть от 1 до 20.")
+        continue
+    if ответ in ответы:
+        print("Вы уже вводили это число. Попробуйте другое.")
+        continue
+
+    ответы.append(ответ)
+    попытки -= 1
+
+    if ответ == секрет:
+        print(f"Верно! Загаданное число — {секрет}.")
+        break
+
+    if ответ &lt; секрет:
+        нижняя_граница = max(нижняя_граница, ответ + 1)
+        print("Попробуйте число побольше.")
+    else:
+        верхняя_граница = min(верхняя_граница, ответ - 1)
+        print("Попробуйте число поменьше.")
+    print(f"Осталось попыток: {попытки}")
+else:
+    print(f"Попытки закончились. Загаданное число — {секрет}.")</code></pre>
+        </details>
+    </section>
+</article>
+{% endblock %}

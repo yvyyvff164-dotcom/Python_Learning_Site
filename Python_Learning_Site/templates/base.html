@@ -1,800 +1,362 @@
 <!DOCTYPE html>
-<html lang="kk">
+<html lang="{{ language }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#1e293b">
-    <title>{% block title %}Python оқу сайты{% endblock %}</title>
-
-    <style>
-{% raw %}
-:root {
-    --primary: #3b82f6;
-    --primary-dark: #1d4ed8;
-    --primary-2: #8b5cf6;
-    --accent: #38bdf8;
-    --sidebar-bg: #1e293b;
-    --sidebar-hover: #334155;
-    --sidebar-active: #2563eb;
-    --sidebar-w: 280px;
-    --bg-main: #f8fafc;
-    --bg-soft: #f1f5f9;
-    --surface: rgba(255, 255, 255, 0.88);
-    --surface-strong: #ffffff;
-    --text-main: #0f172a;
-    --text-body: #163b65;
-    --text-light: #64748b;
-    --text-soft: #4e6484;
-    --heading-2: #0f3d7a;
-    --heading-3: #164b8c;
-    --strong: #0d4ea6;
-    --border: #e2e8f0;
-    --success: #22c55e;
-    --danger: #ef4444;
-    --warning: #f59e0b;
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 20px;
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 20px 45px rgba(16, 37, 68, 0.14);
-    --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-    --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-*, *::before, *::after { box-sizing: border-box; }
-* { margin: 0; padding: 0; }
-
-html { scroll-behavior: smooth; scroll-padding-top: 90px; }
-
-body {
-    min-height: 100vh;
-    overflow-x: hidden;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    color: var(--text-main);
-    line-height: 1.7;
-    background-color: var(--bg-main);
-    background-image:
-        radial-gradient(circle at top left, rgba(0, 166, 251, 0.18), transparent 28%),
-        radial-gradient(circle at top right, rgba(15, 98, 254, 0.16), transparent 24%),
-        linear-gradient(180deg, #ffffff 0%, #eef4ff 100%);
-    background-attachment: fixed;
-}
-
-img, video, iframe { max-width: 100%; }
-
-/* ===== Layout ===== */
-.container { display: flex; min-height: 100vh; }
-
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: var(--sidebar-w);
-    height: 100vh;
-    padding: 70px 0 24px;
-    display: flex;
-    flex-direction: column;
-    color: #ffffff;
-    background: var(--sidebar-bg);
-    box-shadow: 4px 0 25px rgba(0, 0, 0, 0.15);
-    overflow-y: auto;
-    z-index: 1000;
-    transition: var(--transition-smooth);
-}
-
-.sidebar.closed { transform: translateX(-100%); box-shadow: none; }
-
-.sidebar h3 {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 0 24px 15px;
-    font-size: 1.2rem;
-    font-weight: 800;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--accent);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.sidebar ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 15px 12px;
-}
-
-.sidebar ul li a {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
-    border-radius: var(--radius-sm);
-    color: #cbd5e1;
-    font-size: 15px;
-    font-weight: 500;
-    text-decoration: none;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    transition: var(--transition-smooth);
-}
-
-.sidebar ul li a:hover {
-    color: #ffffff;
-    background: var(--sidebar-hover);
-    transform: translateX(6px);
-}
-
-.sidebar ul li a.active {
-    color: #ffffff;
-    font-weight: 700;
-    background: var(--sidebar-active);
-    border-color: transparent;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
-}
-
-/* ===== Деңгейлер (раскрывающиеся списки в сайдбаре) ===== */
-.sidebar-levels {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 15px 12px;
-}
-
-.s-level {
-    border: 1px solid var(--c);
-    border-radius: var(--radius-md);
-    background: rgba(255, 255, 255, 0.04);
-    overflow: hidden;
-}
-
-.s-level summary {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
-    cursor: pointer;
-    list-style: none;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--c);
-    user-select: none;
-    transition: var(--transition-smooth);
-}
-
-.s-level summary::-webkit-details-marker { display: none; }
-.s-level summary:hover { background: rgba(255, 255, 255, 0.06); }
-
-.s-count {
-    margin-left: auto;
-    padding: 1px 9px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.1);
-    color: #cbd5e1;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.s-arrow { font-size: 12px; transition: transform 0.25s; }
-.s-level[open] .s-arrow { transform: rotate(90deg); }
-
-.sidebar .lesson-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    padding: 2px 8px 10px;
-}
-
-.sidebar .lesson-list li a { padding: 10px 12px; font-size: 14px; }
-
-.s-num {
-    min-width: 30px;
-    font-weight: 700;
-    color: var(--c);
-}
-
-.sidebar .lesson-list li a.active .s-num { color: #ffffff; }
-
-.content {
-    flex: 1;
-    min-width: 0;
-    margin-left: var(--sidebar-w);
-    max-width: calc(100% - var(--sidebar-w));
-    padding: 90px clamp(20px, 4vw, 56px) 56px;
-    transition: var(--transition-smooth);
-    animation: pageFade 0.6s ease both;
-}
-
-.content.full { margin-left: 0; max-width: 100%; }
-.content-inner { width: 100%; max-width: 1100px; margin: 0 auto; }
-
-@keyframes pageFade {
-    from { opacity: 0; transform: translateY(14px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
-.sidebar-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(4px);
-    z-index: 999;
-    opacity: 0;
-    pointer-events: none;
-    transition: var(--transition-smooth);
-}
-
-.sidebar-overlay.active { opacity: 1; pointer-events: auto; }
-
-/* ===== Жоғарғы батырмалар ===== */
-.menu-toggle {
-    position: fixed;
-    top: 15px;
-    left: 20px;
-    z-index: 1001;
-    width: 48px;
-    height: 46px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--primary);
-    color: #ffffff;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-size: 22px;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
-    transition: var(--transition-smooth);
-}
-
-.menu-toggle:hover { background: var(--primary-dark); transform: scale(1.05); }
-
-#ai-toggle-btn {
-    position: fixed;
-    top: 15px;
-    right: 20px;
-    z-index: 1001;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 18px;
-    background: linear-gradient(135deg, var(--primary), var(--primary-2));
-    color: #ffffff;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(139, 92, 246, 0.35);
-    transition: var(--transition-smooth);
-}
-
-#ai-toggle-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5); }
-
-/* ===== ИИ чат ===== */
-#ai-chat-window {
-    position: fixed;
-    top: 75px;
-    right: 20px;
-    width: 360px;
-    max-width: calc(100vw - 40px);
-    height: 520px;
-    max-height: calc(100vh - 95px);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    background: var(--surface-strong);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-lg);
-    z-index: 1000;
-    transform-origin: top right;
-    transition: var(--transition-smooth);
-}
-
-#ai-chat-window.hidden {
-    opacity: 0;
-    visibility: hidden;
-    transform: scale(0.92) translateY(-16px);
-    pointer-events: none;
-}
-
-#ai-chat-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 18px;
-    background: var(--sidebar-bg);
-    color: #ffffff;
-    font-weight: 700;
-}
-
-#ai-chat-messages {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 15px;
-    overflow-y: auto;
-    background: var(--bg-soft);
-}
-
-#ai-chat-input-area {
-    display: flex;
-    gap: 8px;
-    padding: 12px;
-    background: var(--surface-strong);
-    border-top: 1px solid var(--border);
-}
-
-#ai-user-input {
-    flex: 1;
-    min-width: 0;
-    padding: 10px 14px;
-    background: var(--bg-main);
-    color: var(--text-main);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-family: inherit;
-    font-size: 14px;
-    outline: none;
-    transition: var(--transition-smooth);
-}
-
-#ai-user-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
-
-#ai-send-btn {
-    padding: 10px 16px;
-    background: var(--success);
-    color: #ffffff;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-weight: 700;
-    cursor: pointer;
-    transition: var(--transition-smooth);
-}
-
-#ai-send-btn:hover { background: #16a34a; transform: scale(1.05); }
-
-/* ===== Типографика ===== */
-.content h1 {
-    margin-bottom: 22px;
-    font-size: clamp(2rem, 4.5vw, 3.1rem);
-    font-weight: 900;
-    line-height: 1.12;
-    background: linear-gradient(90deg, #08203e 0%, #0f62fe 50%, #00a6fb 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.content h2 {
-    margin: 38px 0 16px;
-    font-size: clamp(1.4rem, 2.6vw, 1.9rem);
-    font-weight: 800;
-    color: var(--heading-2);
-}
-
-.content h3 {
-    margin: 28px 0 12px;
-    font-size: clamp(1.15rem, 2vw, 1.4rem);
-    font-weight: 800;
-    color: var(--heading-3);
-}
-
-:where(.content) p { margin-bottom: 1.15rem; font-size: 1.05rem; }
-.content p { color: var(--text-body); }
-.content-inner > p { max-width: 80ch; }
-.content b, .content strong { color: var(--strong); font-weight: 800; }
-
-:where(.content) ul, :where(.content) ol { margin: 16px 0 22px 24px; }
-:where(.content) li { margin-bottom: 8px; }
-.content ul, .content ol { color: var(--text-body); }
-
-.content a:not([class]) {
-    color: var(--primary);
-    font-weight: 700;
-    text-decoration: none;
-}
-
-.content a:not([class]):hover { color: var(--primary-dark); text-decoration: underline; }
-
-.content hr { border: none; height: 1px; margin: 32px 0; background: var(--border); }
-
-.content code {
-    padding: 2px 8px;
-    border-radius: 8px;
-    background: #eaf2ff;
-    color: var(--strong);
-    font-family: 'Fira Code', Consolas, Monaco, monospace;
-    font-size: 0.92em;
-}
-
-.content pre code { padding: 0; background: none; color: inherit; }
-
-/* ===== Видео, карточкалар ===== */
-.video-wrapper {
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding-bottom: 56.25%;
-    margin: 0 0 30px;
-    background: #000;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    box-shadow: var(--shadow-lg);
-}
-
-.video-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-
-.feature-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
-    margin: 25px 0;
-}
-
-.feature-card {
-    padding: 20px;
-    background: var(--surface-strong);
-    color: var(--text-main);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition-smooth);
-}
-
-.feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
-
-:where(.feature-card) h3, :where(.feature-card) h4 { margin: 0 0 10px; font-weight: 800; color: var(--text-main); }
-:where(.feature-card) h4 { font-size: 1.2rem; }
-.feature-card p { margin-bottom: 0; font-size: 0.98rem; line-height: 1.6; color: var(--text-body); }
-
-.card-primary   { border-left: 5px solid var(--primary); }
-.card-secondary { border-left: 5px solid var(--primary-2); }
-.card-success   { border-left: 5px solid var(--success); }
-.card-warning   { border-left: 5px solid var(--warning); }
-.card-danger    { border-left: 5px solid var(--danger); }
-
-/* ===== Кестелер ===== */
-:where(.content) table { width: 100%; border-collapse: collapse; }
-:where(.content) th, :where(.content) td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #e6eefb; }
-:where(.content) th { background: #eef5ff; color: #143d70; font-weight: 800; }
-
-/* ===== Sandbox ===== */
-.editor-container {
-    margin-top: 15px;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
-}
-
-#code {
-    display: block;
-    width: 100%;
-    min-height: 160px;
-    padding: 16px;
-    background: #0f172a;
-    color: #38bdf8;
-    border: none;
-    outline: none;
-    resize: vertical;
-    font-family: 'Fira Code', Consolas, Monaco, monospace;
-    font-size: 14px;
-    line-height: 1.55;
-}
-
-.btn-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
-
-.btn-run, .btn-clear {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 15px;
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 600;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: var(--transition-smooth);
-}
-
-.btn-run {
-    padding: 12px 24px;
-    background: linear-gradient(135deg, #22c55e, #16a34a);
-    color: #ffffff;
-    border: none;
-    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
-}
-
-.btn-run:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5); }
-.btn-run:disabled { opacity: 0.6; cursor: wait; transform: none; }
-
-.btn-clear { padding: 12px 20px; background: transparent; color: var(--text-main); border: 1px solid var(--border); }
-.btn-clear:hover { border-color: var(--primary); }
-
-.btn-primary-action, .btn-primary-custom {
-    display: inline-block;
-    margin-top: 22px;
-    padding: 12px 20px;
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    color: #ffffff;
-    border-radius: var(--radius-sm);
-    font-weight: 600;
-    text-decoration: none;
-    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
-    transition: var(--transition-smooth);
-}
-
-.btn-primary-action:hover, .btn-primary-custom:hover { transform: translateY(-2px); color: #ffffff; }
-
-.hint { margin-top: 8px; font-size: 13px; opacity: 0.7; }
-
-#output {
-    min-height: 60px;
-    margin-top: 8px;
-    padding: 16px;
-    background: #0f172a;
-    color: #22c55e;
-    border: 1px solid #334155;
-    border-radius: var(--radius-md);
-    font-family: 'Fira Code', Consolas, Monaco, monospace;
-    font-size: 14px;
-    line-height: 1.55;
-    white-space: pre-wrap;
-    word-break: break-word;
-}
-
-#output.error { color: #f87171; }
-
-/* ===== Адаптив ===== */
-@media (max-width: 768px) {
-    .sidebar { transform: translateX(-100%); width: min(300px, 86vw); }
-    .sidebar.open { transform: translateX(0); }
-    .content, .content.full { margin-left: 0; max-width: 100%; padding: 80px 18px 32px; }
-    #ai-chat-window { left: 14px; right: 14px; width: auto; max-width: none; }
-}
-
-@media (max-width: 560px) {
-    #ai-toggle-btn { right: 12px; padding: 9px 14px; font-size: 13px; }
-    .btn-row { flex-direction: column; align-items: stretch; }
-    .btn-row .btn-run, .btn-row .btn-clear { width: 100%; }
-}
-
-/* ===== Басты бет режимі ===== */
-body.home .sidebar,
-body.home .menu-toggle,
-body.home .sidebar-overlay { display: none; }
-body.home .content { margin-left: 0; max-width: 100%; padding-top: 80px; }
-body.home .content-inner { max-width: 980px; }
-
-/* ===== Прогресс ===== */
-.sidebar .lesson-list a.done::after { content: "✓"; margin-left: auto; color: #22c55e; font-weight: 800; }
-.finish-box { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-.btn-finish { padding: 12px 22px; border: none; border-radius: var(--radius-sm); background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff; font: 600 15px inherit; cursor: pointer; box-shadow: 0 4px 14px rgba(34,197,94,.35); }
-.btn-finish.is-done { background: #e2e8f0; color: #475569; box-shadow: none; }
-.btn-next { padding: 12px 22px; border-radius: var(--radius-sm); background: var(--primary); color: #fff !important; font-weight: 600; text-decoration: none; }
-{% endraw %}
-    </style>
+    <meta name="theme-color" content="#eceafa">
+    <title>{% block title %}{{ text('Python оқу сайты', 'Курс Python') }}{% endblock %}</title>
+    <script src="{{ url_for('static', filename='course-language.js') }}"></script>
+    <script src="{{ url_for('static', filename='course-rewards.js') }}"></script>
+    <script src="{{ url_for('static', filename='course-theme.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='course-theme.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='lesson-themes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='course-library.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='course-skins.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='arcade-navigation.css') }}">
+    <script defer src="{{ url_for('static', filename='course-library.js') }}"></script>
+    {% if request.endpoint not in ('home', 'practice', 'daily', 'games', 'mini_game', 'profile') %}
+    <script src="{{ url_for('static', filename='python-runtime.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='matrix-effect.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='editor-drafts.css') }}">
+    <script defer src="{{ url_for('static', filename='editor-drafts.js') }}"></script>
+    {% endif %}
+    {% block page_assets %}{% endblock %}
 </head>
-<body class="{% block body_class %}{% endblock %}">
 
-    <!-- Меню ашу/жабу батырмасы -->
-    <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Менюді ашу">☰</button>
+{% set current = namespace(level_number=0, lesson_number=0, level=None) %}
+{% for level in levels %}
+    {% set level_number = loop.index %}
+    {% for lesson in level.lessons %}
+        {% if request.path == lesson.url %}
+            {% set current.level_number = level_number %}
+            {% set current.lesson_number = loop.index %}
+            {% set current.level = level %}
+        {% endif %}
+    {% endfor %}
+{% endfor %}
 
-    <!-- ИИ Көмекші батырмасы -->
-    <button id="ai-toggle-btn" onclick="toggleAIChat()">🤖 AI Көмекші</button>
-
-    <!-- Мобильді Оверлей -->
-    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
-
-    <!-- ИИ Чат терезесі -->
-    <div id="ai-chat-window" class="hidden">
-        <div id="ai-chat-header">
-            <span>🐍 Python AI Көмекші</span>
-            <span onclick="toggleAIChat()" style="cursor:pointer; font-size: 18px;">✖</span>
+<body class="{% block body_class %}{% endblock %}{% if current.level %} course-lesson{% endif %}">
+    <div class="course-ambient" aria-hidden="true">
+        <div class="ambient-day">
+            <span data-float-icon class="ambient-fragment" style="--x: 6%; --y: 8%; --duration: 22s; --delay: -7s;">print()</span>
+            <span data-float-icon class="ambient-fragment" style="--x: 45%; --y: 11%; --duration: 19s; --delay: -4s;">def</span>
+            <span data-float-icon class="ambient-fragment" style="--x: 86%; --y: 10%; --duration: 19s; --delay: -9s;">range(5)</span>
+            <span data-float-icon class="ambient-fragment" style="--x: 19%; --y: 30%; --duration: 24s; --delay: -12s;">for</span>
+            <span data-float-icon class="ambient-fragment" style="--x: 92%; --y: 34%; --duration: 18s; --delay: -7s;">[]</span>
+            <span data-float-icon class="ambient-fragment" style="--x: 4%; --y: 58%; --duration: 27s; --delay: -8s;">if</span>
+            <span data-float-icon class="ambient-fragment" style="--x: 72%; --y: 70%; --duration: 24s; --delay: -17s;">import</span>
+            <span data-float-icon class="ambient-fragment" style="--x: 84%; --y: 75%; --duration: 23s; --delay: -6s;">len()</span>
+            <span data-float-icon class="ambient-fragment" style="--x: 90%; --y: 90%; --duration: 26s; --delay: -14s;">return</span>
         </div>
-        <div id="ai-chat-messages">
-            <div style="background: var(--primary); color: white; padding: 10px 14px; border-radius: 14px 14px 14px 0; max-width: 85%; align-self: flex-start; font-size: 14px; box-shadow: var(--shadow-sm);">
-                Сәлем! Python бойынша сұрағың болса, қоя бер! 🚀
-            </div>
-        </div>
-        <div id="ai-chat-input-area">
-            <input type="text" id="ai-user-input" placeholder="Сұрағыңызды жазыңыз..." onkeypress="handleAIKeyPress(event)">
-            <button id="ai-send-btn" onclick="sendAIMessage()">▶</button>
+        <div class="ambient-night">
+            <i class="ambient-comet" style="--x: 5.6%; --y: 16%; --start-x: -4vw; --end-x: 10vw; --duration: 19s; --delay: -2s;"></i>
+            <i class="ambient-comet" style="--x: 88%; --y: 14%; --duration: 17s; --delay: -3s;"></i>
+            <i class="ambient-comet" style="--x: 40%; --y: 4%; --duration: 21s; --delay: -12s;"></i>
+            <i class="ambient-comet" style="--x: 80%; --y: 41%; --duration: 24s; --delay: -22s;"></i>
+            <i class="ambient-comet" style="--x: -2%; --y: 60%; --duration: 25s; --delay: -5s;"></i>
+            <span data-float-icon class="ambient-signature" style="--x: 5%; --y: 46%;">[ ]</span>
+            <span data-float-icon class="ambient-signature" style="--x: 91%; --y: 20%;">def</span>
+            <span data-float-icon class="ambient-signature" style="--x: 87%; --y: 83%;">print()</span>
         </div>
     </div>
 
-    <div class="container">
-        <!-- Сайдбар навигациясы: деңгейлер app.py ішіндегі LEVELS-тен келеді -->
-        <aside class="sidebar" id="sidebar">
-            <h3>🐍 Python Курсы</h3>
-
-            <div class="sidebar-levels">
-                {% for level in levels %}
-                {% set lvl = loop.index %}
-                <details class="s-level" style="--c: {{ level.color }}">
-                    <summary>
-                        <span>{{ lvl }}. {{ level.short }}</span>
-                        <span class="s-count">{{ level.lessons|length or "—" }}</span>
-                        <span class="s-arrow">▶</span>
-                    </summary>
-                    <ul class="lesson-list">
-                        {% for lesson in level.lessons %}
-                        <li>
-                            <a href="{{ lesson.url }}">
-                                <span class="s-num">{{ lvl }}.{{ loop.index }}</span>
-                                {{ lesson.title }}
-                            </a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </details>
+    <a class="course-skip" href="#content-area">{{ text('Мазмұнға өту', 'Перейти к содержанию') }}</a>
+    <header class="course-topbar">
+        <a class="profile-shortcut" href="{{ url_for('profile') }}" aria-label="{{ text('Бағдарламашы профилі', 'Профиль программиста') }}"{% if request.endpoint == 'profile' %} aria-current="page"{% endif %}>
+            <span class="coder-avatar" aria-hidden="true"><i></i></span><span class="profile-short-label">{{ text('Профиль', 'Профиль') }} <b data-profile-level>1</b></span>
+        </a>
+        {% if current.level %}
+        <button class="menu-toggle" id="course-nav-toggle" type="button" aria-label="{{ text('Сабақтар мәзірі', 'Меню уроков') }}" aria-controls="sidebar" aria-expanded="false"><span data-float-icon aria-hidden="true">☰</span></button>
+        {% endif %}
+        <a class="course-brand" href="{{ url_for('home') }}">
+            <span data-float-icon class="course-brand-mark" aria-hidden="true">Py</span> <span class="course-brand-name">{{ text('Python оқу сайты', 'Курс Python') }}</span>
+        </a>
+        <a class="course-catalog" href="{{ url_for('home') }}#levels">{{ text('Сабақтар', 'Уроки') }}</a>
+        <a class="course-catalog" href="{{ url_for('practice') }}"{% if request.endpoint == 'practice' %} aria-current="page"{% endif %}>{{ text('Жаттықтырғыш', 'Тренажёр') }}</a>
+        <a class="course-catalog games-shortcut" href="{{ url_for('games') }}"{% if request.endpoint in ('games','mini_game') %} aria-current="page"{% endif %}>{{ text('Шағын ойындар', 'Мини-игры') }}</a>
+        <div class="course-topbar-tools">
+            <a class="rewards-link" href="{{ url_for('daily') }}" title="{{ text('Күндік тапсырмалар мен монеталар', 'Задания дня и монеты') }}"{% if request.endpoint == 'daily' %} aria-current="page"{% endif %}>
+                <span class="course-coin" aria-hidden="true">✦</span><span class="rewards-link-name">{{ text('Күндік тапсырмалар', 'Задания дня') }}</span><span class="rewards-sr">{{ text('Монеталар', 'Монеты') }}</span><strong data-coin-balance>…</strong>
+            </a>
+            <nav class="course-language" aria-label="{{ text('Сайт тілі', 'Язык сайта') }}">
+                {% for code, name, short in [('kk', 'Қазақша', 'Қаз'), ('ru', 'Русский', 'Рус')] %}
+                <a href="{{ language_url(code) }}" lang="{{ code }}" hreflang="{{ code }}" aria-label="{{ name }}"{% if language == code %} aria-current="true"{% endif %}><span class="language-full">{{ name }}</span><span class="language-short" aria-hidden="true">{{ short }}</span></a>
                 {% endfor %}
-            </div>
-        </aside>
+            </nav>
+            <button class="course-theme-toggle" id="course-theme-toggle" type="button" aria-label="{{ text('Қараңғы тақырып', 'Тёмная тема') }}" aria-pressed="false" hidden>
+                <span data-float-icon class="course-theme-icon" aria-hidden="true"></span>
+                <span class="course-theme-text" aria-hidden="true">{{ text('Жарық', 'Светлая') }}</span>
+            </button>
+            <button type="button" id="ai-toggle-btn" aria-label="{{ text('AI көмекші', 'ИИ-помощник') }}" aria-controls="ai-chat-window" aria-expanded="false">{{ text('AI', 'ИИ') }}<span class="course-assistant-name">{{ text(' көмекші', '-помощник') }}</span></button>
+        </div>
+    </header>
+    <nav class="arcade-mobile-nav" aria-label="{{ text('Курс бөлімдері', 'Разделы курса') }}">
+        <a href="{{ url_for('home') }}#levels">{{ text('Сабақтар', 'Уроки') }}</a>
+        <a href="{{ url_for('practice') }}"{% if request.endpoint == 'practice' %} aria-current="page"{% endif %}>{{ text('Жаттықтырғыш', 'Тренажёр') }}</a>
+        <a href="{{ url_for('games') }}"{% if request.endpoint in ('games','mini_game') %} aria-current="page"{% endif %}>{{ text('Шағын ойындар', 'Мини-игры') }}</a>
+    </nav>
 
-        <!-- Негізгі контент аймағы -->
-        <main class="content" id="content-area">
+    <section id="ai-chat-window" aria-labelledby="ai-chat-title" hidden>
+        <div id="ai-chat-header">
+            <span id="ai-chat-title">{{ text('Python көмекшісі', 'Помощник по Python') }}</span>
+            <button type="button" id="ai-close-btn" aria-label="{{ text('Көмекшіні жабу', 'Закрыть помощника') }}"><span data-float-icon aria-hidden="true">×</span></button>
+        </div>
+        <div id="ai-chat-messages" role="log" aria-label="{{ text('Хабарламалар', 'Сообщения') }}">
+            <p class="ai-message">{{ text('Python бойынша сұрағыңызды жазыңыз.', 'Задайте вопрос о Python.') }}</p>
+        </div>
+        <form id="ai-chat-input-area">
+            <input id="ai-user-input" placeholder="{{ text('Сұрағыңызды жазыңыз', 'Введите вопрос') }}" aria-label="{{ text('Python бойынша сұрақ', 'Вопрос о Python') }}" autocomplete="off" required>
+            <button id="ai-send-btn" type="submit">{{ text('Жіберу', 'Отправить') }}</button>
+        </form>
+    </section>
+
+    <div class="container">
+        {% if current.level %}
+        <div class="sidebar-overlay" id="sidebar-overlay" aria-hidden="true"></div>
+        <aside class="sidebar" id="sidebar">
+            <nav aria-labelledby="course-sidebar-title">
+                <h2 id="course-sidebar-title">{{ text('Курс мазмұны', 'Содержание курса') }}</h2>
+                <div class="course-progress" hidden>
+                    <span id="course-progress-text"></span>
+                    <progress id="course-progress" value="0" aria-labelledby="course-progress-text"></progress>
+                </div>
+                <a class="library-trainer-link" href="{{ url_for('practice') }}">{{ text('Python жаттықтырғышы', 'Тренажёр Python') }} <span data-float-icon aria-hidden="true">→</span></a>
+                <div class="sidebar-levels">
+                    {% for level in levels %}
+                    {% set level_number = loop.index %}
+                    <details class="s-level" style="--level-hue: {{ level.color }}"{% if level_number == current.level_number %} open{% endif %}>
+                        <summary>
+                            <span data-float-icon class="s-level-index">{{ level_number }}</span>
+                            <span>{{ level.short }}</span>
+                            <span data-float-icon class="s-arrow" aria-hidden="true">▸</span>
+                        </summary>
+                        <ul class="lesson-list">
+                            {% for lesson in level.lessons %}
+                            <li>
+                                <a href="{{ lesson.url }}"{% if lesson.url == request.path %} class="active" aria-current="page"{% endif %}>
+                                    <span class="s-num" aria-hidden="true">{{ level_number }}.{{ loop.index }}</span>
+                                    {{ lesson.title }}
+                                    <span class="s-done" data-float-icon aria-hidden="true">✓</span>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </details>
+                    {% endfor %}
+                </div>
+            </nav>
+        </aside>
+        {% endif %}
+
+        <main class="content" id="content-area" tabindex="-1">
             <div class="content-inner">
-                {% block content %}
-                <!-- Сюда Flask будет автоматически подставлять код ваших уроков -->
-                {% endblock %}
+                {% if current.level %}
+                <div class="lesson-location">
+                <nav class="course-breadcrumb" aria-label="{{ text('Сабақтың курстағы орны', 'Место урока в курсе') }}">
+                    <a href="{{ url_for('home') }}#levels">Курс</a><span data-float-icon aria-hidden="true">›</span>
+                    <span>{{ current.level.title }}</span><span data-float-icon aria-hidden="true">›</span>
+                    <span>{% if language == 'ru' %}Урок {{ current.level_number }}.{{ current.lesson_number }}{% else %}{{ current.level_number }}.{{ current.lesson_number }}-сабақ{% endif %}</span>
+                </nav>
+                <button type="button" id="lesson-bookmark" aria-pressed="false" hidden>
+                    <span data-float-icon class="bookmark-symbol" aria-hidden="true">☆</span> <span class="bookmark-label">{{ text('Сақтау', 'Сохранить') }}</span>
+                </button>
+                <span class="library-status" id="bookmark-feedback" role="status"></span>
+                </div>
+                {% endif %}
+                {% block content %}{% endblock %}
             </div>
         </main>
     </div>
 
-    <!-- СКРИПТ 1: Меню және AI чат -->
+    <div id="reward-toast" role="status" aria-live="polite"></div>
+    {% if current.level %}
+        {% include "_python_errors.html" %}
+    {% endif %}
+    {% block lesson_scripts %}{% endblock %}
     <script>
-        // Сайдбарды ашу/жабу
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const content = document.getElementById('content-area');
-            const overlay = document.getElementById('sidebar-overlay');
+    (() => {
+        const main = document.getElementById('content-area');
+        const sidebar = document.getElementById('sidebar');
+        const navButton = document.getElementById('course-nav-toggle');
+        const overlay = document.getElementById('sidebar-overlay');
+        const mobileNav = window.matchMedia('(max-width: 900px)');
+        const chat = document.getElementById('ai-chat-window');
+        const chatButton = document.getElementById('ai-toggle-btn');
+        const chatClose = document.getElementById('ai-close-btn');
+        const chatMessages = document.getElementById('ai-chat-messages');
+        const chatForm = document.getElementById('ai-chat-input-area');
+        const input = document.getElementById('ai-user-input');
+        const sendButton = document.getElementById('ai-send-btn');
 
-            if (window.innerWidth <= 768) {
-                sidebar.classList.toggle('open');
-                overlay.classList.toggle('active');
-            } else {
-                sidebar.classList.toggle('closed');
-                content.classList.toggle('full');
+        function setSidebar(open, focus = false) {
+            const drawer = mobileNav.matches;
+            sidebar.classList.toggle('open', drawer && open);
+            sidebar.classList.toggle('closed', !drawer && !open);
+            overlay.classList.toggle('active', drawer && open);
+            main.classList.toggle('full', !drawer && !open);
+            sidebar.inert = !open;
+            main.inert = drawer && open;
+            navButton.setAttribute('aria-expanded', String(open));
+            if (focus) {
+                const target = open ? sidebar.querySelector('[aria-current="page"]') : navButton;
+                target.focus();
             }
         }
 
-        // ИИ Чат терезесін ашу/жабу
-        function toggleAIChat() {
-            const chatWindow = document.getElementById('ai-chat-window');
-            chatWindow.classList.toggle('hidden');
+        if (sidebar) {
+            setSidebar(!mobileNav.matches);
+            mobileNav.addEventListener('change', () => setSidebar(!mobileNav.matches));
+            navButton.addEventListener('click', () => setSidebar(sidebar.inert, mobileNav.matches));
+            overlay.addEventListener('click', () => setSidebar(false, true));
         }
 
-        // Enter пернесін басуды өңдеу
-        function handleAIKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendAIMessage();
-            }
+        function setChat(open) {
+            chat.hidden = !open;
+            chatButton.setAttribute('aria-expanded', String(open));
+            (open ? input : chatButton).focus();
         }
 
-        // ИИ-ге хабарлама жіберу және жауап алу
-        async function sendAIMessage() {
-            const inputElement = document.getElementById('ai-user-input');
-            const messageText = inputElement.value.trim();
-            if (!messageText) return;
+        chatButton.addEventListener('click', () => setChat(chat.hidden));
+        chatClose.addEventListener('click', () => setChat(false));
+        document.addEventListener('keydown', event => {
+            if (event.key !== 'Escape' || event.defaultPrevented) return;
+            if (!chat.hidden && chat.contains(document.activeElement)) setChat(false);
+            else if (sidebar && sidebar.classList.contains('open')) setSidebar(false, true);
+        });
 
-            const chatMessages = document.getElementById('ai-chat-messages');
-
-            const userDiv = document.createElement('div');
-            userDiv.style = "background: var(--surface-strong); color: var(--text-main); padding: 10px 14px; border-radius: 14px 14px 0 14px; max-width: 85%; align-self: flex-end; font-size: 14px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); word-wrap: break-word;";
-            userDiv.textContent = messageText;
-            chatMessages.appendChild(userDiv);
-
-            inputElement.value = '';
+        function addMessage(text, fromUser = false) {
+            const message = document.createElement('p');
+            message.className = fromUser ? 'ai-message ai-message-user' : 'ai-message';
+            message.textContent = text;
+            chatMessages.append(message);
             chatMessages.scrollTop = chatMessages.scrollHeight;
+            return message;
+        }
 
-            const loadingDiv = document.createElement('div');
-            loadingDiv.style = "background: var(--primary); color: white; padding: 10px 14px; border-radius: 14px 14px 14px 0; max-width: 85%; align-self: flex-start; font-size: 14px; opacity: 0.8;";
-            loadingDiv.textContent = "Ойланып жатырмын... 🧠";
-            chatMessages.appendChild(loadingDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+        chatForm.addEventListener('submit', async event => {
+            event.preventDefault();
+            const message = input.value.trim();
+            if (!message || sendButton.disabled) return;
+            addMessage(message, true);
+            input.value = '';
+            sendButton.disabled = true;
+            const reply = addMessage(window.courseText("Жауап дайындалып жатыр…", "Готовлю ответ…"));
 
             try {
                 const response = await fetch('/api/chat', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: messageText })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({message})
                 });
-
                 const data = await response.json();
-                loadingDiv.style.opacity = "1";
-                loadingDiv.style.whiteSpace = "pre-wrap";
-                loadingDiv.style.wordWrap = "break-word";
-                loadingDiv.textContent = data.response || data.error || "Жауап алынбады.";
-            } catch (error) {
-                loadingDiv.style.opacity = "1";
-                loadingDiv.textContent = "Байланыс қатесі: " + error.message;
+                reply.textContent = response.ok && data.response ? data.response : window.courseText("Жауап алу мүмкін болмады. Қайта көріңіз.", "Не удалось получить ответ. Попробуйте ещё раз.");
+            } catch {
+                reply.textContent = window.courseText("Байланыс қатесі. Қайта көріңіз.", "Не удалось подключиться. Попробуйте ещё раз.");
+            } finally {
+                sendButton.disabled = false;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
             }
-
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
+        });
+    })();
     </script>
 
-    <!-- СКРИПТ 2: Прогресс (localStorage) -->
     <script>
-    (function () {
-        var LEVELS = {{ levels|tojson }};
-        var KEY = "pls_progress_v1";
+    (() => {
+        const LEVELS = {{ levels|tojson }};
+        const KEY = 'pls_progress_v1';
+        let fallback = {done: {}, last: null};
 
         function load() {
-            try { return JSON.parse(localStorage.getItem(KEY)) || { done: {}, last: null }; }
-            catch (e) { return { done: {}, last: null }; }
-        }
-        function save(p) { try { localStorage.setItem(KEY, JSON.stringify(p)); } catch (e) {} }
-
-        window.PLS = { LEVELS: LEVELS, load: load };
-
-        var path = location.pathname.replace(/\/$/, "") || "/";
-        var p = load();
-
-        var flat = [];
-        LEVELS.forEach(function (l) {
-            l.lessons.forEach(function (ls) { flat.push({ url: ls.url, title: ls.title }); });
-        });
-        var idx = flat.findIndex(function (x) { return x.url === path; });
-
-        document.addEventListener("DOMContentLoaded", function () {
-            // Сайдбар: белсенді сабақ және аяқталғандар
-            document.querySelectorAll(".sidebar .lesson-list a").forEach(function (a) {
-                var href = a.getAttribute("href");
-                if (p.done[href]) a.classList.add("done");
-                if (href === path) {
-                    a.classList.add("active");
-                    var d = a.closest("details");
-                    if (d) d.open = true;
+            try {
+                const value = JSON.parse(localStorage.getItem(KEY));
+                if (value && value.done && typeof value.done === 'object' && !Array.isArray(value.done)) {
+                    return value;
                 }
-            });
+            } catch {}
+            return fallback;
+        }
 
-            if (idx === -1) return;
-            p.last = path;
-            save(p);
+        function save(progress) {
+            fallback = progress;
+            try { localStorage.setItem(KEY, JSON.stringify(progress)); } catch {}
+        }
 
-            // Сабақ соңындағы батырма
-            var box = document.createElement("div");
-            box.className = "finish-box";
-            var btn = document.createElement("button");
-            btn.className = "btn-finish";
-            box.appendChild(btn);
+        window.PLS = {LEVELS, load};
+        const path = location.pathname.replace(/\/$/, '') || '/';
+        const lessons = LEVELS.flatMap(level => level.lessons);
+        const index = lessons.findIndex(lesson => lesson.url === path);
+        if (index === -1) return;
+        const progress = load();
+        progress.last = path;
+        save(progress);
 
-            if (idx < flat.length - 1) {
-                var next = document.createElement("a");
-                next.className = "btn-next";
-                next.href = flat[idx + 1].url;
-                next.textContent = "Келесі сабақ →";
-                box.appendChild(next);
-            }
+        const links = [...document.querySelectorAll('.sidebar .lesson-list a')];
+        const progressBar = document.getElementById('course-progress');
+        const progressText = document.getElementById('course-progress-text');
+        const footer = document.createElement('nav');
+        const finish = document.createElement('button');
+        footer.className = 'finish-box';
+        footer.setAttribute('aria-label', window.courseText("Сабақтар арасында өту", "Переход между уроками"));
+        finish.type = 'button';
+        finish.className = 'btn-finish';
+        footer.append(finish);
 
-            function render() {
-                var done = !!p.done[path];
-                btn.textContent = done ? "✓ Аяқталды" : "✅ Сабақты аяқтадым";
-                btn.classList.toggle("is-done", done);
-            }
-            btn.onclick = function () {
-                if (p.done[path]) delete p.done[path]; else p.done[path] = Date.now();
-                save(p);
-                render();
-                document.querySelectorAll('.sidebar .lesson-list a[href="' + path + '"]').forEach(function (a) {
-                    a.classList.toggle("done", !!p.done[path]);
-                });
-            };
-            render();
+        function footerIcon(glyph) {
+            const icon = document.createElement('span');
+            icon.dataset.floatIcon = '';
+            icon.setAttribute('aria-hidden', 'true');
+            icon.textContent = glyph;
+            return icon;
+        }
 
-            var inner = document.querySelector(".content-inner");
-            if (inner) inner.appendChild(box);
+        function addLink(url, label, className, title) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.className = className;
+            if (className === 'btn-prev') link.append(footerIcon('←'), ' ' + label);
+            else link.append(label + ' ', footerIcon('→'));
+            if (title) link.title = title;
+            footer.append(link);
+        }
+
+        if (index > 0) {
+            const previous = lessons[index - 1];
+            addLink(previous.url, window.courseText("Алдыңғы сабақ", "Предыдущий урок"), 'btn-prev', previous.title);
+        }
+        if (index + 1 < lessons.length) {
+            const next = lessons[index + 1];
+            addLink(next.url, window.courseText("Келесі сабақ", "Следующий урок"), 'btn-next', next.title);
+        } else {
+            addLink('/#levels', window.courseText("Сабақтар тізімі", "Список уроков"), 'btn-next');
+        }
+
+        function renderCompletion(state) {
+            const done = Boolean(state.done[path]);
+            finish.textContent = done ? window.courseText(" Аяқталды", " Пройдено") : window.courseText("Сабақты аяқтадым", "Отметить как пройденный");
+            if (done) finish.prepend(footerIcon('✓'));
+            finish.classList.toggle('is-done', done);
+            finish.setAttribute('aria-pressed', String(done));
+            for (const link of links) link.classList.toggle('done', Boolean(state.done[link.getAttribute('href')]));
+            const count = lessons.filter(lesson => state.done[lesson.url]).length;
+            progressBar.max = lessons.length;
+            progressBar.value = count;
+            progressText.textContent = window.courseText(count + ' / ' + lessons.length + ' сабақ аяқталды', 'Пройдено ' + count + ' из ' + lessons.length);
+        }
+
+        finish.addEventListener('click', () => {
+            const recent = load();
+            if (recent.done[path]) delete recent.done[path];
+            else recent.done[path] = Date.now();
+            save(recent);
+            renderCompletion(recent);
+            window.CourseRewards.syncLessons(LEVELS, recent.done, true);
         });
+        window.addEventListener('storage', event => {
+            if (event.key === KEY) renderCompletion(load());
+        });
+        renderCompletion(progress);
+        progressBar.parentElement.hidden = false;
+        document.querySelector('.content-inner').append(footer);
     })();
     </script>
 </body>

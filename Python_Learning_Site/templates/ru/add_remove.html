@@ -1,0 +1,108 @@
+{% extends "add_remove.html" %}
+
+{% block title %}Добавление и удаление элементов списка | Курс Python{% endblock %}
+
+{% block content %}
+
+<h1 class="lesson-title">Добавление и удаление элементов списка</h1>
+
+<p class="course-objective">Список можно пополнять и сокращать. На этом уроке вы научитесь выбирать метод в зависимости от того, известна ли вам позиция элемента или его значение.</p>
+
+<details class="course-media">
+    <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Посмотреть видеоурок</summary>
+    <div class="video-wrapper">
+        <iframe
+            loading="lazy"
+            src="https://www.youtube.com/embed/cFJfbB80S3k?hl=ru&amp;cc_lang_pref=ru"
+            title="Видеоурок об изменении списков"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+    </div>
+</details>
+
+
+<h2>Методы для работы со списком</h2>
+
+<div class="feature-grid">
+    <div class="feature-card card-success">
+        <h4>Добавление элементов</h4>
+        <ul>
+            <li><code>append(x)</code> — добавляет элемент в конец списка.</li>
+            <li><code>insert(i, x)</code> вставляет <code>x</code> перед элементом с индексом <code>i</code>.</li>
+        </ul>
+    </div>
+
+    <div class="feature-card card-danger">
+        <h4>Удаление элементов</h4>
+        <ul>
+            <li><code>remove(x)</code> — удаляет первый элемент со значением x.</li>
+            <li><code>pop(i)</code> удаляет элемент с индексом <code>i</code> и возвращает его значение. Вызов <code>pop()</code> без индекса извлекает последний элемент.</li>
+        </ul>
+    </div>
+</div>
+
+
+<section class="course-example" aria-labelledby="worked-example">
+    <h3 id="worked-example">Пример. Как удалить повторяющееся значение</h3>
+    <p><code>remove("Яблоко")</code> удаляет первое в списке яблоко. <code>pop(0)</code> извлекает первый элемент списка и позволяет сохранить его в переменную.</p>
+    <pre class="course-code"><code>fruits = ["Яблоко", "Груша", "Яблоко"]
+fruits.remove("Яблоко")
+print(fruits)  # ['Груша', 'Яблоко']
+removed = fruits.pop(0)
+print(removed)  # Груша</code></pre>
+</section>
+
+<section class="course-practice" aria-labelledby="practice-title">
+    <h2 id="practice-title">Практика</h2>
+    <h3>Измените список учеников</h3>
+    <ol>
+        <li>После выполнения примера в списке останутся Сара и Айша. Вставьте между ними имя <code>"Дана"</code> с помощью <code>insert()</code>.</li>
+        <li><code>pop()</code> извлеките последнюю ученицу. Выведите её имя, а на следующей строке покажите оставшийся список.</li>
+    </ol>
+    <p><strong>Ожидаемый результат</strong> <code>Айша</code>, на следующей строке — <code>[&#x27;Сара&#x27;, &#x27;Дана&#x27;]</code></p>
+
+<label class="course-output-label" for="code">Редактор Python</label>
+<div class="editor-container">
+    <textarea id="code" aria-describedby="code-hint" rows="14" autocomplete="off" autocapitalize="off" spellcheck="false">
+# Исходный список
+students = ["Али", "Сара", "Марат"]
+print("До изменений:", students)
+
+# Добавляем ученицу
+students.append("Айша")
+print("После append:", students)
+
+# Удаляем Марата из списка
+students.remove("Марат")
+print("После remove:", students)
+
+# Удаляем первого ученика
+removed = students.pop(0)
+print("Удалённый ученик:", removed)
+print("Итоговый список:", students)
+</textarea>
+</div>
+
+<div class="btn-row">
+    <button class="btn-run" id="run-btn" type="button">Запустить код</button>
+    <button class="btn-clear" id="clear-btn" type="button">Очистить вывод</button>
+</div>
+<p class="hint" id="code-hint">Чтобы запустить код с клавиатуры, нажмите Ctrl + Enter или ⌘ + Enter.</p>
+
+<p class="course-output-label" id="output-label">Результат</p>
+<pre id="output" role="status" aria-labelledby="output-label" tabindex="0">Здесь появится результат...</pre>
+    <details class="course-answer">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Показать пример решения</summary>
+        <pre class="course-code"><code>students.insert(1, "Дана")
+last = students.pop()
+print(last)
+print(students)</code></pre>
+    </details>
+</section>
+
+<div class="feature-card tip-card">
+    <h4><span data-float-icon aria-hidden="true">💡</span> Запомните:</h4>
+    <p style="margin-bottom: 0; color: var(--text-main);"><code>remove()</code> удаляет элемент по значению, а <code>pop()</code> — по индексу.</p>
+</div>
+{% endblock %}

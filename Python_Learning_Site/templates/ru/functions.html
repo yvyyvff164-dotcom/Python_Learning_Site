@@ -1,0 +1,239 @@
+{% extends "functions.html" %}
+
+{% block title %}Встроенные функции Python — Курс Python{% endblock %}
+
+{% block content %}
+
+<h1 class="lesson-title">Встроенные функции Python</h1>
+<p class="course-objective">Вы узнаете, сколько оценок в списке, найдёте высшую оценку и средний балл. Для этого в Python уже есть функции <code>len()</code>, <code>max()</code> и <code>sum()</code>.</p>
+
+<section class="course-example" aria-labelledby="builtins-example">
+    <h2 id="builtins-example">Как вызвать встроенную функцию?</h2>
+    <p>Чтобы вызвать функцию, напишите её имя и круглые скобки. В скобках передайте нужное значение — аргумент. Например, <code>sum(bagalar)</code> возвращает сумму чисел в списке. Если разделить её на длину списка, получится средний балл.</p>
+    <pre class="course-code"><code>bagalar = [70, 85, 90, 75]
+sany = len(bagalar)
+orta = sum(bagalar) / sany
+
+print(sany)           # 4
+print(max(bagalar))   # 90
+print(orta)           # 80.0</code></pre>
+    <p><code>print()</code> выводит значение на экран. <code>max()</code> возвращает наибольшее значение: его можно сохранить в переменной или сразу передать в <code>print()</code>.</p>
+</section>
+
+<section class="course-practice" aria-labelledby="builtins-practice">
+    <h2 id="builtins-practice">Разберите список оценок</h2>
+    <ol>
+        <li>Запустите код и убедитесь, что средний балл равен <code>80.0</code>.</li>
+        <li>Добавьте в список <code>100</code>. Теперь в нём пять оценок, а средний балл равен <code>84.0</code>.</li>
+        <li>Выведите наименьшую оценку с помощью <code>min()</code>. Для этого списка должно получиться <code>70</code>.</li>
+    </ol>
+
+    <label for="code">Код Python</label>
+    <div class="editor-container">
+        <textarea id="code" rows="9" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="editor-keys">
+bagalar = [70, 85, 90, 75]
+sany = len(bagalar)
+orta = sum(bagalar) / sany
+
+print("Количество оценок:", sany)
+print("Высшая оценка:", max(bagalar))
+print("Средний балл:", orta)
+# Выведите здесь самую низкую оценку.
+</textarea>
+    </div>
+
+    <div class="btn-row">
+        <button class="btn-run" id="run-btn" type="button">Запустить код</button>
+        <button class="btn-clear" id="clear-btn" type="button">Очистить результат</button>
+        <button class="btn-clear" id="restore-btn" type="button">Восстановить исходный код</button>
+    </div>
+    <p class="hint" id="editor-keys">Ctrl + Enter или ⌘ + Enter — запуск. Tab — отступ в четыре пробела. Чтобы выйти из редактора, нажмите Esc, затем Tab.</p>
+
+    <p class="course-output-label" id="editor-output-label">Результат</p>
+    <pre id="output" role="status" aria-labelledby="editor-output-label">Результат появится после запуска кода.</pre>
+</section>
+
+<section aria-labelledby="builtins-reference">
+    <h2 id="builtins-reference">30 встроенных функций</h2>
+    <p>Откройте нужную группу, чтобы посмотреть, как вызвать функцию и какое значение она вернёт.</p>
+    <details class="function-reference">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Ввод, вывод и преобразование типов</summary>
+        <div class="catalog-grid">
+    <div class="func-card">
+        <code>print()</code>
+        <p>Выводит данные в консоль.</p>
+        <pre><code>print("Привет, мир!")</code></pre>
+    </div>
+    <div class="func-card">
+        <code>input()</code>
+        <p>Запрашивает ввод и возвращает введённый текст.</p>
+        <pre><code>at = input("Как вас зовут?")</code></pre>
+    </div>
+    <div class="func-card">
+        <code>len()</code>
+        <p>Возвращает длину строки или списка.</p>
+        <pre><code>len([1, 2, 3, 4])  # 4</code></pre>
+    </div>
+    <div class="func-card">
+        <code>type()</code>
+        <p>Возвращает тип значения.</p>
+        <pre><code>type(15)  # &lt;class 'int'&gt;</code></pre>
+    </div>
+    <div class="func-card">
+        <code>int()</code>
+        <p>Преобразует значение в целое число.</p>
+        <pre><code>int("100")  # 100</code></pre>
+    </div>
+    <div class="func-card">
+        <code>float()</code>
+        <p>Преобразует значение в число с плавающей точкой.</p>
+        <pre><code>float("3.14")  # 3.14</code></pre>
+    </div>
+    <div class="func-card">
+        <code>str()</code>
+        <p>Преобразует значение в строку.</p>
+        <pre><code>str(45)  # "45"</code></pre>
+    </div>
+    <div class="func-card">
+        <code>list()</code>
+        <p>Создаёт список из элементов переданного объекта.</p>
+        <pre><code>list("abc")  # ['a', 'b', 'c']</code></pre>
+    </div>
+    <div class="func-card">
+        <code>tuple()</code>
+        <p>Создаёт кортеж — неизменяемую последовательность.</p>
+        <pre><code>tuple([1, 2])  # (1, 2)</code></pre>
+    </div>
+    <div class="func-card">
+        <code>dict()</code>
+        <p>Создаёт словарь.</p>
+        <pre><code>dict(a=1, b=2)</code></pre>
+    </div>
+    <div class="func-card">
+        <code>set()</code>
+        <p>Создаёт множество уникальных элементов.</p>
+        <pre><code>set([1, 2, 2, 3])  # {1, 2, 3}</code></pre>
+    </div>
+    <div class="func-card">
+        <code>range()</code>
+        <p>Задаёт диапазон целых чисел.</p>
+        <pre><code>list(range(1, 5))  # [1, 2, 3, 4]</code></pre>
+    </div>
+        </div>
+    </details>
+    <details class="function-reference">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Вычисления и порядок элементов</summary>
+        <div class="catalog-grid">
+    <div class="func-card">
+        <code>sum()</code>
+        <p>Вычисляет сумму чисел.</p>
+        <pre><code>sum([10, 20, 30])  # 60</code></pre>
+    </div>
+    <div class="func-card">
+        <code>max()</code>
+        <p>Находит наибольший элемент.</p>
+        <pre><code>max([5, 9, 2])  # 9</code></pre>
+    </div>
+    <div class="func-card">
+        <code>min()</code>
+        <p>Находит наименьший элемент.</p>
+        <pre><code>min([5, 9, 2])  # 2</code></pre>
+    </div>
+    <div class="func-card">
+        <code>abs()</code>
+        <p>Возвращает модуль числа.</p>
+        <pre><code>abs(-15)  # 15</code></pre>
+    </div>
+    <div class="func-card">
+        <code>round()</code>
+        <p>Округляет число.</p>
+        <pre><code>round(3.78)  # 4</code></pre>
+    </div>
+    <div class="func-card">
+        <code>pow()</code>
+        <p>Возводит число в степень.</p>
+        <pre><code>pow(2, 3)  # 8</code></pre>
+    </div>
+    <div class="func-card">
+        <code>sorted()</code>
+        <p>Создаёт новый отсортированный список.</p>
+        <pre><code>sorted([3, 1, 2])  # [1, 2, 3]</code></pre>
+    </div>
+    <div class="func-card">
+        <code>reversed()</code>
+        <p>Позволяет перебрать элементы в обратном порядке.</p>
+        <pre><code>list(reversed([1, 2, 3]))  # [3, 2, 1]</code></pre>
+    </div>
+        </div>
+    </details>
+    <details class="function-reference">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Работа с последовательностями</summary>
+        <div class="catalog-grid">
+    <div class="func-card">
+        <code>enumerate()</code>
+        <p>При переборе возвращает индекс вместе со значением.</p>
+        <pre><code>list(enumerate(['a', 'b']))</code></pre>
+    </div>
+    <div class="func-card">
+        <code>zip()</code>
+        <p>Объединяет элементы списков попарно.</p>
+        <pre><code>list(zip([1, 2], ['a', 'b']))</code></pre>
+    </div>
+    <div class="func-card">
+        <code>map()</code>
+        <p>Применяет функцию к каждому элементу.</p>
+        <pre><code>list(map(int, ["1", "2"]))</code></pre>
+    </div>
+    <div class="func-card">
+        <code>filter()</code>
+        <p>Оставляет элементы, которые проходят проверку.</p>
+        <pre><code>list(filter(None, [0, 1, 5]))</code></pre>
+    </div>
+    <div class="func-card">
+        <code>all()</code>
+        <p>Возвращает True, если все значения истинны.</p>
+        <pre><code>all([True, True])  # True</code></pre>
+    </div>
+    <div class="func-card">
+        <code>any()</code>
+        <p>Возвращает True, если хотя бы одно значение истинно.</p>
+        <pre><code>any([False, True])  # True</code></pre>
+    </div>
+        </div>
+    </details>
+    <details class="function-reference">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Символы и справка</summary>
+        <div class="catalog-grid">
+    <div class="func-card">
+        <code>chr()</code>
+        <p>Возвращает символ Unicode по его коду.</p>
+        <pre><code>chr(65)  # 'A'</code></pre>
+    </div>
+    <div class="func-card">
+        <code>ord()</code>
+        <p>Возвращает числовой код символа.</p>
+        <pre><code>ord('A')  # 65</code></pre>
+    </div>
+    <div class="func-card">
+        <code>dir()</code>
+        <p>Возвращает список имён атрибутов и методов объекта.</p>
+        <pre><code>dir(list)</code></pre>
+    </div>
+    <div class="func-card">
+        <code>help()</code>
+        <p>Открывает справку Python. Попробуйте этот пример в локальной среде Python.</p>
+        <pre><code>help(print)</code></pre>
+    </div>
+        </div>
+    </details>
+</section>
+
+<details class="course-media function-video">
+    <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Посмотреть видеоурок</summary>
+    <div class="video-wrapper">
+        <iframe src="https://www.youtube.com/embed/6K5v4--G__U?hl=ru&amp;cc_lang_pref=ru" title="Функции Python" loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+    </div>
+</details>
+{% endblock %}

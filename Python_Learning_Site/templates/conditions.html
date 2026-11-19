@@ -1,454 +1,153 @@
 {% extends "base.html" %}
 
-{% block title %}Шартты операторлар (if, elif, else) — Python оқу сайты{% endblock %}
+{% block title %}Шартты операторлар — Python оқу сайты{% endblock %}
 
 {% block content %}
-<style>
-    /* ==========================================
-        Бетке арналған қосымша стилизация
-    ========================================== */
-    .lesson-title {
-        font-size: 2rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, var(--primary), var(--primary-2));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 20px;
-    }
-
-    /* YouTube видеосын бейімдеу (Responsive iframe) */
-    .video-wrapper {
-        position: relative;
-        width: 100%;
-        padding-bottom: 56.25%; /* 16:9 пропорция */
-        height: 0;
-        background: #000;
-        border-radius: var(--radius-md);
-        overflow: hidden;
-        box-shadow: var(--shadow-lg);
-        margin-bottom: 30px;
-    }
-
-    .video-wrapper iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: none;
-    }
-
-    .feature-card {
-        background: var(--surface-strong);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-md);
-        padding: 20px;
-        box-shadow: var(--shadow-sm);
-        transition: var(--transition-smooth);
-        color: var(--text-main);
-    }
-
-    .feature-card:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--primary);
-    }
-
-    .card-danger {
-        border-left: 5px solid #ef4444;
-    }
-    .card-danger h4 {
-        color: #ef4444;
-        font-size: 1.2rem;
-        font-weight: 800;
-        margin-top: 0;
-        margin-bottom: 10px;
-    }
-
-    /* Салыстыру операторлары кестесі */
-    .ops-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 30px;
-        background: var(--surface-strong);
-        border-radius: var(--radius-md);
-        overflow: hidden;
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow-sm);
-    }
-
-    .ops-table th {
-        background: var(--sidebar-bg);
-        color: #ffffff;
-        padding: 14px;
-        font-weight: 800;
-        text-align: left;
-    }
-
-    .ops-table td {
-        padding: 12px 14px;
-        color: var(--text-main);
-        border-bottom: 1px solid var(--border);
-    }
-
-    .ops-table tr:last-child td {
-        border-bottom: none;
-    }
-
-    .ops-table td:first-child {
-        color: var(--primary-2);
-        font-weight: 700;
-    }
-
-    /* Код редакторы мен Sandbox стилі */
-    .editor-container {
-        margin-top: 15px;
-        border-radius: var(--radius-md);
-        overflow: hidden;
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow-sm);
-    }
-
-    #code {
-        width: 100%;
-        box-sizing: border-box;
-        background: #0f172a;
-        color: #38bdf8;
-        font-family: 'Fira Code', Consolas, Monaco, monospace;
-        font-size: 14px;
-        padding: 16px;
-        border: none;
-        outline: none;
-        resize: vertical;
-        line-height: 1.5;
-        tab-size: 4;
-    }
-
-    .btn-row {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-
-    .btn-run {
-        margin-top: 15px;
-        background: linear-gradient(135deg, #22c55e, #16a34a);
-        color: white;
-        border: none;
-        padding: 12px 24px;
-        font-size: 15px;
-        font-weight: 600;
-        border-radius: var(--radius-sm);
-        cursor: pointer;
-        box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
-        transition: var(--transition-smooth);
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .btn-run:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
-    }
-
-    .btn-run:disabled {
-        opacity: .6;
-        cursor: wait;
-        transform: none;
-    }
-
-    .btn-clear {
-        margin-top: 15px;
-        background: transparent;
-        color: var(--text-main);
-        border: 1px solid var(--border);
-        padding: 12px 20px;
-        font-size: 15px;
-        font-weight: 600;
-        border-radius: var(--radius-sm);
-        cursor: pointer;
-        transition: var(--transition-smooth);
-    }
-
-    .btn-clear:hover {
-        border-color: var(--primary);
-    }
-
-    .hint {
-        font-size: 13px;
-        opacity: .7;
-        margin-top: 8px;
-    }
-
-    #output {
-        background: #0f172a;
-        color: #22c55e;
-        padding: 16px;
-        border-radius: var(--radius-md);
-        font-family: 'Fira Code', Consolas, monospace;
-        font-size: 14px;
-        min-height: 60px;
-        margin-top: 8px;
-        border: 1px solid #334155;
-        white-space: pre-wrap;
-    }
-
-    #output.error {
-        color: #f87171;
-    }
-
-    .btn-primary-action {
-        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-        color: white;
-        padding: 12px 20px;
-        border-radius: var(--radius-sm);
-        font-weight: 600;
-        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
-        transition: var(--transition-smooth);
-        text-decoration: none;
-        display: inline-block;
-        margin-top: 10px;
-    }
-
-    .btn-primary-action:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
-        color: white;
-    }
-
-    hr {
-        border: none;
-        height: 1px;
-        background: var(--border);
-        margin: 30px 0;
-    }
-
-    p {
-        line-height: 1.6;
-        color: var(--text-main);
-    }
-</style>
-
-<h1 class="lesson-title">🔀 Шартты операторлар (if, elif, else)</h1>
-
-<div class="video-wrapper">
-    <iframe
-        src="https://www.youtube.com/embed/EKcp1xuM-l0"
-        title="Python conditional statements"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen>
-    </iframe>
-</div>
-
-<p>
-    Python-да бағдарламаның белгілі бір бағытпен жүруі <b>шарттарға</b> байланысты.
-    Бұл «егер күн ашық болса, далаға шығамын, әйтпесе үйде отырамын» деген логикамен жұмыс істейді.
-</p>
-
-<hr>
-
-<h2>📊 Салыстыру операторлары</h2>
-<p>Шарттарды құру үшін келесі белгілер қолданылады:</p>
-
-<table class="ops-table">
-    <tr>
-        <th>Оператор</th>
-        <th>Мағынасы</th>
-        <th>Мысал</th>
-    </tr>
-    <tr>
-        <td><code>==</code></td>
-        <td>Тең болады</td>
-        <td><code>x == 5</code></td>
-    </tr>
-    <tr>
-        <td><code>!=</code></td>
-        <td>Тең емес</td>
-        <td><code>x != 0</code></td>
-    </tr>
-    <tr>
-        <td><code>&gt; / &lt;</code></td>
-        <td>Үлкен / Кіші</td>
-        <td><code>x &gt; 10</code></td>
-    </tr>
-    <tr>
-        <td><code>and / or</code></td>
-        <td>Және / Немесе</td>
-        <td><code>a &gt; 5 and b &lt; 10</code></td>
-    </tr>
-</table>
-
-<hr>
-
-<h2>🧪 Тәжірибелік алаң (Sandbox)</h2>
-<p>Төмендегі кодты өзгертіп, <b>Run Code</b> батырмасын басып тексеріп көр:</p>
-
-<div class="editor-container">
-    <textarea id="code" rows="18" spellcheck="false">
-# Санды өзгертіп көріңіз
-n = 15
-
-if n > 20:
-    print("Сан 20-дан үлкен")
-elif n == 15:
-    print("Сан дәл 15-ке тең")
+<header class="course-lesson-header">
+    <h1 class="lesson-title">Шартты операторлар</h1>
+    <p class="course-objective">Бағдарламаға нәтижені шартқа қарай таңдауды үйретіңіз. if, elif, else тармақтарын ұпайлар мен кіру ережесі арқылы тексересіз.</p>
+</header>
+<section aria-labelledby="conditions-how">
+    <h2 id="conditions-how">Бағдарлама тармақты қалай таңдайды?</h2>
+    <p><code>if</code> бірінші шартты тексереді. Ол жалған болса, Python <code>elif</code> шартын қарайды. Ешбір шарт ақиқат болмаса, <code>else</code> тармағы орындалады. Тармақтардың ішінде шегініс қалдырыңыз және әр шарт жолын қос нүктемен аяқтаңыз.</p>
+    <div class="feature-card course-example">
+        <h3>Мысал: ұпайды санатқа бөлу</h3>
+        <pre class="course-code"><code>score = 76
+if score &gt;= 90:
+    print("Өте жақсы")
+elif score &gt;= 70:
+    print("Жақсы")
 else:
-    print("Сан кішкентай")
+    print("Тағы жаттығыңыз")</code></pre>
+        <p><code>76 &gt;= 90</code> шарты жалған, ал <code>76 &gt;= 70</code> шарты ақиқат. Сондықтан экранға <strong>Жақсы</strong> шығады. 90-нан басталатын шарт бірінші тұруы қажет, өйткені 90 саны екі шартқа да сай келеді.</p>
+    </div>
+</section>
 
-# Күрделі шарт мысалы
-login = "admin"
-password = "123"
+<section aria-labelledby="conditions-operators">
+    <h2 id="conditions-operators">Салыстыру және логикалық амалдар</h2>
+    <div class="course-table" role="region" aria-label="Шарт құру амалдары" tabindex="0">
+        <table>
+            <thead><tr><th scope="col">Амал</th><th scope="col">Мағынасы</th><th scope="col">Мысал</th></tr></thead>
+            <tbody>
+                <tr><th scope="row"><code>==</code>, <code>!=</code></th><td>Тең, тең емес</td><td><code>score == 70</code></td></tr>
+                <tr><th scope="row"><code>&gt;</code>, <code>&lt;</code></th><td>Үлкен, кіші</td><td><code>score &gt; 70</code></td></tr>
+                <tr><th scope="row"><code>&gt;=</code>, <code>&lt;=</code></th><td>Үлкен немесе тең, кіші немесе тең</td><td><code>score &gt;= 70</code></td></tr>
+                <tr><th scope="row"><code>and</code>, <code>or</code></th><td>Екі шарт та ақиқат, кемінде бір шарт ақиқат</td><td><code>age &gt;= 12 and has_ticket</code></td></tr>
+                <tr><th scope="row"><code>not</code></th><td>Логикалық мәнді кері айналдырады</td><td><code>not has_ticket</code></td></tr>
+            </tbody>
+        </table>
+    </div>
+    <p><code>score = 70</code> мәнді меншіктейді. Ал <code>score == 70</code> сол мәннің 70-ке теңдігін тексереді.</p>
+</section>
+<section class="course-practice" aria-labelledby="conditions-practice">
+    <h2 id="conditions-practice">Шектегі мәндерді тексеріңіз</h2>
+    <ol>
+        <li><code>score</code> айнымалысына кезекпен <code>90</code>, <code>70</code> және <code>69</code> мәндерін қойыңыз. Әр іске қосуда қай тармақ орындалатынын белгілеңіз.</li>
+        <li><code>has_ticket</code> мәнін <code>False</code> етіңіз. Жасы 12-ден асса да, кіруге бола ма?</li>
+        <li><code>and</code> сөзін <code>or</code> сөзіне ауыстырыңыз. Осы өзгеріс неліктен басқа нәтиже береді?</li>
+    </ol>
 
-if login == "admin" and password == "123":
-    print("Жүйеге кіру рұқсат етілді!")
+        <label class="course-output-label" for="code">Python коды</label>
+        <div class="editor-container">
+            <textarea id="code" rows="16" spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off" aria-describedby="editor-shortcuts">score = 76
+
+if score >= 90:
+    print("Өте жақсы")
+elif score >= 70:
+    print("Жақсы")
 else:
-    print("Қате логин немесе пароль!")
+    print("Тағы жаттығыңыз")
+
+age = 14
+has_ticket = True
+if age >= 12 and has_ticket:
+    print("Іс-шараға кіре аласыз")
+else:
+    print("Кіру шарты орындалмады")
 </textarea>
-</div>
+        </div>
+        <div class="btn-row">
+            <button class="btn-run" id="run-btn" type="button">Кодты іске қосу</button>
+            <button class="btn-clear" id="clear-btn" type="button">Нәтижені тазарту</button>
+        </div>
+        <p class="hint" id="editor-shortcuts"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Enter</kbd> — іске қосу. <kbd>Tab</kbd> — шегініс. Редактордан шығу үшін <kbd>Esc</kbd>, содан кейін <kbd>Tab</kbd> басыңыз.</p>
+        <p class="course-output-label" id="editor-result">Нәтиже</p>
+        <pre id="output" role="status" aria-labelledby="editor-result" aria-atomic="true">Нәтиже осында шығады.</pre>
+    <details class="course-media">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Жауаптарды тексеру</summary>
+        <p>90 ұпайда <code>if</code>, 70 ұпайда <code>elif</code>, 69 ұпайда <code>else</code> тармағы орындалады. Билет <code>False</code> болса, <code>and</code> арқылы жазылған шарт жалған. <code>or</code> қолданғанда жас шартының өзі жеткілікті болады.</p>
+    </details>
+</section>
+<section aria-labelledby="conditions-more">
+    <h2 id="conditions-more">Қосымша материалдар</h2>
+    <details class="course-media">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Бейнесабақты ашу</summary>
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/EKcp1xuM-l0" title="Python тіліндегі шартты операторлар" loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+    </details>
+    <p><a href="https://codepen.io/zlreibuh-the-sasster/pen/MYjgeLM" target="_blank" rel="noopener noreferrer">CodePen-дегі қосымша тапсырмаларды ашу</a></p>
+</section>
+{% endblock %}
 
-<div class="btn-row">
-    <button class="btn-run" id="run-btn" type="button">▶ Run Code</button>
-    <button class="btn-clear" id="clear-btn" type="button">🗑 Тазалау</button>
-</div>
-<div class="hint">Ctrl + Enter — кодты іске қосу</div>
-
-<div style="margin-top: 15px; color: var(--text-light); font-size: 14px; font-weight: 500;">Нәтиже (Output):</div>
-<pre id="output">Нәтиже осында шығады...</pre>
-
-<div class="feature-card card-danger" style="margin-top: 30px;">
-    <h4>⚠️ Есіңде сақта:</h4>
-    <p style="margin-bottom: 0;">Python-да <code>if</code>, <code>elif</code> және <code>else</code>-ден кейін міндетті түрде <b>қос нүкте (:)</b> қойылады және келесі жол <b>бос орынмен (отступ)</b> басталуы керек!</p>
-</div>
-
-<h2 style="margin-top: 30px;">🧪 Қосымша тапсырма</h2>
-<a href="https://codepen.io/zlreibuh-the-sasster/pen/MYjgeLM"
-   target="_blank"
-   rel="noopener"
-   class="btn-primary-action">
-    🔀 CodePen-дегі тапсырманы ашу
-</a>
-
+{% block lesson_scripts %}
 <script>
 (function () {
+    const lessonText = window.courseText;
     const codeEl   = document.getElementById("code");
     const outputEl = document.getElementById("output");
     const runBtn   = document.getElementById("run-btn");
     const clearBtn = document.getElementById("clear-btn");
 
-    // Skulpt-ты бірнеше көзден кезекпен жүктеу
-    const SOURCES = [
-        ["https://skulpt.org/js/skulpt.min.js",
-         "https://skulpt.org/js/skulpt-stdlib.js"],
-        ["https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js",
-         "https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"],
-        ["https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt.min.js",
-         "https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt-stdlib.js"]
-    ];
-
-    function loadScript(src) {
-        return new Promise(function (resolve, reject) {
-            const s = document.createElement("script");
-            s.src = src;
-            s.onload = resolve;
-            s.onerror = function () { reject(new Error(src)); };
-            document.head.appendChild(s);
-        });
-    }
-
-    async function loadSkulpt() {
-        if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
-        for (const pair of SOURCES) {
-            try {
-                await loadScript(pair[0]);
-                await loadScript(pair[1]);
-                if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
-            } catch (e) {
-                console.warn("Skulpt жүктелмеді:", e.message);
-            }
-        }
-        throw new Error("Skulpt ешбір көзден жүктелмеді");
-    }
-
-    const skulptReady = loadSkulpt();
-    runBtn.disabled = true;
-    runBtn.textContent = "⏳ Жүктелуде...";
-    function enableBtn() {
-        runBtn.disabled = false;
-        runBtn.textContent = "▶ Run Code";
-    }
-    skulptReady.then(enableBtn).catch(enableBtn);
-
-    function builtinRead(file) {
-        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][file] === undefined) {
-            throw "Файл табылмады: '" + file + "'";
-        }
-        return Sk.builtinFiles["files"][file];
-    }
+    const runLabel = runBtn.textContent;
 
     async function runCode() {
-        outputEl.className = "";
-        outputEl.textContent = "";
+        if (runBtn.disabled) return;
+        const program = codeEl.value;
+
         runBtn.disabled = true;
+        runBtn.textContent = lessonText("Іске қосылуда…", "Выполняется…");
+        outputEl.classList.remove("error");
+        outputEl.textContent = "";
 
         try {
-            await skulptReady;
-        } catch (e) {
-            outputEl.className = "error";
-            outputEl.textContent = "Skulpt жүктелмеді. Интернетті тексеріп, бетті жаңартыңыз (Ctrl+F5).";
+            await window.PythonRuntime.run(program, text => { outputEl.textContent += text; });
+            if (!outputEl.textContent) {
+                outputEl.textContent = lessonText("Код сәтті орындалды (экранға ештеңе шықпады).", "Код выполнен. Программа ничего не вывела.");
+            }
+        } catch (error) {
+            outputEl.classList.add("error");
+            outputEl.textContent += (outputEl.textContent ? "\n" : "") + lessonText("Қате: ", "Ошибка: ") + String(error);
+        } finally {
             runBtn.disabled = false;
-            return;
+            runBtn.textContent = runLabel;
         }
-
-        Sk.configure({
-            output: function (text) { outputEl.textContent += text; },
-            read: builtinRead,
-            __future__: Sk.python3,
-            inputfun: function (prompt) {
-                return window.prompt(prompt || "Мәнді енгізіңіз:") || "";
-            },
-            execLimit: 10000
-        });
-
-        Sk.misceval
-            .asyncToPromise(function () {
-                return Sk.importMainWithBody("<stdin>", false, codeEl.value, true);
-            })
-            .then(function () {
-                if (outputEl.textContent === "") {
-                    outputEl.textContent = "Код сәтті орындалды (экранға ештеңе шықпады).";
-                }
-            })
-            .catch(function (err) {
-                outputEl.className = "error";
-                outputEl.textContent += (outputEl.textContent ? "\n" : "") + "Қате (Error): " + err.toString();
-            })
-            .finally(function () {
-                runBtn.disabled = false;
-            });
     }
 
     runBtn.addEventListener("click", runCode);
 
     clearBtn.addEventListener("click", function () {
         outputEl.className = "";
-        outputEl.textContent = "Нәтиже осында шығады...";
+        outputEl.textContent = lessonText("Нәтиже осында шығады.", "Здесь появится результат.");
     });
 
     // Ctrl+Enter — іске қосу, Tab — шегініс (4 бос орын)
+    let exitWithTab = false;
+    codeEl.addEventListener("blur", function () { exitWithTab = false; });
     codeEl.addEventListener("keydown", function (e) {
+        const allowsTab = exitWithTab;
+        exitWithTab = e.key === "Escape";
         if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
             e.preventDefault();
             runCode();
-        } else if (e.key === "Tab") {
+        } else if (e.key === "Tab" && !e.shiftKey && !allowsTab) {
             e.preventDefault();
             const s = codeEl.selectionStart, end = codeEl.selectionEnd;
-            codeEl.value = codeEl.value.slice(0, s) + "    " + codeEl.value.slice(end);
-            codeEl.selectionStart = codeEl.selectionEnd = s + 4;
+            codeEl.setRangeText("    ", s, end, "end");
         }
     });
 })();
 </script>
-
 {% endblock %}

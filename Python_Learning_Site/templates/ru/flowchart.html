@@ -1,0 +1,123 @@
+{% extends "flowchart.html" %}
+
+{% block title %}Конструктор блок-схем (FlowRun) — Курс Python{% endblock %}
+
+{% block content %}
+{% raw %}
+
+<h1 class="lesson-title">Конструктор блок-схем</h1>
+<p class="course-objective">Вы соберёте алгоритм из фигур, посмотрите, какой код на Python им соответствует, и проверите результат. Блоки обозначают действия, а стрелки задают порядок их выполнения.</p>
+
+<section class="course-example" aria-labelledby="fc-example-title">
+    <h2 id="fc-example-title">Как сложить два числа?</h2>
+    <p>Сначала вводим два целых числа и сохраняем их в переменных <code>a</code> и <code>b</code>. Следующий блок вычисляет <code>a + b</code>, а последний выводит сумму на экран.</p>
+    <p class="fc-worked-steps">Начало → Ввод → Ввод → Вычисления → Вывод → Конец</p>
+    <pre class="course-code"><code>a = int(input("Первое число: "))
+b = int(input("Второе число: "))
+s = a + b
+print("Сумма:", s)</code></pre>
+    <p>Выберите пример сложения в списке ниже. Введите по очереди 2 и 3. На экране появится <code>Сумма: 5</code>.</p>
+</section>
+
+<h2>Что обозначают блоки</h2>
+<div class="feature-grid">
+    <div class="feature-card" style="border-left: 5px solid #0f172a;">
+        <h4><span class="legend-dot" style="background:#1e293b"></span>Начало / Конец</h4>
+        <p>Овалы отмечают начало и конец алгоритма. Они всегда присутствуют на схеме.</p>
+    </div>
+    <div class="feature-card" style="border-left: 5px solid #2563eb;">
+        <h4><span class="legend-dot" style="background:#2563eb"></span>Ввод</h4>
+        <p>Параллелограмм ввода запрашивает значение у пользователя. Например, <code>a = int(input())</code>.</p>
+    </div>
+    <div class="feature-card" style="border-left: 5px solid #16a34a;">
+        <h4><span class="legend-dot" style="background:#16a34a"></span>Вывод</h4>
+        <p>Параллелограмм вывода показывает результат на экране. Например, <code>print(...)</code>.</p>
+    </div>
+    <div class="feature-card" style="border-left: 5px solid #7c3aed;">
+        <h4><span class="legend-dot" style="background:#7c3aed"></span>Вычисления</h4>
+        <p>Прямоугольник обозначает вычисление или присваивание значения переменной. Например, <code>s = a + b</code>.</p>
+    </div>
+    <div class="feature-card" style="border-left: 5px solid #d97706;">
+        <h4><span class="legend-dot" style="background:#d97706"></span>Условие</h4>
+        <p>В ромбе проверяется условие. В зависимости от результата выполняется ветка <strong>Да</strong> или <strong>Нет</strong>.</p>
+    </div>
+    <div class="feature-card" style="border-left: 5px solid #0891b2;">
+        <h4><span class="legend-dot" style="background:#0891b2"></span>Цикл (while / for)</h4>
+        <p>Шестиугольник обозначает цикл. <code>while</code> повторяет блоки, пока условие истинно. <code>for</code> выполняет их для каждого значения последовательности.</p>
+    </div>
+</div>
+
+<section id="fc-builder" class="fc-builder course-practice" aria-labelledby="fc-builder-title">
+<h2 id="fc-builder-title">Соберите блок-схему</h2>
+<p>Перетащите блок на схему или щёлкните по нему, а затем по кнопке <strong>＋</strong> в месте вставки. С клавиатуры выберите блок клавишей Enter, перейдите к нужному месту клавишей Tab и снова нажмите Enter. Когда вы меняете поля блока, код Python обновляется сразу.</p>
+
+<label class="fc-example-select">
+    <span>Готовый пример</span>
+    <select id="fc-examples" class="fc-select">
+        <option value="">Выберите пример…</option>
+        <option value="sum">Сумма двух чисел</option>
+        <option value="parity">Чётное или нечётное?</option>
+        <option value="sumn">Сумма от 1 до n (for)</option>
+        <option value="countdown">Обратный отсчёт (while)</option>
+    </select>
+</label>
+<div class="fc-toolbar">
+    <button class="btn-run" id="fc-run" type="button">▶ Запустить</button>
+    <button class="btn-clear" id="fc-copy" type="button">📋 Копировать код</button>
+    <button class="btn-clear" id="fc-download" type="button">⬇ Скачать .py</button>
+    <button class="btn-clear" id="fc-clear" type="button">🗑 Очистить</button>
+</div>
+
+<div class="fc-layout">
+    <aside class="fc-palette" id="fc-palette" aria-labelledby="fc-palette-title">
+        <h3 id="fc-palette-title">Блоки</h3>
+        <div id="fc-status" role="status">Выберите блок, который хотите добавить на схему.</div>
+    </aside>
+
+    <div id="fc-canvas" role="group" aria-label="Блок-схема"></div>
+</div>
+
+<div class="fc-bottom">
+    <div>
+        <p class="fc-title course-output-label" id="fc-code-label">Код Python</p>
+        <pre id="fc-code" tabindex="0" aria-labelledby="fc-code-label"></pre>
+    </div>
+    <div>
+        <p class="fc-title course-output-label" id="fc-output-label">Результат</p>
+        <pre id="output" role="status" aria-labelledby="fc-output-label">Здесь появится результат.</pre>
+    </div>
+</div>
+</section>
+
+<h2>Как проверить код</h2>
+<div class="feature-grid">
+    <div class="feature-card card-success">
+        <h4>Имена переменных</h4>
+        <p>Имя переменной пишется без пробелов. Например, <code>number1</code> или <code>total</code>.</p>
+    </div>
+    <div class="feature-card card-warning">
+        <h4>Текст и числа</h4>
+        <p>Текст заключайте в кавычки. Несколько значений разделяйте запятыми, например <code>"Сумма:", s</code>.</p>
+    </div>
+    <div class="feature-card card-primary">
+        <h4>Условия</h4>
+        <p>Для сравнения используйте выражения вроде <code>a &gt; b</code> или <code>n % 2 == 0</code>. Если оба условия должны выполняться одновременно, соедините их с помощью <code>and</code>.</p>
+    </div>
+    <div class="feature-card card-danger">
+        <h4>Бесконечный цикл</h4>
+        <p>Внутри цикла меняйте значение, от которого зависит условие. Например, команда <code>i = i - 1</code> при обратном отсчёте приближает счётчик к нулю, чтобы цикл мог завершиться.</p>
+    </div>
+</div>
+
+<h2>Попробуйте самостоятельно</h2>
+<ol>
+    <li>В примере сложения замените <code>a + b</code> на <code>a * b</code>. При вводе 4 и 6 должно получиться 24. Измените и подпись в блоке вывода.</li>
+    <li>Соберите схему для поиска наибольшего из трёх чисел. Проверьте её на наборах <code>9, 4, 9</code> и <code>-3, -8, -1</code>. Должны получиться 9 и −1.</li>
+    <li>Найдите сумму чётных чисел от 1 до 100 с помощью блоков <code>for</code> и <code>if</code>. Для проверки: сумма равна 2550.</li>
+    <li>Вычислите факториал числа с помощью цикла. Для <code>5!</code> должно получиться 120, а для <code>0!</code> — 1.</li>
+    <li>Соберите цикл <code>while</code>, который проверяет введённое слово. Если строка пустая или пользователь ввёл <code>ошибка</code>, программа должна запросить слово ещё раз. При вводе слова <code>солнце</code> цикл должен завершиться.</li>
+</ol>
+
+<p><a href="https://flowrun.io/scratchpad" target="_blank" rel="noopener">Открыть конструктор FlowRun в новой вкладке</a></p>
+{% endraw %}
+{% endblock %}

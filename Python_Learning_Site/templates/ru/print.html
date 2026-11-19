@@ -1,0 +1,88 @@
+{% extends "print.html" %}
+
+{% block title %}Вывод данных с помощью print() — Курс Python{% endblock %}
+
+{% block content %}
+<header class="course-lesson-header">
+    <h1 class="lesson-title">Вывод данных с помощью print()</h1>
+    <p class="course-objective">Вы научитесь выводить на экран текст, числа и результаты вычислений, а также задавать разделитель между значениями в одной строке.</p>
+</header>
+<section aria-labelledby="print-how">
+    <h2 id="print-how">Как вывести текст и числа</h2>
+    <p>Текст заключают в кавычки. Числа и арифметические выражения пишут без кавычек. В один вызов <code>print()</code> можно передать несколько значений через запятую.</p>
+    <div class="course-table" role="region" aria-label="Примеры вызова print" tabindex="0">
+        <table>
+            <thead><tr><th scope="col">Код</th><th scope="col">Результат</th><th scope="col">Что произойдёт?</th></tr></thead>
+            <tbody>
+                <tr><th scope="row"><code>print("2 + 3")</code></th><td><code>2 + 3</code></td><td>Текст в кавычках выводится без изменений.</td></tr>
+                <tr><th scope="row"><code>print(2 + 3)</code></th><td><code>5</code></td><td>Python вычисляет значение выражения.</td></tr>
+                <tr><th scope="row"><code>print("Шаг", 1)</code></th><td><code>Шаг 1</code></td><td>Между двумя значениями появится пробел.</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section aria-labelledby="print-format">
+    <h2 id="print-format">Как изменить разделитель и конец строки</h2>
+    <div class="feature-grid">
+        <div class="feature-card course-example">
+            <h3><code>sep</code> — разделитель между значениями</h3>
+            <p>По умолчанию значения разделяет один пробел. В этом примере между ними появятся точки.</p>
+            <pre class="course-code"><code>print("15", "04", "2026", sep=".")
+# Результат: 15.04.2026</code></pre>
+        </div>
+        <div class="feature-card course-example">
+            <h3><code>end</code> — символ в конце строки</h3>
+            <p>Обычно следующий вызов <code>print()</code> начинает новую строку. В примере ниже первый вызов заканчивает вывод пробелом.</p>
+            <pre class="course-code"><code>print("Обучение", end=" ")
+print("началось!")
+# Результат: Обучение началось!</code></pre>
+        </div>
+    </div>
+</section>
+<section class="course-practice" aria-labelledby="print-practice">
+    <h2 id="print-practice">Предскажите результат и запустите код</h2>
+    <ol>
+        <li>Предскажите, что выведет каждая строка исходной программы. Проверьте свой ответ в редакторе.</li>
+        <li>Измените <code>sep</code> так, чтобы дата выводилась в формате <code>15-04-2026</code>.</li>
+        <li>Используйте два последних вызова <code>print()</code>, чтобы вывести <code>Шаг 1</code> в одной строке.</li>
+    </ol>
+
+        <label class="course-output-label" for="code">Код Python</label>
+        <div class="editor-container">
+            <textarea id="code" rows="8" spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off" aria-describedby="editor-shortcuts">print("Добро пожаловать в Python!")
+print("5 + 10 =", 5 + 10)
+
+print("15", "04", "2026", sep=".")
+print("Готово", end=" → ")
+print("Проверка")
+</textarea>
+        </div>
+        <div class="btn-row">
+            <button class="btn-run" id="run-btn" type="button">Запустить код</button>
+            <button class="btn-clear" id="clear-btn" type="button">Очистить результат</button>
+        </div>
+        <p class="hint" id="editor-shortcuts"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Enter</kbd> — запуск. <kbd>Tab</kbd> — отступ. Чтобы выйти из редактора, нажмите <kbd>Esc</kbd>, затем <kbd>Tab</kbd>.</p>
+        <p class="course-output-label" id="editor-result">Результат</p>
+        <pre id="output" role="status" aria-labelledby="editor-result" aria-atomic="true">Здесь появится результат.</pre>
+    <details class="course-media">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Посмотреть вариант решения</summary>
+        <pre class="course-code"><code>print("15", "04", "2026", sep="-")
+print("Шаг", end=" ")
+print(1)</code></pre>
+        <p>Слово без кавычек Python может принять за имя переменной. Если такое имя ещё не определено, возникнет ошибка <code>NameError</code>.</p>
+    </details>
+</section>
+<section aria-labelledby="print-more">
+    <h2 id="print-more">Дополнительные материалы</h2>
+    <details class="course-media">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Открыть видеоурок</summary>
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/2B91x1IG4W0?hl=ru&amp;cc_lang_pref=ru" title="Функция print()" loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+    </details>
+    <p><a href="https://codepen.io/zlreibuh-the-sasster/pen/dPpbXqN" target="_blank" rel="noopener noreferrer">Открыть дополнительные задания на CodePen</a></p>
+</section>
+{% endblock %}

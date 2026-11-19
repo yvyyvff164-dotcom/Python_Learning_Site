@@ -1,0 +1,250 @@
+{% extends "strings.html" %}
+
+{% block title %}Строки | Курс Python{% endblock %}
+
+{% block content %}
+
+<h1 class="lesson-title">Строки</h1>
+
+<p class="course-objective">Строка (<code>str</code>) — это последовательность символов. На этом уроке вы получите символ по индексу, выделите часть строки срезом и обработаете введённый текст.</p>
+
+<!--
+    Чтобы добавить видео, раскомментируйте блок ниже,
+    и укажите идентификатор ролика YouTube вместо ВИДЕО_ID.
+
+<div class="video-wrapper">
+    <iframe
+        src="https://www.youtube.com/embed/ВИДЕО_ID"
+        title="Python strings"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+    </iframe>
+</div>
+-->
+
+
+<h2><span data-float-icon aria-hidden="true">✍️</span> Как записать строку?</h2>
+
+<div class="feature-grid">
+    <div class="feature-card card-primary">
+        <h4>Одинарные и двойные кавычки</h4>
+        <p style="margin-bottom: 0;"><code>"Привет"</code> и <code>'Привет'</code> обозначают одну и ту же строку. Закрывающая кавычка должна совпадать с открывающей.</p>
+    </div>
+
+    <div class="feature-card card-purple">
+        <h4>Тройные кавычки</h4>
+        <p style="margin-bottom: 0;"><code>"""..."""</code> позволяют записать текст в несколько строк.</p>
+    </div>
+
+    <div class="feature-card card-success">
+        <h4>Специальные символы</h4>
+        <p style="margin-bottom: 0;"><code>\n</code> — перевод строки, <code>\t</code> — табуляция. Эти последовательности можно вставлять прямо в строку.</p>
+    </div>
+</div>
+
+<pre class="code-pre">a = "Первая строка"
+b = 'Вторая строка'
+print("Первая\nВторая\tс отступом")</pre>
+
+
+<h2>Индексы и срезы</h2>
+<p>У каждого символа есть индекс. Отсчёт от начала строки начинается с <b>0</b>, от конца — с <b>−1</b>.</p>
+
+<div class="index-row">
+    <div class="index-cell"><div class="ch">P</div><div class="pos">0</div><div class="neg">-6</div></div>
+    <div class="index-cell"><div class="ch">y</div><div class="pos">1</div><div class="neg">-5</div></div>
+    <div class="index-cell"><div class="ch">t</div><div class="pos">2</div><div class="neg">-4</div></div>
+    <div class="index-cell"><div class="ch">h</div><div class="pos">3</div><div class="neg">-3</div></div>
+    <div class="index-cell"><div class="ch">o</div><div class="pos">4</div><div class="neg">-2</div></div>
+    <div class="index-cell"><div class="ch">n</div><div class="pos">5</div><div class="neg">-1</div></div>
+</div>
+
+<pre class="code-pre">s = "Python"
+print(s[0])    # P
+print(s[-1])   # n</pre>
+
+<h3><span data-float-icon aria-hidden="true">✂️</span> Срезы (Slices)</h3>
+<p>Часть строки можно получить срезом <code>[начало:конец]</code>. Как и в <code>range()</code>, правая граница <b>не включается</b>.</p>
+
+<pre class="code-pre">s = "Python"
+print(s[0:2])    # Py
+print(s[2:])     # thon
+print(s[:3])     # Pyt
+print(s[::-1])   # nohtyP  (в обратном порядке)</pre>
+
+
+<h2>Обработка текста</h2>
+<p>Методы вызываются через точку после строки, например <code>s.strip()</code>. А <code>len(s)</code> — отдельная функция, которой строку передают как аргумент.</p>
+
+<div class="course-table table-scroll" tabindex="0" role="region" aria-label="Способы обработки строк">
+<table class="spec-table">
+    <tr>
+        <th scope="col">Выражение</th>
+        <th scope="col">Что делает?</th>
+        <th scope="col">Пример</th>
+    </tr>
+    <tr>
+        <td><code>len(s)</code></td>
+        <td>Возвращает длину строки в символах</td>
+        <td><code>len("Python")</code> → 6</td>
+    </tr>
+    <tr>
+        <td><code>s.upper()</code></td>
+        <td>Переводит все буквы в верхний регистр</td>
+        <td><code>"abc".upper()</code> → ABC</td>
+    </tr>
+    <tr>
+        <td><code>s.lower()</code></td>
+        <td>Переводит все буквы в нижний регистр</td>
+        <td><code>"ABC".lower()</code> → abc</td>
+    </tr>
+    <tr>
+        <td><code>s.title()</code></td>
+        <td>Начинает каждое слово с заглавной буквы</td>
+        <td><code>"hello world".title()</code> → Hello World</td>
+    </tr>
+    <tr>
+        <td><code>s.strip()</code></td>
+        <td>Убирает пробельные символы в начале и в конце строки</td>
+        <td><code>"  hi  ".strip()</code> → hi</td>
+    </tr>
+    <tr>
+        <td><code>s.replace(a, b)</code></td>
+        <td>Заменяет вхождения подстроки a на b</td>
+        <td><code>"cat".replace("c", "b")</code> → bat</td>
+    </tr>
+    <tr>
+        <td><code>s.split()</code></td>
+        <td>Разбивает строку по пробельным символам и возвращает список слов</td>
+        <td><code>"a b c".split()</code> → ['a', 'b', 'c']</td>
+    </tr>
+    <tr>
+        <td><code>"-".join(list)</code></td>
+        <td>Объединяет строки списка в одну строку через заданный разделитель</td>
+        <td><code>"-".join(["a", "b"])</code> → a-b</td>
+    </tr>
+    <tr>
+        <td><code>s.find(x)</code></td>
+        <td>Возвращает индекс первого вхождения x или −1, если x не найден</td>
+        <td><code>"hello".find("l")</code> → 2</td>
+    </tr>
+    <tr>
+        <td><code>s.count(x)</code></td>
+        <td>Считает число вхождений x в строку</td>
+        <td><code>"banana".count("a")</code> → 3</td>
+    </tr>
+    <tr>
+        <td><code>s.startswith(x)</code></td>
+        <td>Возвращает True, если строка начинается с x</td>
+        <td><code>"Python".startswith("Py")</code> → True</td>
+    </tr>
+    <tr>
+        <td><code>x in s</code></td>
+        <td>Проверяет, встречается ли x в строке</td>
+        <td><code>"th" in "Python"</code> → True</td>
+    </tr>
+</table>
+</div>
+
+<h3><span data-float-icon aria-hidden="true">➕</span> Сложение и умножение строк</h3>
+<pre class="code-pre">print("Привет, " + "мир!")   # Привет, мир!
+print("ha" * 3)                # hahaha</pre>
+
+
+<section class="course-example" aria-labelledby="worked-example">
+    <h3 id="worked-example">Пример. Как привести имя к единой записи</h3>
+    <p><code>strip()</code> убирает пробелы с обоих концов строки. <code>title()</code> начинает каждое слово с заглавной буквы. Оба метода возвращают новую строку.</p>
+    <pre class="course-code"><code>name = "  сара  "
+print(name.strip().title())  # Сара</code></pre>
+</section>
+
+<section class="course-practice" aria-labelledby="practice-title">
+    <h2 id="practice-title">Практика</h2>
+    <h3>Подготовьте имя для списка</h3>
+    <ol>
+        <li>Добавьте в конец программы строку <code>name = "  айша  "</code>.</li>
+        <li>Уберите пробелы по краям и запишите имя с заглавной буквы. Сохраните результат в переменной <code>clean_name</code> и выведите её значение.</li>
+    </ol>
+    <p><strong>Ожидаемый результат</strong> <code>Айша</code></p>
+
+<label class="course-output-label" for="code">Редактор Python</label>
+<div class="editor-container">
+    <textarea id="code" aria-describedby="code-hint" rows="15" autocomplete="off" autocapitalize="off" spellcheck="false">
+# 1. Создание строки и её длина
+text = "Python Programming"
+print("Строка:", text)
+print("Длина:", len(text))
+
+# 2. Индексы
+print("Первая буква:", text[0])
+print("Последняя буква:", text[-1])
+
+# 3. Срезы
+print("Первые 6 букв:", text[0:6])
+print("С индекса 7:", text[7:])
+print("В обратном порядке:", text[::-1])
+
+# 4. Методы
+print(text.upper())
+print(text.lower())
+print(text.replace("Python", "Java"))
+print("Есть ли в строке Python?", "Python" in text)
+
+# 5. split и join
+words = "яблоко банан вишня"
+items = words.split()
+print("Список:", items)
+print("Объединяем снова:", "-".join(items))
+
+# 6. strip, count, find
+padded = "   привет   "
+print("[" + padded.strip() + "]")
+print("Сколько раз встречается буква а:", words.count("а"))
+print("Индекс слова банан:", words.find("банан"))
+
+# 7. Сложение и умножение строк
+print("Привет, " + "мир!")
+print("ha" * 3)
+</textarea>
+</div>
+
+<div class="btn-row">
+    <button class="btn-run" id="run-btn" type="button">Запустить код</button>
+    <button class="btn-clear" id="clear-btn" type="button">Очистить вывод</button>
+</div>
+<p class="hint" id="code-hint">Чтобы запустить код с клавиатуры, нажмите Ctrl + Enter или ⌘ + Enter.</p>
+
+<p class="course-output-label" id="output-label">Результат</p>
+<pre id="output" role="status" aria-labelledby="output-label" tabindex="0">Здесь появится результат...</pre>
+    <details class="course-answer">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Показать пример решения</summary>
+        <pre class="course-code"><code>name = "  айша  "
+clean_name = name.strip().title()
+print(clean_name)</code></pre>
+    </details>
+</section>
+
+
+<h2><span data-float-icon aria-hidden="true">⚠️</span> Частые ошибки</h2>
+<div class="feature-grid">
+    <div class="feature-card card-danger">
+        <h4>1. Попытка изменить символ строки</h4>
+        <p style="margin-bottom: 0;">Строка — <b>неизменяемый</b> тип данных. Присваивание <code>s[0] = "J"</code> вызовет ошибку <code>TypeError</code>. Чтобы заменить первую букву, создайте новую строку: <code>s = "J" + s[1:]</code>.</p>
+    </div>
+
+    <div class="feature-card card-warning">
+        <h4>2. Сложение строки и числа</h4>
+        <p style="margin-bottom: 0;"><code>"Возраст: " + 14</code> вызовет ошибку. Сначала преобразуйте число в строку: <code>"Возраст: " + str(14)</code>.</p>
+    </div>
+
+    <div class="feature-card card-danger">
+        <h4>3. Индекс за пределами строки</h4>
+        <p style="margin-bottom: 0;">Если строка содержит шесть символов, обращение <code>s[10]</code> вызовет ошибку <code>IndexError</code>.</p>
+    </div>
+</div>
+
+<div class="feature-card card-success" style="margin-top: 25px;">
+    <h3>Дополнительное задание</h3>
+    <p style="margin-bottom: 0;">Запишите своё имя в переменную <code>text</code>. Выведите его в обратном порядке, затем заглавными буквами и, наконец, выведите количество символов.</p>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+<template id="python-guide-template">
+    <details class="python-guide">
+        <summary>{{ text('Жиі кездесетін қателерді талдау', 'Разбор частых ошибок') }}</summary>
+        <p class="guide-location" role="status"></p>
+        <details data-exception="SyntaxError">
+            <summary><code>SyntaxError</code> · {{ text('Python жазбаны оқи алмады', 'Python не смог прочитать запись') }}</summary>
+            <p>{{ text('Көрсетілген жолды және оның алдындағы жолды қараңыз. Жақша мен тырнақшаның жабылғанын, ал if, for және def жолдарының соңында қос нүкте барын тексеріңіз.', 'Посмотрите на указанную строку и строку перед ней. Проверьте парные скобки, кавычки и двоеточие после if, for или def.') }}</p>
+            <div class="guide-examples">
+                <div><strong>{{ text('Қате', 'С ошибкой') }}</strong><pre><code>score = 2
+if score > 0
+    print(score)</code></pre></div>
+                <div><strong>{{ text('Түзетілгені', 'Исправлено') }}</strong><pre><code>score = 2
+if score > 0:
+    print(score)</code></pre></div>
+            </div>
+        </details>
+        <details data-exception="IndexError">
+            <summary><code>IndexError</code> · {{ text('Мұндай индекс жоқ', 'Такого индекса нет') }}</summary>
+            <p>{{ text('Тізімде екі элемент болса, олардың индекстері 0 және 1 болады. Элементке жүгінер алдында len() арқылы ұзындығын тексеріңіз.', 'У списка из двух элементов индексы 0 и 1. Проверьте длину через len() и выберите индекс в пределах списка.') }}</p>
+            <div class="guide-examples">
+                <div><strong>{{ text('Қате', 'С ошибкой') }}</strong><pre><code>items = [4, 8]
+print(items[2])</code></pre></div>
+                <div><strong>{{ text('Соңғы элемент', 'Последний элемент') }}</strong><pre><code>items = [4, 8]
+print(items[1])  # 8</code></pre></div>
+            </div>
+        </details>
+        <details data-exception="TypeError">
+            <summary><code>TypeError</code> · {{ text('Амал бұл дерек түріне жарамайды', 'Тип данных не подходит для операции') }}</summary>
+            <p>{{ text('Мысалы, input() мәтін қайтарады. Оған бүтін сан қосқыңыз келсе, алдымен сан жазылған мәтінді int() арқылы түрлендіріңіз. Мәннің түрін type() арқылы біле аласыз.', 'Например, input() возвращает строку. Если хотите прибавить к ней число, сначала преобразуйте строку с цифрами через int(). Проверить тип значения можно через type().') }}</p>
+            <div class="guide-examples">
+                <div><strong>{{ text('Қате', 'С ошибкой') }}</strong><pre><code>count = "3"
+print(count + 2)</code></pre></div>
+                <div><strong>{{ text('Түзетілгені', 'Исправлено') }}</strong><pre><code>count = "3"
+print(int(count) + 2)  # 5</code></pre></div>
+            </div>
+        </details>
+    </details>
+</template>

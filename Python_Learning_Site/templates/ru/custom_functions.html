@@ -1,0 +1,84 @@
+{% extends "custom_functions.html" %}
+
+{% block title %}Как написать свою функцию — Курс Python{% endblock %}
+
+{% block content %}
+
+<h1 class="lesson-title">Как написать свою функцию</h1>
+<p class="course-objective">Вы напишете функцию для вычисления площади прямоугольника и вызовете её для разных размеров. Формула будет записана один раз, а результат можно будет использовать в других вычислениях.</p>
+
+<section class="course-example" aria-labelledby="function-structure">
+    <h2 id="function-structure">Из чего состоит функция</h2>
+    <div class="function-steps">
+        <article class="feature-card">
+            <h3><code>def</code> — определение функции</h3>
+            <p>После def укажите имя функции, а в круглых скобках перечислите параметры. Закончите строку двоеточием. Команды в теле функции пишите с отступом в четыре пробела.</p>
+        </article>
+        <article class="feature-card">
+            <h3>Параметры и аргументы</h3>
+            <p><code>eni</code> и <code>uzyndygy</code> — параметры, ширина и длина. При вызове <code>audan(3, 4)</code> вместо них подставляются аргументы 3 и 4.</p>
+        </article>
+        <article class="feature-card">
+            <h3><code>return</code> — возврат значения</h3>
+            <p>Завершает выполнение функции и возвращает результат в то место программы, где её вызвали. Это значение можно сохранить в переменной или сразу использовать в вычислении.</p>
+        </article>
+    </div>
+    <pre class="course-code"><code>def audan(eni, uzyndygy):
+    return eni * uzyndygy
+
+birinshi = audan(3, 4)
+ekinshi = audan(2, 5)
+print(birinshi + ekinshi)  # 22</code></pre>
+    <p>Параметры <code>eni</code> и <code>uzyndygy</code> доступны только внутри функции. Снаружи мы сохраняем результаты в переменных <code>birinshi</code> и <code>ekinshi</code>.</p>
+
+    <h3>Значение по умолчанию</h3>
+    <p>Параметру можно задать значение по умолчанию. Например, если вызвать функцию <code>def darezhe(san, korsetkish=2)</code> с одним аргументом, второй параметр примет значение 2.</p>
+</section>
+
+<section class="course-practice" aria-labelledby="function-practice">
+    <h2 id="function-practice">Измените размеры прямоугольника</h2>
+    <ol>
+        <li>Запустите код и проверьте, что сумма двух площадей равна <code>22</code>.</li>
+        <li>Добавьте вызов <code>audan(5, 7)</code> и выведите результат. Должно получиться <code>35</code>.</li>
+        <li>Напишите функцию <code>perimetr(eni, uzyndygy)</code>, которая возвращает <code>2 * (eni + uzyndygy)</code>. Проверьте себя: <code>perimetr(3, 4)</code> должен вернуть <code>14</code>.</li>
+        <li>Сравните результаты вызовов <code>darezhe(4)</code> и <code>darezhe(4, 3)</code>.</li>
+    </ol>
+
+    <label for="code">Код Python</label>
+    <div class="editor-container">
+        <textarea id="code" rows="13" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="editor-keys">
+def audan(eni, uzyndygy):
+    return eni * uzyndygy
+
+print("Сумма площадей:", audan(3, 4) + audan(2, 5))
+
+def darezhe(san, korsetkish=2):
+    return san ** korsetkish
+
+print("Квадрат числа 4:", darezhe(4))
+print("Куб числа 4:", darezhe(4, 3))
+
+# Напишите здесь функцию для вычисления периметра.
+</textarea>
+    </div>
+
+    <div class="btn-row">
+        <button class="btn-run" id="run-btn" type="button">Запустить код</button>
+        <button class="btn-clear" id="clear-btn" type="button">Очистить результат</button>
+        <button class="btn-clear" id="restore-btn" type="button">Восстановить исходный код</button>
+    </div>
+    <p class="hint" id="editor-keys">Ctrl + Enter или ⌘ + Enter — запуск. Tab — отступ в четыре пробела. Чтобы выйти из редактора, нажмите Esc, затем Tab.</p>
+
+    <p class="course-output-label" id="editor-output-label">Результат</p>
+    <pre id="output" role="status" aria-labelledby="editor-output-label">Результат появится после запуска кода.</pre>
+</section>
+
+<details class="course-media function-video">
+    <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Посмотреть видеоурок</summary>
+    <div class="video-wrapper">
+        <iframe src="https://www.youtube.com/embed/DJAlfolEv9A?hl=ru&amp;cc_lang_pref=ru" title="Как написать свою функцию на Python" loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+    </div>
+</details>
+{% endblock %}

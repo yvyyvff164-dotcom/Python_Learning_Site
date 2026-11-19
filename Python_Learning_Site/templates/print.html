@@ -1,425 +1,148 @@
 {% extends "base.html" %}
 
-{% block title %}Print() командасы — Python оқу сайты{% endblock %}
+{% block title %}print() және нәтиже шығару — Python оқу сайты{% endblock %}
 
 {% block content %}
-<style>
-    /* ==========================================
-        Бетке арналған қосымша стилизация
-    ========================================== */
-    .lesson-title {
-        font-size: 2rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, var(--primary), var(--primary-2));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 20px;
-    }
-
-    /* YouTube видеосын бейімдеу (Responsive iframe) */
-    .video-wrapper {
-        position: relative;
-        width: 100%;
-        padding-bottom: 56.25%; /* 16:9 пропорция */
-        height: 0;
-        background: #000;
-        border-radius: var(--radius-md);
-        overflow: hidden;
-        box-shadow: var(--shadow-lg);
-        margin-bottom: 30px;
-    }
-
-    .video-wrapper iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: none;
-    }
-
-    /* Карточкалар торы */
-    .card-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 20px;
-        margin: 25px 0;
-    }
-
-    .feature-card {
-        background: var(--surface-strong);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-md);
-        padding: 20px;
-        box-shadow: var(--shadow-sm);
-        transition: var(--transition-smooth);
-        color: var(--text-main);
-    }
-
-    .feature-card:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--primary);
-    }
-
-    .card-primary {
-        border-left: 5px solid var(--primary);
-    }
-    .card-primary h4 {
-        color: var(--primary);
-        font-size: 1.2rem;
-        font-weight: 800;
-        margin-top: 0;
-        margin-bottom: 10px;
-    }
-
-    .card-success {
-        border-left: 5px solid var(--success);
-    }
-    .card-success h4 {
-        color: var(--success);
-        font-size: 1.2rem;
-        font-weight: 800;
-        margin-top: 0;
-        margin-bottom: 10px;
-    }
-
-    /* Код редакторы мен Sandbox стилі */
-    .editor-container {
-        margin-top: 15px;
-        border-radius: var(--radius-md);
-        overflow: hidden;
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow-sm);
-    }
-
-    #code {
-        width: 100%;
-        box-sizing: border-box;
-        background: #0f172a;
-        color: #38bdf8;
-        font-family: 'Fira Code', Consolas, Monaco, monospace;
-        font-size: 14px;
-        padding: 16px;
-        border: none;
-        outline: none;
-        resize: vertical;
-        line-height: 1.5;
-        tab-size: 4;
-    }
-
-    .btn-row {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-
-    .btn-run {
-        margin-top: 15px;
-        background: linear-gradient(135deg, #22c55e, #16a34a);
-        color: white;
-        border: none;
-        padding: 12px 24px;
-        font-size: 15px;
-        font-weight: 600;
-        border-radius: var(--radius-sm);
-        cursor: pointer;
-        box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
-        transition: var(--transition-smooth);
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .btn-run:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
-    }
-
-    .btn-run:disabled {
-        opacity: .6;
-        cursor: wait;
-        transform: none;
-    }
-
-    .btn-clear {
-        margin-top: 15px;
-        background: transparent;
-        color: var(--text-main);
-        border: 1px solid var(--border);
-        padding: 12px 20px;
-        font-size: 15px;
-        font-weight: 600;
-        border-radius: var(--radius-sm);
-        cursor: pointer;
-        transition: var(--transition-smooth);
-    }
-
-    .btn-clear:hover {
-        border-color: var(--primary);
-    }
-
-    .hint {
-        font-size: 13px;
-        opacity: .7;
-        margin-top: 8px;
-    }
-
-    #output {
-        background: #0f172a;
-        color: #22c55e;
-        padding: 16px;
-        border-radius: var(--radius-md);
-        font-family: 'Fira Code', Consolas, monospace;
-        font-size: 14px;
-        min-height: 60px;
-        margin-top: 8px;
-        border: 1px solid #334155;
-        white-space: pre-wrap;
-    }
-
-    #output.error {
-        color: #f87171;
-    }
-
-    .btn-primary-action {
-        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-        color: white;
-        padding: 12px 20px;
-        border-radius: var(--radius-sm);
-        font-weight: 600;
-        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
-        transition: var(--transition-smooth);
-        text-decoration: none;
-        display: inline-block;
-        margin-top: 25px;
-    }
-
-    .btn-primary-action:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
-        color: white;
-    }
-
-    hr {
-        border: none;
-        height: 1px;
-        background: var(--border);
-        margin: 30px 0;
-    }
-
-    p {
-        line-height: 1.6;
-        color: var(--text-main);
-    }
-</style>
-
-<h1 class="lesson-title">🖨 Print() командасы және мәліметтерді шығару</h1>
-
-<div class="video-wrapper">
-    <iframe
-        src="https://www.youtube.com/embed/2B91x1IG4W0"
-        title="Print командасы"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen>
-    </iframe>
-</div>
-
-<p>
-    <code>print()</code> — бұл Python-дағы ең жиі қолданылатын функция. Оның негізгі мақсаты — бағдарлама орындалуының нәтижесін экранға (консольге) шығару.
-</p>
-
-<hr>
-
-<h2>💡 Print() функциясының құпиялары</h2>
-
-<p>Көпшілік тек мәтін шығаруды біледі, бірақ <code>print()</code>-тің пайдалы параметрлері бар:</p>
-<ul style="color: var(--text-main); padding-left: 20px;">
-    <li><b>sep=" "</b> — элементтер арасына қандай белгі қоюды анықтайды (әдепкі бойынша бос орын).</li>
-    <li><b>end="\n"</b> — жол соңына не қоюды анықтайды (әдепкі бойынша келесі жолға өту).</li>
-</ul>
-
-<div class="card-grid">
-    <div class="feature-card card-primary">
-        <h4>Мәтін шығару</h4>
-        <p style="margin-bottom: 0;"><code>print("Сәлем!")</code></p>
+<header class="course-lesson-header">
+    <h1 class="lesson-title">print() және нәтиже шығару</h1>
+    <p class="course-objective">Мәтінді, сандарды және есептің нәтижесін экранға шығарыңыз. Бір жолдағы мәндерді қалай бөлуді де үйренесіз.</p>
+</header>
+<section aria-labelledby="print-how">
+    <h2 id="print-how">Мәтін мен сандарды шығару</h2>
+    <p>Мәтінді тырнақшаға алыңыз. Сан немесе арифметикалық өрнек тырнақшасыз жазылады. Бір <code>print()</code> шақыруына бірнеше мәнді үтірмен бөле отырып беруге болады.</p>
+    <div class="course-table" role="region" aria-label="print функциясының мысалдары" tabindex="0">
+        <table>
+            <thead><tr><th scope="col">Код</th><th scope="col">Нәтиже</th><th scope="col">Не орындалады?</th></tr></thead>
+            <tbody>
+                <tr><th scope="row"><code>print("2 + 3")</code></th><td><code>2 + 3</code></td><td>Тырнақшадағы мәтін сол күйінде шығады.</td></tr>
+                <tr><th scope="row"><code>print(2 + 3)</code></th><td><code>5</code></td><td>Python өрнекті есептейді.</td></tr>
+                <tr><th scope="row"><code>print("Қадам", 1)</code></th><td><code>Қадам 1</code></td><td>Екі мән арасына бос орын қойылады.</td></tr>
+            </tbody>
+        </table>
     </div>
-    <div class="feature-card card-primary">
-        <h4>Сандар мен есептер</h4>
-        <p style="margin-bottom: 0;"><code>print(25 + 75)</code></p>
+</section>
+
+<section aria-labelledby="print-format">
+    <h2 id="print-format">Аралық белгі мен жолдың соңын өзгерту</h2>
+    <div class="feature-grid">
+        <div class="feature-card course-example">
+            <h3><code>sep</code> — мәндер арасындағы белгі</h3>
+            <p>Әдепкіде мәндер бір бос орынмен бөлінеді. Төмендегі код олардың арасына нүкте қояды.</p>
+            <pre class="course-code"><code>print("15", "04", "2026", sep=".")
+# Нәтиже: 15.04.2026</code></pre>
+        </div>
+        <div class="feature-card course-example">
+            <h3><code>end</code> — жол соңындағы белгі</h3>
+            <p>Әдепкіде келесі <code>print()</code> жаңа жолдан басталады. Төменде бірінші жол бос орынмен аяқталады.</p>
+            <pre class="course-code"><code>print("Оқу", end=" ")
+print("басталды!")
+# Нәтиже: Оқу басталды!</code></pre>
+        </div>
     </div>
-    <div class="feature-card card-primary">
-        <h4>Бірнеше мән</h4>
-        <p style="margin-bottom: 0;"><code>print("A", "B", "C")</code></p>
-    </div>
-</div>
+</section>
+<section class="course-practice" aria-labelledby="print-practice">
+    <h2 id="print-practice">Нәтижені болжап, кодты іске қосыңыз</h2>
+    <ol>
+        <li>Бастапқы кодтың әр жолы не шығаратынын болжап, нәтижені тексеріңіз.</li>
+        <li><code>sep</code> мәнін өзгертіп, күнді <code>15-04-2026</code> түрінде шығарыңыз.</li>
+        <li>Соңғы екі <code>print()</code> көмегімен <code>Қадам 1</code> мәтінін бір жолға шығарыңыз.</li>
+    </ol>
 
-<hr>
-
-<h2>🧪 Тәжірибелік алаң (Sandbox)</h2>
-
-<p>Төмендегі кодты өзгертіп, <b>Run Code</b> батырмасын басыңыз. Мысалы, <code>sep="-"</code> қосып көріңіз.</p>
-
-<div class="editor-container">
-    <textarea id="code" rows="14" spellcheck="false">
-# 1. Қарапайым шығару
-print("Python-ға қош келдіңіз!")
-
-# 2. Математикалық есептеу
+        <label class="course-output-label" for="code">Python коды</label>
+        <div class="editor-container">
+            <textarea id="code" rows="8" spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off" aria-describedby="editor-shortcuts">print("Python-ға қош келдіңіз!")
 print("5 + 10 =", 5 + 10)
 
-# 3. sep параметрін қолдану (арасын бөлу)
-print("01", "01", "2024", sep=".")
-
-# 4. Бірнеше жолды біріктіру
-print("Бұл бірінші жол", end=" ---> ")
-print("Бұл жалғасы")
+print("15", "04", "2026", sep=".")
+print("Дайын", end=" → ")
+print("Тексеру")
 </textarea>
-</div>
+        </div>
+        <div class="btn-row">
+            <button class="btn-run" id="run-btn" type="button">Кодты іске қосу</button>
+            <button class="btn-clear" id="clear-btn" type="button">Нәтижені тазарту</button>
+        </div>
+        <p class="hint" id="editor-shortcuts"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Enter</kbd> — іске қосу. <kbd>Tab</kbd> — шегініс. Редактордан шығу үшін <kbd>Esc</kbd>, содан кейін <kbd>Tab</kbd> басыңыз.</p>
+        <p class="course-output-label" id="editor-result">Нәтиже</p>
+        <pre id="output" role="status" aria-labelledby="editor-result" aria-atomic="true">Нәтиже осында шығады.</pre>
+    <details class="course-media">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Мүмкін шешімді көру</summary>
+        <pre class="course-code"><code>print("15", "04", "2026", sep="-")
+print("Қадам", end=" ")
+print(1)</code></pre>
+        <p>Тырнақшаға алынбаған атау айнымалы болуы мүмкін. Егер ол бұрын анықталмаса, Python <code>NameError</code> қатесін көрсетеді.</p>
+    </details>
+</section>
+<section aria-labelledby="print-more">
+    <h2 id="print-more">Қосымша материалдар</h2>
+    <details class="course-media">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Бейнесабақты ашу</summary>
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/2B91x1IG4W0" title="print() функциясы" loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+    </details>
+    <p><a href="https://codepen.io/zlreibuh-the-sasster/pen/dPpbXqN" target="_blank" rel="noopener noreferrer">CodePen-дегі қосымша тапсырмаларды ашу</a></p>
+</section>
+{% endblock %}
 
-<div class="btn-row">
-    <button class="btn-run" id="run-btn" type="button">▶ Run Code</button>
-    <button class="btn-clear" id="clear-btn" type="button">🗑 Тазалау</button>
-</div>
-<div class="hint">Ctrl + Enter — кодты іске қосу</div>
-
-<div style="margin-top: 15px; color: var(--text-light); font-size: 14px; font-weight: 500;">Нәтиже (Output):</div>
-<pre id="output">Нәтиже осында шығады...</pre>
-
-<hr>
-
-<div class="feature-card card-success">
-    <h4>🧠 Өзіңді тексер:</h4>
-    <p style="margin-bottom: 0;">Мәтінді экранға шығару үшін ол міндетті түрде <b>тырнақшаға (" ")</b> алынуы керек. Егер тырнақшасыз жазсаңыз, Python оны айнымалы деп қабылдап, қате (NameError) береді.</p>
-</div>
-
-<a href="https://codepen.io/zlreibuh-the-sasster/pen/dPpbXqN"
-   target="_blank"
-   rel="noopener"
-   class="btn-primary-action">
-    🧠 CodePen-дегі тапсырмаларды орындау
-</a>
-
+{% block lesson_scripts %}
 <script>
 (function () {
+    const lessonText = window.courseText;
     const codeEl   = document.getElementById("code");
     const outputEl = document.getElementById("output");
     const runBtn   = document.getElementById("run-btn");
     const clearBtn = document.getElementById("clear-btn");
 
-    // Skulpt-ты бірнеше көзден кезекпен жүктеу
-    const SOURCES = [
-        ["https://skulpt.org/js/skulpt.min.js",
-         "https://skulpt.org/js/skulpt-stdlib.js"],
-        ["https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js",
-         "https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"],
-        ["https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt.min.js",
-         "https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt-stdlib.js"]
-    ];
-
-    function loadScript(src) {
-        return new Promise(function (resolve, reject) {
-            const s = document.createElement("script");
-            s.src = src;
-            s.onload = resolve;
-            s.onerror = function () { reject(new Error(src)); };
-            document.head.appendChild(s);
-        });
-    }
-
-    async function loadSkulpt() {
-        if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
-        for (const pair of SOURCES) {
-            try {
-                await loadScript(pair[0]);
-                await loadScript(pair[1]);
-                if (typeof Sk !== "undefined" && Sk.builtinFiles) return;
-            } catch (e) {
-                console.warn("Skulpt жүктелмеді:", e.message);
-            }
-        }
-        throw new Error("Skulpt ешбір көзден жүктелмеді");
-    }
-
-    const skulptReady = loadSkulpt();
-    runBtn.disabled = true;
-    runBtn.textContent = "⏳ Жүктелуде...";
-    function enableBtn() {
-        runBtn.disabled = false;
-        runBtn.textContent = "▶ Run Code";
-    }
-    skulptReady.then(enableBtn).catch(enableBtn);
-
-    function builtinRead(file) {
-        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][file] === undefined) {
-            throw "Файл табылмады: '" + file + "'";
-        }
-        return Sk.builtinFiles["files"][file];
-    }
+    const runLabel = runBtn.textContent;
 
     async function runCode() {
-        outputEl.className = "";
-        outputEl.textContent = "";
+        if (runBtn.disabled) return;
+        const program = codeEl.value;
+
         runBtn.disabled = true;
+        runBtn.textContent = lessonText("Іске қосылуда…", "Выполняется…");
+        outputEl.classList.remove("error");
+        outputEl.textContent = "";
 
         try {
-            await skulptReady;
-        } catch (e) {
-            outputEl.className = "error";
-            outputEl.textContent = "Skulpt жүктелмеді. Интернетті тексеріп, бетті жаңартыңыз (Ctrl+F5).";
+            await window.PythonRuntime.run(program, text => { outputEl.textContent += text; });
+            if (!outputEl.textContent) {
+                outputEl.textContent = lessonText("Код сәтті орындалды (экранға ештеңе шықпады).", "Код выполнен. Программа ничего не вывела.");
+            }
+        } catch (error) {
+            outputEl.classList.add("error");
+            outputEl.textContent += (outputEl.textContent ? "\n" : "") + lessonText("Қате: ", "Ошибка: ") + String(error);
+        } finally {
             runBtn.disabled = false;
-            return;
+            runBtn.textContent = runLabel;
         }
-
-        Sk.configure({
-            output: function (text) { outputEl.textContent += text; },
-            read: builtinRead,
-            __future__: Sk.python3,
-            inputfun: function (prompt) {
-                return window.prompt(prompt || "Мәнді енгізіңіз:") || "";
-            },
-            execLimit: 10000
-        });
-
-        Sk.misceval
-            .asyncToPromise(function () {
-                return Sk.importMainWithBody("<stdin>", false, codeEl.value, true);
-            })
-            .then(function () {
-                if (outputEl.textContent === "") {
-                    outputEl.textContent = "Код сәтті орындалды (экранға ештеңе шықпады).";
-                }
-            })
-            .catch(function (err) {
-                outputEl.className = "error";
-                outputEl.textContent += (outputEl.textContent ? "\n" : "") + "Қате (Error): " + err.toString();
-            })
-            .finally(function () {
-                runBtn.disabled = false;
-            });
     }
 
     runBtn.addEventListener("click", runCode);
 
     clearBtn.addEventListener("click", function () {
         outputEl.className = "";
-        outputEl.textContent = "Нәтиже осында шығады...";
+        outputEl.textContent = lessonText("Нәтиже осында шығады.", "Здесь появится результат.");
     });
 
     // Ctrl+Enter — іске қосу, Tab — шегініс (4 бос орын)
+    let exitWithTab = false;
+    codeEl.addEventListener("blur", function () { exitWithTab = false; });
     codeEl.addEventListener("keydown", function (e) {
+        const allowsTab = exitWithTab;
+        exitWithTab = e.key === "Escape";
         if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
             e.preventDefault();
             runCode();
-        } else if (e.key === "Tab") {
+        } else if (e.key === "Tab" && !e.shiftKey && !allowsTab) {
             e.preventDefault();
             const s = codeEl.selectionStart, end = codeEl.selectionEnd;
-            codeEl.value = codeEl.value.slice(0, s) + "    " + codeEl.value.slice(end);
-            codeEl.selectionStart = codeEl.selectionEnd = s + 4;
+            codeEl.setRangeText("    ", s, end, "end");
         }
     });
 })();
 </script>
-
 {% endblock %}

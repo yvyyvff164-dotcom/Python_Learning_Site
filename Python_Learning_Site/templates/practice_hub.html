@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Python жаттықтырғышы — Python оқу сайты{% endblock %}
+{% block body_class %}practice-page{% endblock %}
+
+{% block page_assets %}
+<link rel="stylesheet" href="{{ url_for('static', filename='practice-hub.css') }}">
+<script defer src="{{ url_for('static', filename='practice-hub.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<article class="practice" aria-labelledby="practice-title">
+    <header class="practice-heading">
+        <h1 id="practice-title">Python жаттықтырғышы</h1>
+        <p>Кодтың нәтижесін болжаңыз, қатені түзетіңіз және шешіміңізді түсіндірмемен салыстырыңыз. Әр топта төрт тапсырма бар.</p>
+        <p class="practice-storage" data-practice-storage hidden>Браузерде сақтау қолжетімсіз. Нәтижелер бет ашық тұрғанда сақталады.</p>
+    </header>
+    <noscript><p>Жаттығуды орындау үшін браузерде JavaScript қосыңыз.</p></noscript>
+
+    <div data-practice-app hidden>
+        <section data-practice-menu aria-labelledby="practice-menu-title">
+            <h2 id="practice-menu-title" tabindex="-1">Жаттығуды таңдаңыз</h2>
+            <div class="practice-track-grid" data-practice-tracks></div>
+
+            <section class="practice-pending" aria-labelledby="practice-pending-title">
+                <div>
+                    <h3 id="practice-pending-title">Қателерді қайталау</h3>
+                    <p data-practice-pending-text>Әзірге қайталайтын қате жауап жоқ.</p>
+                </div>
+                <button type="button" class="practice-button practice-button-alt" data-practice-start-review hidden>Қателерді жаттықтыру</button>
+                <details data-practice-pending-details hidden>
+                    <summary>Қате жауаптарды қарау</summary>
+                    <div class="practice-review-list" data-practice-pending-list></div>
+                </details>
+            </section>
+        </section>
+
+        <section class="practice-card" data-practice-round aria-labelledby="practice-round-title" hidden>
+            <div class="practice-card-bar">
+                <button type="button" class="practice-button practice-button-alt" data-practice-menu-link>‹ Жаттығуларға оралу</button>
+                <p data-practice-position></p>
+            </div>
+            <progress class="practice-progress" data-practice-progress aria-label="Жаттығу барысы"></progress>
+
+            <p class="practice-kind" data-practice-kind></p>
+            <h2 id="practice-round-title" tabindex="-1"></h2>
+            <pre class="practice-code" tabindex="0" aria-label="Python коды"><code data-practice-code></code></pre>
+
+            <form data-practice-form>
+                <fieldset>
+                    <legend>Жауапты таңдаңыз</legend>
+                    <div class="practice-options" data-practice-options></div>
+                </fieldset>
+                <button type="submit" class="practice-button" data-practice-submit disabled>Жауапты тексеру</button>
+            </form>
+
+            <div class="practice-feedback" data-practice-feedback aria-labelledby="practice-verdict" role="region" tabindex="-1" hidden>
+                <h3 id="practice-verdict"></h3>
+                <p data-practice-detail></p>
+                <a data-practice-lesson></a>
+            </div>
+            <button type="button" class="practice-button" data-practice-next hidden>Келесі тапсырма</button>
+        </section>
+
+        <section class="practice-card" data-practice-summary aria-labelledby="practice-summary-title" hidden>
+            <h2 id="practice-summary-title" tabindex="-1">Жаттығу нәтижесі</h2>
+            <p class="practice-score" data-practice-score></p>
+            <p>Дұрыс жауаптар</p>
+            <div class="practice-summary-actions">
+                <button type="button" class="practice-button" data-practice-menu-link>Жаттығуларға оралу</button>
+                <button type="button" class="practice-button practice-button-alt" data-practice-start-review hidden>Қателерді жаттықтыру</button>
+            </div>
+            <section data-practice-summary-errors aria-labelledby="practice-summary-errors-title" hidden>
+                <h3 id="practice-summary-errors-title">Қате жауаптарды талдау</h3>
+                <div class="practice-review-list" data-practice-summary-list></div>
+            </section>
+        </section>
+    </div>
+</article>
+{% endblock %}

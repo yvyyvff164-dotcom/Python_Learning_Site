@@ -1,0 +1,112 @@
+{% extends "arrays1.html" %}
+
+{% block title %}Одномерный массив в Python — список | Курс Python{% endblock %}
+
+{% block content %}
+
+<h1 class="lesson-title">Одномерный массив в Python — список</h1>
+
+<p class="course-objective">Список (<code>list</code>) хранит значения в заданном порядке. На этом уроке вы научитесь находить элемент по индексу и заменять его новым значением.</p>
+
+<details class="course-media">
+    <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Посмотреть видеоурок</summary>
+    <div class="video-wrapper">
+        <iframe
+            loading="lazy"
+            src="https://www.youtube.com/embed/Zg_gXzHFNlI?hl=ru&amp;cc_lang_pref=ru"
+            title="Видеоурок о списках в Python"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+    </div>
+</details>
+
+
+<h2>Как найти индекс элемента</h2>
+<p>У каждого элемента списка есть свой номер — индекс. <b>Нумерация начинается с нуля!</b></p>
+
+<div class="feature-grid">
+    <div class="feature-card card-primary">
+        <h4>Индекс от начала (0, 1, 2...)</h4>
+        <p style="margin-bottom: 0;">Считайте слева направо. Индекс первого элемента — <code>[0]</code>.</p>
+    </div>
+
+    <div class="feature-card card-warning">
+        <h4>Отрицательный индекс (-1, -2...)</h4>
+        <p style="margin-bottom: 0;">Считайте с конца списка. Индекс последнего элемента — <code>[-1]</code>.</p>
+    </div>
+</div>
+
+
+<section class="course-example" aria-labelledby="worked-example">
+    <h3 id="worked-example">Пример. Два индекса одного элемента</h3>
+    <p><code>fruits[1]</code> и <code>fruits[-3]</code> указывают на один и тот же фрукт. В первом случае отсчёт идёт от начала, во втором — от конца списка.</p>
+    <div class="course-table table-scroll" tabindex="0" role="region" aria-label="Индексы фруктов в списке">
+        <table class="data-index-table" aria-label="Индексы фруктов в списке">
+            <tbody>
+                <tr><th scope="row">Фрукт</th><td>Яблоко</td><td>Груша</td><td>Банан</td><td>Вишня</td></tr>
+                <tr><th scope="row">Индекс от начала</th><td>0</td><td><strong>1</strong></td><td>2</td><td>3</td></tr>
+                <tr><th scope="row">Отрицательный индекс</th><td>−4</td><td><strong>−3</strong></td><td>−2</td><td>−1</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <pre class="course-code"><code>fruits = ["Яблоко", "Груша", "Банан", "Вишня"]
+print(fruits[1], fruits[-3])  # Груша Груша</code></pre>
+</section>
+
+<section class="course-practice" aria-labelledby="practice-title">
+    <h2 id="practice-title">Практика</h2>
+    <h3>Обновите список фруктов</h3>
+    <ol>
+        <li>Запустите пример и определите индекс второго фрукта.</li>
+        <li>В конце программы замените второй фрукт на <code>"Абрикос"</code>. Выведите обновлённый список, а на следующей строке — последний фрукт.</li>
+    </ol>
+    <p><strong>Ожидаемый результат</strong> <code>[&#x27;Яблоко&#x27;, &#x27;Абрикос&#x27;, &#x27;Дыня&#x27;, &#x27;Вишня&#x27;]</code>, на следующей строке — <code>Вишня</code></p>
+
+<label class="course-output-label" for="code">Редактор Python</label>
+<div class="editor-container">
+    <textarea id="code" aria-describedby="code-hint" rows="13" autocomplete="off" autocapitalize="off" spellcheck="false">
+# Создаём список
+fruits = ["Яблоко", "Груша", "Банан", "Вишня"]
+
+print("Весь список:", fruits)
+
+# Читаем элементы по индексу
+print("Первый фрукт (0):", fruits[0])
+print("Второй фрукт (1):", fruits[1])
+print("Последний фрукт (-1):", fruits[-1])
+
+# Заменяем элемент списка
+fruits[2] = "Дыня"
+print("Обновлённый список:", fruits)
+</textarea>
+</div>
+
+<div class="btn-row">
+    <button class="btn-run" id="run-btn" type="button">Запустить код</button>
+    <button class="btn-clear" id="clear-btn" type="button">Очистить вывод</button>
+</div>
+<p class="hint" id="code-hint">Чтобы запустить код с клавиатуры, нажмите Ctrl + Enter или ⌘ + Enter.</p>
+
+<p class="course-output-label" id="output-label">Результат</p>
+<pre id="output" role="status" aria-labelledby="output-label" tabindex="0">Здесь появится результат...</pre>
+    <details class="course-answer">
+        <summary class="lesson-disclosure"><span class="lesson-disclosure-mark" data-float-icon aria-hidden="true">▸</span> Показать пример решения</summary>
+        <pre class="course-code"><code>fruits[1] = "Абрикос"
+print(fruits)
+print(fruits[-1])</code></pre>
+    </details>
+</section>
+
+<div class="feature-card card-danger" style="margin-top: 30px;">
+    <h4><span data-float-icon aria-hidden="true">⚠️</span> Частая ошибка:</h4>
+    <p style="margin-bottom: 0;">Если обратиться к индексу за пределами списка, Python выдаст ошибку <code>IndexError</code>. Например, нельзя получить десятый элемент списка, в котором всего три элемента.</p>
+</div>
+
+<a href="https://codepen.io/zlreibuh-the-sasster/pen/PwGYGNd"
+   target="_blank"
+   rel="noopener"
+   class="btn-primary-action">
+    <span data-float-icon aria-hidden="true">🚀</span> Задания по одномерным массивам
+</a>
+{% endblock %}

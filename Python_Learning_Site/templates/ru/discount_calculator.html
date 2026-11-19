@@ -1,0 +1,150 @@
+{% extends "discount_calculator.html" %}
+{% block title %}Калькулятор скидок — Курс Python{% endblock %}
+{% block content %}
+
+<article class="discount-project" aria-labelledby="discount-title">
+    <h1 id="discount-title">Калькулятор скидок</h1>
+    <p class="course-objective">Сколько придётся заплатить за несколько одинаковых товаров с учётом скидки? В этом проекте вы напишете программу на Python, которая рассчитает стоимость покупки, размер скидки в тенге и итоговую сумму.</p>
+    <a class="course-jump" href="#discount-demo-title">Попробовать калькулятор <span aria-hidden="true">↓</span></a>
+
+    <section class="discount-panel" aria-labelledby="discount-theory">
+        <h2 id="discount-theory">Как работает калькулятор?</h2>
+        <p>На вход программа получает цену одного товара, количество и процент скидки. Функция <code>input()</code> читает введённое значение как текст, а <code>int()</code> преобразует его в целое число. С помощью условия <code>if</code> можно проверить, что цена и количество положительны, а скидка лежит в пределах от 0 до 100 процентов.</p>
+        <ol class="discount-steps">
+            <li>Умножьте цену одного товара на количество, чтобы узнать стоимость покупки до скидки.</li>
+            <li>Умножьте стоимость покупки на процент скидки и разделите на 100.</li>
+            <li>Вычтите сумму скидки из стоимости покупки. Получится сумма к оплате.</li>
+        </ol>
+        <div class="discount-example">
+            <h3>Пример</h3>
+            <p>Три книги по 1 200 ₸ стоят 3 600 ₸. При скидке 15% покупка обойдётся на <code>3 600 × 15 ÷ 100 = 540</code> ₸ дешевле. К оплате останется <strong>3 060 ₸</strong>.</p>
+        </div>
+    </section>
+
+    <div class="discount-interactive" hidden>
+        <div class="discount-columns">
+            <section class="discount-panel" aria-labelledby="discount-demo-title">
+                <h2 id="discount-demo-title" tabindex="-1">Проверьте калькулятор</h2>
+                <form id="discount-demo" novalidate>
+                    <div class="discount-fields">
+                        <div class="discount-field">
+                            <label for="discount-price">Цена одного товара, ₸</label>
+                            <input id="discount-price" name="price" value="1200" inputmode="numeric" aria-describedby="discount-price-hint" required>
+                            <small id="discount-price-hint">От 1 до 1 000 000 тенге</small>
+                        </div>
+                        <div class="discount-field">
+                            <label for="discount-quantity">Количество товаров</label>
+                            <input id="discount-quantity" name="quantity" value="3" inputmode="numeric" aria-describedby="discount-quantity-hint" required>
+                            <small id="discount-quantity-hint">От 1 до 100 штук</small>
+                        </div>
+                        <div class="discount-field">
+                            <label for="discount-percent">Скидка, %</label>
+                            <input id="discount-percent" name="percent" value="15" inputmode="numeric" aria-describedby="discount-percent-hint" required>
+                            <small id="discount-percent-hint">Целое число от 0 до 100</small>
+                        </div>
+                    </div>
+
+                    <div class="discount-actions">
+                        <button type="submit">Рассчитать</button>
+                        <button type="reset">Вернуть пример</button>
+                    </div>
+                </form>
+                <p class="discount-feedback" id="discount-demo-feedback" role="status"></p>
+
+                <dl class="discount-receipt" id="discount-receipt" aria-label="Результат расчёта" hidden>
+                    <div><dt>Стоимость до скидки</dt><dd data-result="subtotal"></dd></div>
+                    <div><dt>Сумма скидки</dt><dd data-result="discount"></dd></div>
+                    <div><dt>К оплате</dt><dd data-result="total"></dd></div>
+                </dl>
+            </section>
+
+            <section class="discount-panel" aria-labelledby="discount-cases-title">
+                <h2 id="discount-cases-title">Контрольные примеры</h2>
+                <p>Сначала посчитайте в уме, сколько получится к оплате в каждом примере. Затем введите значения в калькулятор и сравните результаты.</p>
+                <ul class="discount-cases">
+                    <li data-case="regular">
+                        <strong>Обычная скидка</strong>
+                        <span>Одна тетрадь стоит 750 ₸. На покупку двух тетрадей действует скидка 15%.</span>
+                        <small hidden>✓ Проверено</small>
+                    </li>
+                    <li data-case="zero">
+                        <strong>Без скидки</strong>
+                        <span>Одна ручка стоит 320 ₸. Вы покупаете четыре ручки со скидкой 0%.</span>
+                        <small hidden>✓ Проверено</small>
+                    </li>
+                    <li data-case="full">
+                        <strong>Скидка 100%</strong>
+                        <span>Открытка стоит 450 ₸. Вы берёте одну открытку со скидкой 100%.</span>
+                        <small hidden>✓ Проверено</small>
+                    </li>
+                    <li data-case="invalid">
+                        <strong>Недопустимое значение</strong>
+                        <span>Введите скидку 101%. Какое сообщение покажет калькулятор?</span>
+                        <small hidden>✓ Проверено</small>
+                    </li>
+                </ul>
+            </section>
+        </div>
+
+        <section class="discount-panel" aria-labelledby="discount-build-title">
+            <h2 id="discount-build-title">Соберите программу на Python</h2>
+            <p>Выберите выражение для каждой строки. Затем запишите программу в редакторе Python и проверьте её на примерах выше.</p>
+            <form id="discount-build">
+                <div class="discount-formulas">
+                    <div class="discount-field">
+                        <label for="discount-formula-subtotal"><code>стоимость =</code></label>
+                        <select id="discount-formula-subtotal" name="subtotal">
+                            <option value="">Выберите выражение</option>
+                            <option value="add">цена + количество</option>
+                            <option value="multiply">цена * количество</option>
+                            <option value="divide">цена / количество</option>
+                        </select>
+                    </div>
+                    <div class="discount-field">
+                        <label for="discount-formula-saving"><code>скидка =</code></label>
+                        <select id="discount-formula-saving" name="saving">
+                            <option value="">Выберите выражение</option>
+                            <option value="percent-off">стоимость - процент</option>
+                            <option value="percent-of-price">цена * процент / 100</option>
+                            <option value="percent-of-total">стоимость * процент / 100</option>
+                        </select>
+                    </div>
+                    <div class="discount-field">
+                        <label for="discount-formula-total"><code>итог =</code></label>
+                        <select id="discount-formula-total" name="total">
+                            <option value="">Выберите выражение</option>
+                            <option value="subtract">стоимость - скидка</option>
+                            <option value="add">стоимость + скидка</option>
+                            <option value="divide">скидка / количество</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="discount-actions"><button type="submit">Проверить выражения</button></div>
+                <p class="discount-feedback" id="discount-build-feedback" role="status"></p>
+            </form>
+            <details class="discount-solution">
+                <summary>Показать пример программы на Python</summary>
+                <pre><code>try:
+    цена = int(input("Цена одного товара в тенге: "))
+    количество = int(input("Количество товаров: "))
+    процент = int(input("Процент скидки: "))
+
+    if 1 &lt;= цена &lt;= 1_000_000 and 1 &lt;= количество &lt;= 100 and 0 &lt;= процент &lt;= 100:
+        стоимость = цена * количество
+        скидка = стоимость * процент / 100
+        итог = стоимость - скидка
+
+        print(f"Стоимость до скидки: {стоимость:.2f} ₸")
+        print(f"Сумма скидки: {скидка:.2f} ₸")
+        print(f"К оплате: {итог:.2f} ₸")
+    else:
+        print("Цена, количество или процент скидки выходят за допустимые пределы.")
+except ValueError:
+    print("Введите целое число в каждом поле.")</code></pre>
+            </details>
+        </section>
+    </div>
+
+    <noscript><p>Для работы калькулятора и задания с выражениями включите JavaScript в браузере.</p></noscript>
+</article>
+{% endblock %}

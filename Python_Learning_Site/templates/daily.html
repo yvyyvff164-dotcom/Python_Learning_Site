@@ -7,6 +7,7 @@
 <script type="module" src="{{ url_for('static', filename='daily.js') }}"></script>
 {% endblock %}
 {% block content %}
+{% from "_studio_ui.html" import icon with context %}
 <article class="daily-hub" id="daily-hub">
     <header class="daily-header">
         <div>
@@ -15,14 +16,14 @@
             <p>{{ text('Тапсырмаларды шешіп, монета жинаңыз. Жиналған монеталарға курстың жаңа безендіруін ашуға болады.', 'Решайте задачи и копите монеты, чтобы открывать новые оформления курса.') }}</p>
         </div>
         <div class="daily-wallet">
-            <span class="course-coin wallet-coin" aria-hidden="true">✦</span>
+            <span class="studio-wallet-coin">{{ icon('coin') }}</span>
             <div><span>{{ text('Монеталарым', 'Мои монеты') }}</span><strong data-coin-balance>…</strong></div>
         </div>
     </header>
     <nav class="daily-tabs" aria-label="{{ text('Практика бөлімдері', 'Разделы практики') }}">
-        <a href="#tasks" data-tab="tasks" aria-current="page">{{ text('Тапсырмалар', 'Задания') }}</a>
-        <a href="#achievements" data-tab="achievements">{{ text('Жетістіктер', 'Достижения') }}</a>
-        <a href="#shop" data-tab="shop">{{ text('Дүкен', 'Магазин') }}</a>
+        <a href="#tasks" data-tab="tasks" aria-current="page">{{ icon('calendar2-check') }} {{ text('Тапсырмалар', 'Задания') }}</a>
+        <a href="#achievements" data-tab="achievements">{{ icon('trophy') }} {{ text('Жетістіктер', 'Достижения') }}</a>
+        <a href="#shop" data-tab="shop">{{ icon('bag') }} {{ text('Дүкен', 'Магазин') }}</a>
     </nav>
     <noscript><p>{{ text('Тапсырманы тексеру және марапаттарды сақтау үшін JavaScript қосыңыз.', 'Включите JavaScript, чтобы проверять ответы и сохранять награды.') }}</p></noscript>
     <p id="reward-storage-issue" role="status" hidden>{{ text('Браузер марапаттарды сақтай алмады. Деректерді сақтауға рұқсат беріп, қайта көріңіз.', 'Браузеру не удалось сохранить награды. Разрешите сохранение данных сайта и попробуйте ещё раз.') }}</p>
@@ -51,7 +52,7 @@
                     <label for="daily-answer">{{ text('Жауабыңыз', 'Ваш ответ') }}</label>
                     <div class="daily-answer-row">
                         <input id="daily-answer" name="answer" type="text" maxlength="80" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="daily-feedback" required>
-                        <button class="daily-action" type="submit">{{ text('Тексеру', 'Проверить') }}</button>
+                        <button class="daily-action" type="submit">{{ icon('check2-circle') }} {{ text('Тексеру', 'Проверить') }}</button>
                     </div>
                 </form>
                 <p id="daily-feedback" class="daily-feedback" role="status" aria-live="polite"></p>
@@ -99,9 +100,12 @@
                 ('ocean', 'Deep Ocean', text('Терең көк мұхит, жарқыраған медузалар және су астындағы жарық.', 'Глубокий океан, светящиеся медузы и бирюзовые лучи под водой.'))
             ] %}
             <article class="skin-card" data-shop-skin="{{ skin }}">
-                <img src="{{ url_for('static', filename='skins/' ~ skin ~ '.jpg') }}" loading="lazy" width="1536" height="1024" alt="">
+                <div class="skin-preview">
+                    <img src="{{ url_for('static', filename='skins/' ~ skin ~ '.jpg') }}" loading="lazy" width="1536" height="1024" alt="">
+                    <span class="skin-swatches" aria-hidden="true"><i></i><i></i><i></i></span>
+                </div>
                 <div class="skin-body">
-                    <div class="skin-heading"><h3>{{ title }}</h3><span class="skin-price"><span class="course-coin" aria-hidden="true">✦</span><b data-price></b><span class="rewards-sr">{{ text('монета', 'монет') }}</span></span></div>
+                    <div class="skin-heading"><h3>{{ title }}</h3><span class="skin-price">{{ icon('coin') }}<b data-price></b><span class="rewards-sr">{{ text('монета', 'монет') }}</span></span></div>
                     <p>{{ description }}</p>
                     <button type="button" class="daily-action" data-skin-action></button>
                     <small data-skin-note></small>

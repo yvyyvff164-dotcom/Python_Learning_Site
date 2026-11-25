@@ -1,0 +1,52 @@
+{% from "_studio_ui.html" import icon, brand, nav_item with context %}
+{% set endpoint = request.endpoint %}
+{% set home_label = text('Басты бет','Главная') %}
+{% set lessons_label = text('Сабақтар','Уроки') %}
+{% set practice_label = text('Жаттықтырғыш','Тренажёр') %}
+{% set games_label = text('Шағын ойындар','Мини-игры') %}
+{% set daily_label = text('Күндік тапсырмалар','Задания дня') %}
+{% set shop_label = text('Дүкен','Магазин') %}
+{% set achievements_label = text('Жетістіктер','Достижения') %}
+{% set section_name = home_label if endpoint=='home' else practice_label if endpoint=='practice' else games_label if endpoint in ('games','mini_game') else daily_label if endpoint=='daily' else text('Профиль','Профиль') if endpoint=='profile' else lessons_label %}
+{% set main_items = [('home',url_for('home'),'house-door',home_label,endpoint=='home'),
+    ('lessons',url_for('home')~'#levels','collection',lessons_label,current.level),
+    ('practice',url_for('practice'),'terminal',practice_label,endpoint=='practice'),
+    ('games',url_for('games'),'controller',games_label,endpoint in ('games','mini_game'))] %}
+{% set activity_items = [('daily',url_for('daily')~'#tasks','calendar2-check',daily_label,endpoint=='daily'),
+    ('achievements',url_for('daily')~'#achievements','trophy',achievements_label,false),
+    ('shop',url_for('daily')~'#shop','bag',shop_label,false)] %}
+
+<a class="course-skip" href="#content-area">{{ text('Мазмұнға өту','Перейти к содержанию') }}</a>
+<aside class="studio-rail" aria-label="{{ text('Сайт мәзірі','Меню сайта') }}">
+    {{ brand() }}
+    <a class="rail-person profile-shortcut" href="{{ url_for('profile') }}" title="{{ text('Бағдарламашы профилі','Профиль программиста') }}" aria-label="{{ text('Бағдарламашы профилі','Профиль программиста') }}"{% if endpoint=='profile' %} aria-current="page"{% endif %}>
+        <span class="rail-avatar">{{ icon('person-workspace') }}</span>
+        <span class="rail-person-text"><strong>{{ text('Менің профилім','Мой профиль') }}</strong><small>{{ text('Деңгей','Уровень') }} <b data-profile-level>1</b></small></span>
+    </a>
+    <nav class="rail-menu" aria-label="{{ text('Курс бөлімдері','Разделы курса') }}">
+        <div>{% for item in main_items %}{{ nav_item(*item) }}{% endfor %}</div>
+        <div>{% for item in activity_items %}{{ nav_item(*item) }}{% endfor %}</div>
+    </nav>
+</aside>
+<header class="course-topbar studio-topbar">
+    <div class="studio-context">
+        {{ brand(true) }}
+        <a class="mobile-person" href="{{ url_for('profile') }}" aria-label="{{ text('Бағдарламашы профилі','Профиль программиста') }}"{% if endpoint=='profile' %} aria-current="page"{% endif %}>{{ icon('person-circle') }}</a>
+        {% if current.level %}<button type="button" class="menu-toggle tool-button" id="course-nav-toggle" aria-label="{{ text('Сабақтар мәзірі','Меню уроков') }}" aria-controls="sidebar" aria-expanded="false">{{ icon('menu-button-wide') }}</button>{% endif %}
+        <span class="section-context"><span>{{ text('Оқу кеңістігі','Учебное пространство') }}</span><i aria-hidden="true">/</i><strong>{{ section_name }}</strong></span>
+    </div>
+    <div class="course-topbar-tools studio-tools">
+        <a class="rewards-link wallet-link" href="{{ url_for('daily') }}" aria-label="{{ text('Күндік тапсырмалар мен монеталар','Задания дня и монеты') }}" title="{{ text('Күндік тапсырмалар мен монеталар','Задания дня и монеты') }}">{{ icon('coin') }}<strong data-coin-balance>…</strong></a>
+        <nav class="course-language studio-language" aria-label="{{ text('Сайт тілі','Язык сайта') }}">
+            {% for code, name, short in [('kk','Қазақша','ҚАЗ'),('ru','Русский','РУС')] %}
+            <a href="{{ language_url(code) }}" lang="{{ code }}" hreflang="{{ code }}" aria-label="{{ name }}" title="{{ name }}"{% if language==code %} aria-current="true"{% endif %}>{{ short }}</a>
+            {% endfor %}
+        </nav>
+        <button class="course-theme-toggle tool-button" id="course-theme-toggle" type="button" aria-label="{{ text('Қараңғы тақырып','Тёмная тема') }}" aria-pressed="false" hidden>{{ icon('sun') }}{{ icon('moon-stars') }}<span class="course-theme-text sr-only">{{ text('Жарық','Светлая') }}</span></button>
+        <button class="assistant-tool" type="button" id="ai-toggle-btn" aria-label="{{ text('AI көмекші','ИИ-помощник') }}" aria-controls="ai-chat-window" aria-expanded="false">{{ icon('stars') }}<span>{{ text('AI көмекші','ИИ-помощник') }}</span></button>
+    </div>
+</header>
+<nav class="arcade-mobile-nav studio-dock" aria-label="{{ text('Курс бөлімдері','Разделы курса') }}">
+    {% for item in main_items[1:] %}{{ nav_item(*item) }}{% endfor %}
+    {{ nav_item('daily',url_for('daily'),'calendar2-check',text('Тапсырмалар','Задания'),endpoint=='daily') }}
+</nav>

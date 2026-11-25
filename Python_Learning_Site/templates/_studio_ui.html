@@ -1,0 +1,12 @@
+{% macro icon(name) -%}<span class="ui-icon i-{{ name }}" data-float-icon aria-hidden="true"></span>{%- endmacro %}
+
+{% macro brand(compact=false) -%}
+<a class="studio-brand {% if compact %}compact-brand{% else %}course-brand{% endif %}" href="{{ url_for('home') }}" aria-label="{{ text('Python оқу сайты — басты бет', 'Курс Python — главная') }}">
+    <span class="studio-logomark">{{ icon('terminal') }}</span>
+    <span class="studio-wordmark"><b>Python</b><small>{{ text('Оқу сайты','Учебный сайт') }}</small></span>
+</a>
+{%- endmacro %}
+
+{% macro nav_item(route, url, glyph, label, current=false) -%}
+<a class="studio-route" href="{{ url }}" data-route="{{ route }}" aria-label="{{ label }}" title="{{ label }}"{% if current %} aria-current="page"{% endif %}>{{ icon(glyph) }}<span>{{ label }}</span></a>
+{%- endmacro %}

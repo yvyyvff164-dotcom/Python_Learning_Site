@@ -1,0 +1,163 @@
+/* The store previews use the same ink, light and accent as the purchased design. */
+:is(html[data-skin="beach"], [data-shop-skin="beach"]) {
+    --studio-dark:#11323c; --studio-mid:#155c64; --studio-light:#ffdaa0; --studio-other:#87ead8;
+    --skin-key:#006b64; --skin-bright:#76e6cf; --skin-accent:#85491c; --skin-paper:#fffaf0;
+    --skin-bg:#f3e8d6; --skin-night:#102931; --skin-ink:#253936; --panel-radius:25px; --control-radius:20px;
+}
+:is(html[data-skin="newyear"], [data-shop-skin="newyear"]) {
+    --studio-dark:#112d2c; --studio-mid:#294a49; --studio-light:#ffe09d; --studio-other:#f79a9a;
+    --skin-key:#236346; --skin-bright:#a6ecbd; --skin-accent:#963845; --skin-paper:#fbfbf4;
+    --skin-bg:#e6ede1; --skin-night:#142725; --skin-ink:#23392f; --panel-radius:15px; --control-radius:8px;
+}
+:is(html[data-skin="sakura"], [data-shop-skin="sakura"]) {
+    --studio-dark:#392139; --studio-mid:#674159; --studio-light:#ffcada; --studio-other:#d6c0f4;
+    --skin-key:#91365d; --skin-bright:#ffb7cd; --skin-accent:#704d91; --skin-paper:#fff7f7;
+    --skin-bg:#f6e6e9; --skin-night:#2c202c; --skin-ink:#422637; --panel-radius:23px; --control-radius:13px;
+}
+:is(html[data-skin="aurora"], [data-shop-skin="aurora"]) {
+    --studio-dark:#112338; --studio-mid:#194350; --studio-light:#97ffce; --studio-other:#ceb1ff;
+    --skin-key:#006a60; --skin-bright:#84f4cb; --skin-accent:#654598; --skin-paper:#f2fcf8;
+    --skin-bg:#e0efe9; --skin-night:#11252d; --skin-ink:#223c40; --panel-radius:20px; --control-radius:14px;
+}
+:is(html[data-skin="glass"], [data-shop-skin="glass"]) {
+    --studio-dark:#263348; --studio-mid:#46576f; --studio-light:#e7f4ff; --studio-other:#c5c3ef;
+    --skin-key:#3a577b; --skin-bright:#bfdeff; --skin-accent:#5b507f; --skin-paper:#f7faff;
+    --skin-bg:#e5ebf3; --skin-night:#222d3a; --skin-ink:#293447; --panel-radius:16px; --control-radius:11px;
+}
+:is(html[data-skin="cyberpunk"], [data-shop-skin="cyberpunk"]) {
+    --studio-dark:#13132f; --studio-mid:#37244c; --studio-light:#7df9ee; --studio-other:#ff96df;
+    --skin-key:#614090; --skin-bright:#7af6eb; --skin-accent:#9a246b; --skin-paper:#faf7ff;
+    --skin-bg:#eae4f5; --skin-night:#1b1930; --skin-ink:#302441; --panel-radius:5px; --control-radius:3px;
+}
+:is(html[data-skin="ocean"], [data-shop-skin="ocean"]) {
+    --studio-dark:#0c253d; --studio-mid:#114c60; --studio-light:#9bf3ef; --studio-other:#d4c0ff;
+    --skin-key:#00647e; --skin-bright:#88e7ef; --skin-accent:#594e9c; --skin-paper:#f2fbff;
+    --skin-bg:#dfedf1; --skin-night:#102737; --skin-ink:#203746; --panel-radius:27px; --control-radius:12px;
+}
+
+html[data-skin][data-theme] {
+    --bg-main:var(--skin-bg); --bg-soft:color-mix(in srgb,var(--skin-paper) 70%,var(--skin-bg));
+    --surface:var(--skin-paper); --surface-strong:var(--skin-paper); --surface-raised:var(--bg-soft);
+    --surface-glass:color-mix(in srgb,var(--skin-paper) 95%,transparent);
+    --text-main:var(--skin-ink); --text-body:color-mix(in srgb,var(--skin-ink) 89%,var(--skin-paper));
+    --text-light:color-mix(in srgb,var(--skin-ink) 76%,var(--skin-paper)); --text-soft:var(--text-body);
+    --primary:var(--skin-key); --primary-dark:var(--skin-key); --primary-hover:color-mix(in srgb,var(--skin-key) 79%,#050811);
+    --primary-2:var(--skin-accent); --accent:var(--skin-accent); --on-primary:#fff;
+    --primary-soft:color-mix(in srgb,var(--skin-key) 13%,var(--skin-paper));
+    --primary-muted:color-mix(in srgb,var(--skin-key) 42%,var(--skin-paper));
+    --accent-soft:color-mix(in srgb,var(--skin-accent) 12%,var(--skin-paper));
+    --border:color-mix(in srgb,var(--skin-ink) 20%,var(--skin-paper));
+    --border-strong:color-mix(in srgb,var(--skin-ink) 43%,var(--skin-paper));
+    --sidebar-bg:var(--skin-paper); --sidebar-hover:var(--bg-soft); --sidebar-active:var(--primary-soft);
+    --heading-2:var(--text-main); --heading-3:var(--text-main); --strong:var(--primary-dark); --focus:var(--primary);
+    --code-surface:var(--studio-dark); --code-text:#f3f8fc; --code-border:color-mix(in srgb,var(--studio-mid) 71%,var(--studio-light));
+    --terminal-accent:var(--studio-light); --code-focus:var(--studio-light); --brand-fill:var(--studio-light); --level-badge:var(--primary-soft);
+    --shadow-sm:0 2px 7px color-mix(in srgb,var(--skin-ink) 7%,transparent);
+    --shadow-md:0 12px 28px color-mix(in srgb,var(--skin-ink) 10%,transparent);
+    --studio-ink:#fafcfe; --studio-sub:#e0e9ea;
+}
+html[data-skin][data-theme="dark"] {
+    --bg-main:var(--skin-night); --surface:color-mix(in srgb,var(--skin-night) 92%,var(--skin-bright));
+    --surface-strong:color-mix(in srgb,var(--skin-night) 87%,var(--skin-bright)); --bg-soft:var(--surface-strong);
+    --surface-glass:color-mix(in srgb,var(--skin-night) 95%,transparent); --surface-raised:var(--surface-strong);
+    --text-main:#f2f6f9; --text-body:#d0dde1; --text-light:#b2c4cc; --text-soft:var(--text-body);
+    --primary:var(--skin-bright); --primary-dark:var(--skin-bright); --primary-hover:color-mix(in srgb,var(--skin-bright) 73%,white);
+    --primary-soft:color-mix(in srgb,var(--skin-bright) 13%,var(--skin-night));
+    --primary-muted:color-mix(in srgb,var(--skin-bright) 38%,var(--skin-night)); --on-primary:var(--skin-night);
+    --accent:var(--studio-other); --primary-2:var(--accent); --accent-soft:color-mix(in srgb,var(--studio-other) 15%,var(--skin-night));
+    --border:color-mix(in srgb,var(--skin-bright) 23%,var(--skin-night)); --border-strong:color-mix(in srgb,var(--skin-bright) 41%,var(--skin-night));
+    --sidebar-bg:var(--skin-night); --code-surface:color-mix(in srgb,var(--studio-dark) 71%,#050811);
+}
+
+html[data-skin] .studio .studio-atmosphere {
+    background:linear-gradient(118deg,color-mix(in srgb,var(--bg-main) 98%,transparent) 10%,color-mix(in srgb,var(--bg-main) 84%,transparent) 68%,color-mix(in srgb,var(--bg-main) 72%,transparent)),var(--landscape) center/cover;
+}
+html[data-skin] .studio .studio-atmosphere::after { content:none; animation:none; }
+html[data-skin] body.studio.home .studio-hero {
+    background:linear-gradient(100deg,var(--studio-dark) 6%,color-mix(in srgb,var(--studio-dark) 94%,transparent) 36%,color-mix(in srgb,var(--studio-dark) 65%,transparent) 68%,color-mix(in srgb,var(--studio-mid) 26%,transparent)),var(--landscape) center 55%/cover;
+}
+html[data-skin] .studio .python-sculpture { filter:var(--sculpture-filter,saturate(.85)) drop-shadow(0 15px 18px #04121ac7); }
+html[data-skin] .studio .exhibit-orbit { border-color:color-mix(in srgb,var(--studio-light) 56%,transparent); }
+.studio .skin-preview { position:relative; display:block; overflow:hidden; }
+.studio .skin-preview img { display:block; width:100%; height:auto; aspect-ratio:2.15; object-fit:cover; object-position:center 56%; transition:transform .35s ease-out; }
+.studio .skin-card:hover .skin-preview img { transform:scale(1.025); }
+.studio .skin-swatches { position:absolute; display:flex; align-items:center; gap:3px; inset:auto 10px 9px auto; padding:4px 5px; border:1px solid #ffffff65; border-radius:10px; background:#11202cc9; }
+.skin-swatches i { display:block; width:10px; height:10px; border:1px solid #ffffff90; border-radius:50%; background:var(--studio-mid); }
+.skin-swatches i:nth-child(2) { background:var(--studio-light); }.skin-swatches i:nth-child(3) { background:var(--studio-other); }
+.studio .studio-atmosphere .sky-texture { inset:-3%; }
+html:not([data-skin])[data-theme="dark"] .studio .sky-texture {
+    background:radial-gradient(circle at 32% 48%,#a0f3db9c 1px,transparent 1.6px) 0 0/83px 97px,
+               radial-gradient(circle at 61% 24%,#c9c3fa7d 1px,transparent 1.7px) 0 0/131px 139px;
+    animation:studio-trace 28s ease-in-out infinite alternate;
+}
+html[data-skin="beach"] .studio .sky-texture {
+    background:repeating-radial-gradient(ellipse at 1% 112%,transparent 0 43px,#46b5ae77 45px 46px,transparent 48px 75px);
+    opacity:.47; mask-image:linear-gradient(0deg,#000,transparent 61%); animation:studio-tide 12s ease-in-out infinite alternate;
+}
+html[data-skin="beach"] .studio .lv-icon { border-radius:50% 50% 48% 29%; }
+html[data-skin="newyear"] { --sculpture-filter:sepia(.2) saturate(.83); }
+html[data-skin="newyear"] .studio .sky-texture {
+    background:radial-gradient(circle,#fff 0 1.8px,transparent 2.7px) 0 0/89px 107px,radial-gradient(circle,#b2ccca 0 1.2px,transparent 2px) 21px 32px/67px 83px;
+    inset:-107px 0 0; opacity:.8; mask-image:linear-gradient(100deg,transparent,#000 74%); animation:studio-snow 20s linear infinite;
+}
+html[data-skin="newyear"] .studio .studio-hero::before { background:radial-gradient(circle at 55% 8%,#ffd383bb 0 2px,transparent 4px) 0 0/59px 97px; }
+html[data-skin="sakura"] { --sculpture-filter:hue-rotate(100deg) saturate(.76); }
+html[data-skin="sakura"] .studio .sky-texture {
+    background:radial-gradient(ellipse 5px 2px at 22% 39%,#d3608e9c 90%,transparent) 0 0/129px 109px,
+               radial-gradient(ellipse 3px 6px at 77% 14%,#e98ead9c 90%,transparent) 0 0/173px 153px;
+    opacity:.65; mask-image:linear-gradient(105deg,transparent 8%,#000);
+    inset:-109px -50px 0; animation:studio-petals 19s ease-in-out infinite alternate;
+}
+html[data-skin="sakura"] .studio :is(.lv-icon,.rail-avatar) { border-radius:48% 16% 48% 16%; }
+html[data-skin="aurora"] { --sculpture-filter:hue-rotate(-16deg) saturate(1.12); }
+html[data-skin="aurora"] .studio .sky-light {
+    inset:-6%; background:linear-gradient(117deg,transparent 17%,#53e6b54f 36%,#a9a4ff46 45%,transparent 57%),
+        radial-gradient(ellipse at 87% 6%,#4bcbb459,transparent 49%); filter:blur(9px); animation:studio-ribbon 13s ease-in-out infinite alternate;
+}
+html[data-skin="aurora"] .studio .studio-hero::before { background:linear-gradient(114deg,transparent 43%,#6cf2bf4a 60%,#b7aaff3b 67%,transparent 79%); animation:studio-ribbon 14s ease-in-out infinite alternate; }
+html[data-skin="glass"] { --sculpture-filter:saturate(.14) brightness(1.14); }
+html[data-skin="glass"] .studio .sky-texture {
+    background:repeating-linear-gradient(122deg,transparent 0 104px,#bed4e591 105px,transparent 107px 176px);
+    opacity:.75; animation:studio-facet 17s ease-in-out infinite alternate;
+}
+html[data-skin="glass"] .studio :is(.lv,.home-arcade,.practice-track,.game-panel,.daily-exercise,.skin-card) {
+    background:color-mix(in srgb,var(--surface) 84%,transparent); backdrop-filter:blur(12px); box-shadow:inset 0 1px 0 #fff5,var(--shadow-sm);
+}
+html[data-skin="cyberpunk"] { --sculpture-filter:hue-rotate(22deg) saturate(1.3); }
+html[data-skin="cyberpunk"] .studio .sky-texture {
+    background:linear-gradient(#e957a944 1px,transparent 1px) 0 0/38px 38px,linear-gradient(90deg,#35b8c969 1px,transparent 1px) 0 0/38px 38px;
+    mask-image:linear-gradient(0deg,#000,transparent 61%); opacity:.72; animation:studio-city 21s linear infinite;
+}
+html[data-skin="cyberpunk"] .studio .studio-logomark,html[data-skin="cyberpunk"] .studio .lv-icon { border-radius:2px; box-shadow:inset -3px -2px 0 var(--accent); }
+html[data-skin="ocean"] { --sculpture-filter:hue-rotate(5deg) saturate(1.23); }
+html[data-skin="ocean"] .studio .sky-texture {
+    background:radial-gradient(circle at 36% 37%,transparent 2px,#42a6b687 3px,transparent 4px) 0 0/109px 137px,
+               radial-gradient(circle at 72% 76%,transparent 4px,#7cc5d38c 5px,transparent 6px) 0 0/153px 189px;
+    opacity:.74; mask-image:linear-gradient(105deg,transparent,#000); inset:-3% -2% -137px; animation:studio-bubbles 18s ease-in-out infinite alternate;
+}
+html[data-skin="ocean"] .studio .studio-hero::before { background:repeating-linear-gradient(113deg,transparent 0 71px,#a7fff114 81px,transparent 111px); }
+html[data-skin="ocean"] .studio .lv-icon { border-radius:50% 48% 20% 49%; }
+@keyframes studio-tide { to { transform:translate3d(2%,-1%,0) scale(1.04); } }
+@keyframes studio-snow { to { transform:translate3d(0,107px,0); } }
+@keyframes studio-petals { to { transform:translate3d(38px,86px,0) rotate(2deg); } }
+@keyframes studio-ribbon { to { transform:translate3d(3%,1%,0) skewX(-5deg); opacity:.72; } }
+@keyframes studio-facet { to { transform:translate3d(2%,0,0); opacity:.33; } }
+@keyframes studio-city { to { transform:translate3d(0,38px,0); } }
+@keyframes studio-bubbles { to { transform:translate3d(11px,-93px,0); } }
+@keyframes studio-trace { to { transform:translate3d(1%,1.5%,0); opacity:.75; } }
+
+@media (max-width:560px) {
+    html[data-skin] body.studio.home .studio-hero {
+        background:linear-gradient(100deg,var(--studio-dark),color-mix(in srgb,var(--studio-dark) 91%,transparent) 42%,color-mix(in srgb,var(--studio-dark) 67%,transparent)),var(--landscape) center/cover;
+    }
+}
+@media (prefers-reduced-motion:reduce) {
+    .studio .studio-atmosphere > span, .studio .studio-hero::before, .studio .exhibit-orbit::after, .studio .python-sculpture,
+    .studio .studio-hero-copy, .studio .arcade-intro > div, .studio .game-panel > h2, .studio [data-panel], .studio .lv-list,
+    .studio .game-cover *, .studio .game-cover *::before, .studio .game-cover *::after {
+        animation:none !important;
+    }
+    .studio .exhibit-object,.studio .lv-arrow,.studio .home-action,.studio .skin-preview img,.studio .studio-route,
+    .studio .tool-button,.studio .game-card,.studio .practice-track { transition:none; }
+    html:has(body.studio) { scroll-behavior:auto; }
+}

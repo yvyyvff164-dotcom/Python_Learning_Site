@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#eceafa">
+    <meta name="theme-color" content="#edf3f1">
     <title>{% block title %}{{ text('Python оқу сайты', 'Курс Python') }}{% endblock %}</title>
     <script src="{{ url_for('static', filename='course-language.js') }}"></script>
     <script src="{{ url_for('static', filename='course-rewards.js') }}"></script>
@@ -21,6 +21,11 @@
     <script defer src="{{ url_for('static', filename='editor-drafts.js') }}"></script>
     {% endif %}
     {% block page_assets %}{% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='studio-type.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='studio.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='studio-pages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='studio-skins.css') }}">
+    <script defer src="{{ url_for('static', filename='studio.js') }}"></script>
 </head>
 
 {% set current = namespace(level_number=0, lesson_number=0, level=None) %}
@@ -35,78 +40,22 @@
     {% endfor %}
 {% endfor %}
 
-<body class="{% block body_class %}{% endblock %}{% if current.level %} course-lesson{% endif %}">
-    <div class="course-ambient" aria-hidden="true">
-        <div class="ambient-day">
-            <span data-float-icon class="ambient-fragment" style="--x: 6%; --y: 8%; --duration: 22s; --delay: -7s;">print()</span>
-            <span data-float-icon class="ambient-fragment" style="--x: 45%; --y: 11%; --duration: 19s; --delay: -4s;">def</span>
-            <span data-float-icon class="ambient-fragment" style="--x: 86%; --y: 10%; --duration: 19s; --delay: -9s;">range(5)</span>
-            <span data-float-icon class="ambient-fragment" style="--x: 19%; --y: 30%; --duration: 24s; --delay: -12s;">for</span>
-            <span data-float-icon class="ambient-fragment" style="--x: 92%; --y: 34%; --duration: 18s; --delay: -7s;">[]</span>
-            <span data-float-icon class="ambient-fragment" style="--x: 4%; --y: 58%; --duration: 27s; --delay: -8s;">if</span>
-            <span data-float-icon class="ambient-fragment" style="--x: 72%; --y: 70%; --duration: 24s; --delay: -17s;">import</span>
-            <span data-float-icon class="ambient-fragment" style="--x: 84%; --y: 75%; --duration: 23s; --delay: -6s;">len()</span>
-            <span data-float-icon class="ambient-fragment" style="--x: 90%; --y: 90%; --duration: 26s; --delay: -14s;">return</span>
-        </div>
-        <div class="ambient-night">
-            <i class="ambient-comet" style="--x: 5.6%; --y: 16%; --start-x: -4vw; --end-x: 10vw; --duration: 19s; --delay: -2s;"></i>
-            <i class="ambient-comet" style="--x: 88%; --y: 14%; --duration: 17s; --delay: -3s;"></i>
-            <i class="ambient-comet" style="--x: 40%; --y: 4%; --duration: 21s; --delay: -12s;"></i>
-            <i class="ambient-comet" style="--x: 80%; --y: 41%; --duration: 24s; --delay: -22s;"></i>
-            <i class="ambient-comet" style="--x: -2%; --y: 60%; --duration: 25s; --delay: -5s;"></i>
-            <span data-float-icon class="ambient-signature" style="--x: 5%; --y: 46%;">[ ]</span>
-            <span data-float-icon class="ambient-signature" style="--x: 91%; --y: 20%;">def</span>
-            <span data-float-icon class="ambient-signature" style="--x: 87%; --y: 83%;">print()</span>
-        </div>
-    </div>
-
-    <a class="course-skip" href="#content-area">{{ text('Мазмұнға өту', 'Перейти к содержанию') }}</a>
-    <header class="course-topbar">
-        <a class="profile-shortcut" href="{{ url_for('profile') }}" aria-label="{{ text('Бағдарламашы профилі', 'Профиль программиста') }}"{% if request.endpoint == 'profile' %} aria-current="page"{% endif %}>
-            <span class="coder-avatar" aria-hidden="true"><i></i></span><span class="profile-short-label">{{ text('Профиль', 'Профиль') }} <b data-profile-level>1</b></span>
-        </a>
-        {% if current.level %}
-        <button class="menu-toggle" id="course-nav-toggle" type="button" aria-label="{{ text('Сабақтар мәзірі', 'Меню уроков') }}" aria-controls="sidebar" aria-expanded="false"><span data-float-icon aria-hidden="true">☰</span></button>
-        {% endif %}
-        <a class="course-brand" href="{{ url_for('home') }}">
-            <span data-float-icon class="course-brand-mark" aria-hidden="true">Py</span> <span class="course-brand-name">{{ text('Python оқу сайты', 'Курс Python') }}</span>
-        </a>
-        <a class="course-catalog" href="{{ url_for('home') }}#levels">{{ text('Сабақтар', 'Уроки') }}</a>
-        <a class="course-catalog" href="{{ url_for('practice') }}"{% if request.endpoint == 'practice' %} aria-current="page"{% endif %}>{{ text('Жаттықтырғыш', 'Тренажёр') }}</a>
-        <a class="course-catalog games-shortcut" href="{{ url_for('games') }}"{% if request.endpoint in ('games','mini_game') %} aria-current="page"{% endif %}>{{ text('Шағын ойындар', 'Мини-игры') }}</a>
-        <div class="course-topbar-tools">
-            <a class="rewards-link" href="{{ url_for('daily') }}" title="{{ text('Күндік тапсырмалар мен монеталар', 'Задания дня и монеты') }}"{% if request.endpoint == 'daily' %} aria-current="page"{% endif %}>
-                <span class="course-coin" aria-hidden="true">✦</span><span class="rewards-link-name">{{ text('Күндік тапсырмалар', 'Задания дня') }}</span><span class="rewards-sr">{{ text('Монеталар', 'Монеты') }}</span><strong data-coin-balance>…</strong>
-            </a>
-            <nav class="course-language" aria-label="{{ text('Сайт тілі', 'Язык сайта') }}">
-                {% for code, name, short in [('kk', 'Қазақша', 'Қаз'), ('ru', 'Русский', 'Рус')] %}
-                <a href="{{ language_url(code) }}" lang="{{ code }}" hreflang="{{ code }}" aria-label="{{ name }}"{% if language == code %} aria-current="true"{% endif %}><span class="language-full">{{ name }}</span><span class="language-short" aria-hidden="true">{{ short }}</span></a>
-                {% endfor %}
-            </nav>
-            <button class="course-theme-toggle" id="course-theme-toggle" type="button" aria-label="{{ text('Қараңғы тақырып', 'Тёмная тема') }}" aria-pressed="false" hidden>
-                <span data-float-icon class="course-theme-icon" aria-hidden="true"></span>
-                <span class="course-theme-text" aria-hidden="true">{{ text('Жарық', 'Светлая') }}</span>
-            </button>
-            <button type="button" id="ai-toggle-btn" aria-label="{{ text('AI көмекші', 'ИИ-помощник') }}" aria-controls="ai-chat-window" aria-expanded="false">{{ text('AI', 'ИИ') }}<span class="course-assistant-name">{{ text(' көмекші', '-помощник') }}</span></button>
-        </div>
-    </header>
-    <nav class="arcade-mobile-nav" aria-label="{{ text('Курс бөлімдері', 'Разделы курса') }}">
-        <a href="{{ url_for('home') }}#levels">{{ text('Сабақтар', 'Уроки') }}</a>
-        <a href="{{ url_for('practice') }}"{% if request.endpoint == 'practice' %} aria-current="page"{% endif %}>{{ text('Жаттықтырғыш', 'Тренажёр') }}</a>
-        <a href="{{ url_for('games') }}"{% if request.endpoint in ('games','mini_game') %} aria-current="page"{% endif %}>{{ text('Шағын ойындар', 'Мини-игры') }}</a>
-    </nav>
+{% from "_studio_ui.html" import icon with context %}
+<body data-section="{{ request.endpoint }}" class="studio {% block body_class %}{% endblock %}{% if current.level %} course-lesson{% endif %}">
+    <div class="course-ambient studio-atmosphere" aria-hidden="true"><span class="sky-light"></span><span class="sky-texture"></span></div>
+    {% include "_studio_navigation.html" %}
 
     <section id="ai-chat-window" aria-labelledby="ai-chat-title" hidden>
         <div id="ai-chat-header">
-            <span id="ai-chat-title">{{ text('Python көмекшісі', 'Помощник по Python') }}</span>
-            <button type="button" id="ai-close-btn" aria-label="{{ text('Көмекшіні жабу', 'Закрыть помощника') }}"><span data-float-icon aria-hidden="true">×</span></button>
+            <span id="ai-chat-title">{{ icon('stars') }} {{ text('Python көмекшісі', 'Помощник по Python') }}</span>
+            <button type="button" id="ai-close-btn" aria-label="{{ text('Көмекшіні жабу', 'Закрыть помощника') }}">{{ icon('x-lg') }}</button>
         </div>
         <div id="ai-chat-messages" role="log" aria-label="{{ text('Хабарламалар', 'Сообщения') }}">
             <p class="ai-message">{{ text('Python бойынша сұрағыңызды жазыңыз.', 'Задайте вопрос о Python.') }}</p>
         </div>
         <form id="ai-chat-input-area">
             <input id="ai-user-input" placeholder="{{ text('Сұрағыңызды жазыңыз', 'Введите вопрос') }}" aria-label="{{ text('Python бойынша сұрақ', 'Вопрос о Python') }}" autocomplete="off" required>
-            <button id="ai-send-btn" type="submit">{{ text('Жіберу', 'Отправить') }}</button>
+            <button id="ai-send-btn" type="submit">{{ icon('send') }} {{ text('Жіберу', 'Отправить') }}</button>
         </form>
     </section>
 
@@ -120,7 +69,7 @@
                     <span id="course-progress-text"></span>
                     <progress id="course-progress" value="0" aria-labelledby="course-progress-text"></progress>
                 </div>
-                <a class="library-trainer-link" href="{{ url_for('practice') }}">{{ text('Python жаттықтырғышы', 'Тренажёр Python') }} <span data-float-icon aria-hidden="true">→</span></a>
+                <a class="library-trainer-link" href="{{ url_for('practice') }}">{{ text('Python жаттықтырғышы', 'Тренажёр Python') }} {{ icon('terminal') }}</a>
                 <div class="sidebar-levels">
                     {% for level in levels %}
                     {% set level_number = loop.index %}

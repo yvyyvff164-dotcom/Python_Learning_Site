@@ -1,0 +1,105 @@
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 850;
+  font-display: swap;
+  src: url(vendor/studio/inter-cyrillic-ext.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 850;
+  font-display: swap;
+  src: url(vendor/studio/inter-cyrillic.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 850;
+  font-display: swap;
+  src: url(vendor/studio/inter-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 850;
+  font-display: swap;
+  src: url(vendor/studio/inter-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+    font-family: 'Course Icons';
+    src: url('vendor/studio/bootstrap-icons.woff2') format('woff2');
+    font-display: block;
+}
+.ui-icon {
+    display: inline-grid; place-items: center; flex: none;
+    font: normal normal 1em/1 'Course Icons'; speak: never; vertical-align: -.08em;
+    -webkit-font-smoothing: antialiased;
+}
+.i-terminal::before { content: "\f5c3"; }
+.i-house-door::before { content: "\f423"; }
+.i-collection::before { content: "\f2cc"; }
+.i-book::before { content: "\f194"; }
+.i-code-slash::before { content: "\f2c6"; }
+.i-controller::before { content: "\f2d4"; }
+.i-calendar2-check::before { content: "\f1f8"; }
+.i-bag::before { content: "\f179"; }
+.i-person-circle::before { content: "\f4d7"; }
+.i-coin::before { content: "\f634"; }
+.i-sun::before { content: "\f5a2"; }
+.i-moon-stars::before { content: "\f496"; }
+.i-stars::before { content: "\f589"; }
+.i-window::before { content: "\f620"; }
+.i-layers::before { content: "\f45b"; }
+.i-diagram-3::before { content: "\f2ee"; }
+.i-database::before { content: "\f8c4"; }
+.i-boxes::before { content: "\f685"; }
+.i-grid-1x2::before { content: "\f3f4"; }
+.i-flag::before { content: "\f3cc"; }
+.i-lightning-charge::before { content: "\f46d"; }
+.i-keyboard::before { content: "\f451"; }
+.i-bug::before { content: "\f1dc"; }
+.i-puzzle::before { content: "\f503"; }
+.i-translate::before { content: "\f658"; }
+.i-list::before { content: "\f479"; }
+.i-bookmark::before { content: "\f1a2"; }
+.i-bookmark-fill::before { content: "\f199"; }
+.i-trophy::before { content: "\f5e7"; }
+.i-play-fill::before { content: "\f4f4"; }
+.i-search::before { content: "\f52a"; }
+.i-chevron-down::before { content: "\f282"; }
+.i-sliders::before { content: "\f56b"; }
+.i-x-lg::before { content: "\f659"; }
+.i-send::before { content: "\f6c0"; }
+.i-gem::before { content: "\f3e6"; }
+.i-clock-history::before { content: "\f292"; }
+.i-person-workspace::before { content: "\f67a"; }
+.i-check2-circle::before { content: "\f270"; }
+.i-braces::before { content: "\f1c9"; }
+.i-terminal-fill::before { content: "\f5c2"; }
+.i-collection-play::before { content: "\f2cb"; }
+.i-puzzle-fill::before { content: "\f502"; }
+.i-bullseye::before { content: "\f1de"; }
+.i-compass::before { content: "\f2d1"; }
+.i-journal-code::before { content: "\f43f"; }
+.i-box-seam::before { content: "\f1c7"; }
+.i-menu-button-wide::before { content: "\f489"; }
+.i-clipboard-check::before { content: "\f28b"; }
+.i-chat-dots::before { content: "\f24a"; }
+.i-flower1::before { content: "\f3cd"; }
+.i-snow::before { content: "\f56d"; }
+.i-water::before { content: "\f617"; }
+.i-activity::before { content: "\f66b"; }
+.i-grid-3x3-gap::before { content: "\f3f9"; }
+.i-droplet::before { content: "\f30d"; }
+.i-triangle-half::before { content: "\f5e4"; }
+.i-command::before { content: "\f2cf"; }
+.i-columns-gap::before { content: "\f2cd"; }
+.i-cpu::before { content: "\f2d6"; }
+.i-circle-half::before { content: "\f288"; }
+.i-palette::before { content: "\f4b1"; }
+.i-palette2::before { content: "\f4b2"; }

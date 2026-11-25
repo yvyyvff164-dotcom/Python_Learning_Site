@@ -3,11 +3,12 @@
 {% block body_class %}arcade-page{% endblock %}
 {% block page_assets %}<link rel="stylesheet" href="{{ url_for('static', filename='arcade.css') }}">{% endblock %}
 {% block content %}
-<article class="arcade-shell">
+{% from "_studio_ui.html" import icon with context %}
+<article class="arcade-shell game-directory">
     <header class="arcade-intro">
         <div><h1>{{ text('Шағын ойындар', 'Мини-игры') }}</h1>
         <p>{{ text('Python жаттығуының төрт түрі. Әр аяқталған раунд профиліңізге 10 XP қосады.', 'Четыре способа потренироваться в Python. Каждый пройденный раунд приносит в профиль 10 XP.') }}</p></div>
-        <a class="arc-link" href="{{ url_for('profile') }}">{{ text('Менің профилім', 'Мой профиль') }} ↗</a>
+        <a class="arc-link" href="{{ url_for('profile') }}">{{ icon('person-circle') }} {{ text('Менің профилім', 'Мой профиль') }}</a>
     </header>
     <div class="games-grid">
         {% for slug, game in games.items() %}
@@ -18,7 +19,7 @@
                 {% elif slug == 'build' %}<div class="cover-blocks"><i>if</i><b>print</b><i>else</i></div>
                 {% else %}<div class="cover-translation"><i>−5°</i><b>→</b><i>if</i></div>{% endif %}
             </div>
-            <div class="game-card-copy"><div><h2>{{ game[0] }}</h2><p>{{ game[1] }}</p></div><span aria-hidden="true">↗</span></div>
+            <div class="game-card-copy"><div><h2>{{ game[0] }}</h2><p>{{ game[1] }}</p></div><span class="game-play-mark">{{ icon('play-fill') }}</span></div>
         </a>
         {% endfor %}
     </div>

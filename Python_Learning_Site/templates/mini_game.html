@@ -7,6 +7,7 @@
 <script type="module" src="{{ url_for('static', filename='mini-game.js') }}"></script>
 {% endblock %}
 {% block content %}
+{% from "_studio_ui.html" import icon with context %}
 <article class="arcade-shell game-room gc-{{ game }}" id="game-room" data-mode="{{ game }}">
     <a class="arc-back" href="{{ url_for('games') }}">← {{ text('Барлық шағын ойындар', 'Все мини-игры') }}</a>
     <header class="game-intro"><h1>{{ title }}</h1><span class="arc-xp">+10 XP</span></header>
@@ -17,7 +18,7 @@
         <div class="bug-workspace">
             <div class="editor-column"><label for="game-code">{{ text('Қозғалыс коды', 'Код движения') }}</label>
                 <textarea class="arc-editor" id="game-code" rows="8" maxlength="5000" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
-                <button class="arc-button primary" type="button" id="game-check">{{ text('Тексеру және іске қосу', 'Проверить и запустить') }}</button>
+                <button class="arc-button primary" type="button" id="game-check">{{ icon('play-fill') }} {{ text('Тексеру және іске қосу', 'Проверить и запустить') }}</button>
             </div>
             <figure class="motion-console"><figcaption>{{ text('Ойын алаңы', 'Игровое поле') }}</figcaption>
                 <div class="motion-field" id="motion-field" aria-hidden="true"><div class="motion-target"></div><div id="motion-piece"></div></div>
@@ -43,7 +44,7 @@
         <div class="translate-workspace">
             <div class="editor-column"><label for="game-code">{{ text('Сіздің бағдарламаңыз', 'Ваша программа') }}</label>
                 <textarea class="arc-editor" id="game-code" rows="8" maxlength="5000" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
-                <button class="arc-button primary" type="button" id="game-check">{{ text('Мысалдармен тексеру', 'Проверить на примерах') }}</button></div>
+                <button class="arc-button primary" type="button" id="game-check">{{ icon('check2-circle') }} {{ text('Мысалдармен тексеру', 'Проверить на примерах') }}</button></div>
             <section class="test-panel"><h3>{{ text('Тексеру мысалдары', 'Примеры для проверки') }}</h3>
                 <table class="game-tests"><thead><tr><th>{{ text('Кіріс', 'Ввод') }}</th><th>{{ text('Күтіледі', 'Ожидается') }}</th><th>{{ text('Шықты', 'Получено') }}</th></tr></thead><tbody id="test-results"></tbody></table></section>
         </div>

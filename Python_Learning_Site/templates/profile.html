@@ -6,10 +6,11 @@
 <script type="module" src="{{ url_for('static', filename='programmer-profile.js') }}"></script>
 {% endblock %}
 {% block content %}
+{% from "_studio_ui.html" import icon with context %}
 <article class="arcade-shell" id="programmer-profile">
     <h1 class="profile-heading">{{ text('Бағдарламашы профилі', 'Профиль программиста') }}</h1>
     <header class="profile-pass">
-        <div class="profile-person"><span class="coder-avatar large-avatar" aria-hidden="true"><i></i></span>
+        <div class="profile-person"><span class="profile-avatar-new">{{ icon('person-workspace') }}</span>
             <div><small id="profile-level"></small><h2 id="profile-rank"></h2><p id="active-title" hidden></p></div></div>
         <div class="profile-experience"><strong id="profile-xp">… XP</strong><progress id="xp-progress" max="1" value="0" aria-labelledby="profile-next"></progress><span id="profile-next"></span></div>
     </header>
@@ -17,7 +18,7 @@
     <p id="profile-storage" class="game-feedback" data-tone="error" hidden>{{ text('Браузер профиль деректерін сақтай алмады.', 'Браузеру не удалось сохранить данные профиля.') }}</p>
     <dl class="profile-stats">
         {% for id, label in [('lessons',text('Аяқталған сабақтар','Пройдено уроков')),('games',text('Ойын раундтары','Раундов в играх')),('daily',text('Күндік тапсырмалар','Решено задач дня')),('practice',text('Практика жауаптары','Решено в практике')),('streak',text('Қатарынан күн','Дней подряд')),('coins',text('Монеталар','Монеты'))] %}
-        <div><dt>{{ label }}</dt><dd id="stat-{{ id }}">…</dd></div>
+        <div><dt>{{ icon({'lessons':'book','games':'controller','daily':'calendar2-check','practice':'terminal','streak':'lightning-charge','coins':'coin'}[id]) }} {{ label }}</dt><dd id="stat-{{ id }}">…</dd></div>
         {% endfor %}
     </dl>
     <section class="profile-titles" aria-labelledby="title-heading">
@@ -30,7 +31,7 @@
             ('perfect','✦',text('Қатесіз','Без единой ошибки'),text('Үш раундты алғашқы тексеруде дұрыс орындаңыз. Кеңес қолдануға болады.','Пройдите три раунда с первой проверки. Подсказками пользоваться можно.')),
             ('architect','▦',text('Сәулетші','Архитектор'),text('Блоктардан үш түрлі бағдарламаны құрастырыңыз.','Соберите все три разные программы из блоков.'))
         ] %}
-        <article class="title-card" data-title="{{ id }}"><div class="title-mark" aria-hidden="true">{{ symbol }}</div>
+        <article class="title-card" data-title="{{ id }}"><div class="title-mark" aria-hidden="true">{{ icon({'hunter':'bug','loops':'clock-history','perfect':'bullseye','architect':'boxes'}[id]) }}</div>
             <div><h3>{{ name }}</h3><p>{{ description }}</p><div class="title-actions"><small data-counter></small><button type="button" class="arc-small" data-wear hidden></button></div></div></article>
         {% endfor %}
         </div><p id="title-notice" role="status" class="game-feedback"></p>

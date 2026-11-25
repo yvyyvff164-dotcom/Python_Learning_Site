@@ -138,15 +138,15 @@ def inject_levels():
             "lesson_word": lesson_word}
 
 
-def course_page(name):
+def course_page(name, **context):
     templates = [f"ru/{name}", name] if language() == "ru" else name
-    return render_template(templates)
+    return render_template(templates, **context)
 
 
 # --- Главная страница: шапка, о сайте, уровни и прогресс ---
 @app.route("/")
 def home():
-    return course_page("index.html")
+    return course_page("index.html", games=arcade_games())
 
 
 # --- Маршруты обучающих страниц ---

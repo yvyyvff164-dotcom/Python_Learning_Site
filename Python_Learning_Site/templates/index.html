@@ -4,283 +4,8 @@
 {% block body_class %}home{% endblock %}
 
 {% block content %}
-<style>
-  body.home .content-inner { max-width: 1140px; }
-  .home-hero {
-    --hero-bg: #f1edff;
-    --hero-glow: #d3c7ff;
-    --hero-end: #fff0db;
-    --hero-pattern: #5e3ca51c;
-    --hero-keyword: #5b3ac0;
-    --terminal-shadow: #493e8360;
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    display: grid;
-    grid-template-columns: minmax(0, 1.04fr) minmax(0, .96fr);
-    gap: clamp(24px, 5vw, 62px);
-    align-items: center;
-    padding: clamp(29px, 4.25vw, 57px) clamp(28px, 5vw, 66px);
-    border: 1px solid var(--border-strong, var(--border));
-    border-radius: clamp(22px, 3vw, 36px);
-    background:
-      radial-gradient(ellipse at 77% 19%, var(--hero-glow), transparent 65%),
-      linear-gradient(141deg, var(--hero-bg) 25%, var(--hero-end));
-    box-shadow: var(--shadow-lg);
-  }
-  html[data-theme="dark"] .home-hero {
-    --hero-bg: #16152a;
-    --hero-glow: #302357;
-    --hero-end: #182034;
-    --hero-pattern: #b9a3fc20;
-    --hero-keyword: #c8b8ff;
-    --terminal-shadow: #050510b0;
-  }
-  .home-hero::before {
-    z-index: -1;
-    position: absolute;
-    inset: 0 0 0 46%;
-    background: radial-gradient(circle, var(--hero-pattern) 1.4px, transparent 1.5px) 0 0 / 21px 21px;
-    mask-image: linear-gradient(90deg, transparent, #000 38%);
-    pointer-events: none;
-    content: "";
-  }
-  .content .home-hero h1 {
-    margin: 0;
-    max-width: 11ch;
-    color: var(--text-main);
-    font-size: clamp(2.4rem, 5.45vw, 4.8rem);
-    font-weight: 800;
-    line-height: 1.03;
-    letter-spacing: -.047em;
-    overflow-wrap: normal;
-  }
-  .home-hero h1 span {
-    display: block;
-    color: var(--hero-keyword);
-  }
-  .content .home-hero-copy p {
-    margin: 23px 0 0;
-    max-width: 40ch;
-    color: var(--text-body);
-    font-size: clamp(.99rem, 1.6vw, 1.12rem);
-    line-height: 1.6;
-  }
-  .home-hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 27px; }
-  .home-action {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    min-height: 48px;
-    padding: 10px 16px;
-    border: 1px solid transparent;
-    border-radius: 12px;
-    font-weight: 750;
-    font-size: .93rem;
-    line-height: 1.3;
-    text-decoration: none;
-    transition: background-color .18s ease, border-color .18s ease;
-  }
-  .home-action-primary { background: var(--primary); color: var(--on-primary, #fff); }
-  .home-action-primary:hover { background: color-mix(in srgb, var(--primary) 87%, var(--text-main)); }
-  .home-action-secondary {
-    background: color-mix(in srgb, var(--surface-raised, var(--surface)) 77%, transparent);
-    color: var(--text-main);
-    border-color: var(--border-strong, var(--border));
-  }
-  .home-action-secondary:hover { border-color: var(--primary); }
-  .content .home-hero-stats {
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: 20px;
-    row-gap: 4px;
-    list-style: none;
-    margin: 23px 0 0;
-    padding: 0;
-    color: var(--text-body);
-    font-size: .85rem;
-  }
-  .home-hero-stats li { margin: 0; }
-  .home-hero-stats strong { color: var(--text-main); font-variant-numeric: tabular-nums; }
+{% from "_studio_ui.html" import icon with context %}
 
-  .home-terminal {
-    min-width: 0;
-    position: relative;
-    overflow: hidden;
-    transform: rotate(-1.25deg);
-    color: #eef0ff;
-    border: 1px solid #998cdd7a;
-    border-radius: 20px;
-    background: #17182d;
-    box-shadow: 0 18px 40px var(--terminal-shadow), 0 4px 15px #05061545;
-  }
-  .home-terminal-header {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    padding: 14px 16px;
-    border-bottom: 1px solid #343550;
-    background: #202139;
-    color: #d3d4ef;
-    font: .81rem/1.35 var(--code-font);
-  }
-  .home-terminal-lights { display: flex; gap: 5px; }
-  .home-terminal-lights i { width: 7px; height: 7px; border-radius: 50%; background: #f49aaf; }
-  .home-terminal-lights i:nth-child(2) { background: #f9ce91; }
-  .home-terminal-lights i:nth-child(3) { background: #7ce4be; }
-  .home-terminal-lang { margin-inline-start: auto; color: #a7a9c9; font-size: .73rem; }
-  .content .home-terminal pre {
-    overflow: auto;
-    display: block;
-    padding: 20px 16px 21px;
-    margin: 0;
-    background: transparent;
-    border: 0;
-    border-radius: 0;
-    color: #eef0ff;
-    font: clamp(.675rem, 1.25vw, .95rem)/1.9 var(--code-font);
-    tab-size: 4;
-  }
-  .content .home-terminal code { color: inherit; }
-  .home-terminal pre:focus-visible { outline-color: #ccafff; outline-offset: -3px; }
-  .home-terminal-code .k { color: #ccafff; }
-  .home-terminal-code .f { color: #85caff; }
-  .home-terminal-code .s { color: #9ce3bc; }
-  .home-terminal-code .c { color: #b5b7d6; }
-  .home-terminal-result {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 4px 14px;
-    padding: 13px 16px;
-    border-top: 1px solid #343550;
-    background: #111325;
-    color: #b7bbdd;
-    font-size: .83rem;
-  }
-  .home-terminal-result samp { font: .88rem/1.3 var(--code-font); color: #a4ebc4; }
-
-  .home-resume {
-    display: flex;
-    gap: 16px;
-    margin-top: 22px;
-    padding: clamp(15px, 3vw, 23px);
-    align-items: center;
-    flex-wrap: wrap;
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    background: var(--surface);
-    box-shadow: var(--shadow-sm);
-  }
-  .home-resume-text { flex: 1 1 230px; min-width: 0; }
-  .home-resume-text span, .home-resume-text small { color: var(--text-light); font-size: .83rem; }
-  .home-resume-text b { display: block; color: var(--text-main); font-size: 1.14rem; line-height: 1.38; }
-  .home-resume-progress { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 11px; margin-top: 8px; }
-  .home-resume-progress progress {
-    appearance: none;
-    height: 7px;
-    width: min(230px, 100%);
-    border: 0;
-    border-radius: 999px;
-    background: var(--bg-soft);
-    accent-color: var(--primary);
-  }
-  .home-resume-progress progress::-webkit-progress-bar { background: var(--bg-soft); border-radius: 999px; }
-  .home-resume-progress progress::-webkit-progress-value { background: var(--primary); border-radius: 999px; }
-  .home-resume-progress progress::-moz-progress-bar { background: var(--primary); border-radius: 999px; }
-
-  .home-section { margin-top: clamp(48px, 6.2vw, 79px); }
-  .content .home-section h2 { margin: 0 0 8px; font-size: clamp(1.8rem, 4vw, 2.65rem); letter-spacing: -.035em; }
-  .content .home-section-lead { color: var(--text-body); margin: 0 0 21px; }
-  .lv-card { display: grid; gap: 10px; }
-  .lv {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    box-shadow: var(--shadow-sm);
-  }
-  .lv[open] { border-color: color-mix(in srgb, var(--c) 40%, var(--border)); }
-  .lv summary {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto auto;
-    align-items: center;
-    gap: 13px;
-    padding: 13px 17px;
-    cursor: pointer;
-    list-style: none;
-    border-radius: 15px;
-    transition: background-color .18s ease;
-  }
-  .lv summary::marker { content: ""; }
-  .lv summary::-webkit-details-marker { display: none; }
-  .lv summary:hover { background: var(--bg-soft); }
-  .lv-icon {
-    display: grid;
-    place-items: center;
-    width: 46px;
-    height: 46px;
-    border: 1px solid color-mix(in srgb, var(--c) 33%, var(--border));
-    border-radius: 12px;
-    background: color-mix(in srgb, var(--c) 15%, var(--surface-raised, var(--surface)));
-    font-size: 1.22rem;
-  }
-  .lv-title { display: block; color: var(--text-main); font-size: clamp(.99rem, 2vw, 1.09rem); font-weight: 750; line-height: 1.3; }
-  .lv-desc { display: block; margin-top: 3px; color: var(--text-light); font-size: .86rem; line-height: 1.4; }
-  .lv-prog {
-    color: var(--text-body);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 4px 9px;
-    white-space: nowrap;
-    font-size: .76rem;
-    font-variant-numeric: tabular-nums;
-  }
-  .lv-arrow { color: var(--primary-dark); font: 1.5rem/1 var(--code-font); transition: transform .18s ease; }
-  .lv[open] .lv-arrow { transform: rotate(90deg); }
-  .content .lv-list { margin: 0; padding: 2px 15px 13px 75px; list-style: none; }
-  .lv-list li { margin: 0; }
-  .lv-list li + li { margin-top: 2px; }
-  .lv-list a {
-    display: grid;
-    grid-template-columns: 2.3rem minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 7px;
-    min-height: 42px;
-    padding: 7px 10px;
-    border-radius: 9px;
-    color: var(--text-main);
-    font-size: .94rem;
-    font-weight: 650;
-    text-decoration: none;
-  }
-  .lv-list a:hover { background: var(--primary-soft, var(--bg-soft)); }
-  .lv-list a.done::after { color: var(--success); font-weight: 800; content: "✓"; }
-  .lv-num { color: var(--text-light); font: .78rem/1 var(--code-font); }
-  .content .lv-soon { margin: 0 17px 14px 75px; color: var(--text-light); }
-  @media (max-width: 760px) {
-    .home-hero { grid-template-columns: minmax(0, 1fr); gap: 23px; }
-    .content .home-hero h1 { max-width: 13ch; font-size: clamp(2.25rem, 8.8vw, 4.2rem); }
-    .home-terminal { transform: none; }
-  }
-  @media (max-width: 460px) {
-    .home-hero { padding: 21px; }
-    .home-hero-actions { gap: 8px; margin-top: 20px; }
-    .home-hero-actions .home-action { padding-inline: 11px; font-size: .87rem; }
-    .content .home-hero-copy p { margin-top: 16px; }
-    .content .home-hero-stats { margin-top: 16px; }
-    .home-terminal-header, .home-terminal-result, .content .home-terminal pre { padding-inline: 10px; }
-    .lv summary { grid-template-columns: auto minmax(0, 1fr) auto; gap: 6px 10px; padding: 12px; }
-    .lv-icon { grid-row: span 2; width: 37px; height: 37px; }
-    .lv-prog { grid-column: 2; grid-row: 2; justify-self: start; padding: 0 6px; }
-    .lv-arrow { grid-column: 3; grid-row: 1 / 3; }
-    .content .lv-list { padding: 0 9px 10px; }
-    .content .lv-soon { margin-inline-start: 59px; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .home-action, .lv summary, .lv-arrow { transition: none; }
-  }
-</style>
 
 {% set course = namespace(first=none, lessons=0) %}
 {% for level in levels %}
@@ -290,34 +15,23 @@
   {% endif %}
 {% endfor %}
 
-<section class="home-hero" aria-labelledby="home-title">
-  <div class="home-hero-copy">
-    <h1 id="home-title">{% if language == 'ru' %}Изучайте Python <span>на русском языке</span>{% else %}Python-ды <span>қазақ тілінде</span> үйреніңіз.{% endif %}</h1>
-    <p>{{ text('Алғашқы кодтан өз жобаңызға дейін. Python негіздерін оқып, мысалдарды браузерде іске қосыңыз және тапсырмаларды орындаңыз.', 'От первой строки кода до собственного проекта. Изучайте основы Python, запускайте примеры в браузере и решайте задачи.') }}</p>
-    <div class="home-hero-actions">
-      {% if course.first %}
-        <a class="home-action home-action-primary" id="resume-link" href="{{ course.first }}"><span id="home-primary-label">{{ text('Оқуды бастау', 'Начать обучение') }}</span> <span aria-hidden="true">→</span></a>
-      {% endif %}
-      <a class="home-action home-action-secondary" href="{{ url_for('practice') }}">{{ text('Жаттықтырғышты ашу', 'Открыть тренажёр') }}</a>
+<section class="home-hero studio-hero" aria-labelledby="home-title">
+    <div class="studio-hero-copy">
+      <ul class="studio-facts" aria-label="{{ text('Курстың көлемі','Объём курса') }}">
+        <li>{{ icon('layers') }} {{ levels|length }} {{ text('деңгей','уровней') }}</li>
+        <li><a class="hero-lesson-count" href="#levels">{{ icon('book') }} {{ course.lessons }} {{ text('сабақ',lesson_word(course.lessons)) }}</a></li>
+      </ul>
+      <h1 id="home-title">{% if language == 'ru' %}Изучайте Python <span>на русском языке</span>{% else %}Python-ды <span>қазақ тілінде</span> үйреніңіз.{% endif %}</h1>
+      <p>{{ text('Алғашқы кодтан өз жобаңызға дейін. Python негіздерін оқып, мысалдарды браузерде іске қосыңыз және тапсырмаларды орындаңыз.', 'От первой строки кода до собственного проекта. Изучайте основы Python, запускайте примеры в браузере и решайте задачи.') }}</p>
+      <div class="home-hero-actions">
+        {% if course.first %}<a class="home-action home-action-primary" id="resume-link" href="{{ course.first }}">{{ icon('play-fill') }}<span id="home-primary-label">{{ text('Оқуды бастау','Начать обучение') }}</span></a>{% endif %}
+        <a class="home-action home-action-secondary" href="{{ url_for('practice') }}">{{ icon('terminal') }} {{ text('Жаттықтырғышты ашу','Открыть тренажёр') }}</a>
+      </div>
     </div>
-    <ul class="home-hero-stats" aria-label="{{ text('Курстың көлемі', 'Объём курса') }}">
-      <li><strong>{{ levels | length }}</strong> {{ text('деңгей', 'уровней') }}</li>
-      <li><a class="hero-lesson-count" href="#levels" aria-label="{{ text('Курс бағдарламасындағы %s сабақты көру', 'Посмотреть все уроки курса (%s)') | format(course.lessons) }}"><strong>{{ course.lessons }}</strong> {{ text('сабақ', lesson_word(course.lessons)) }} ↓</a></li>
-    </ul>
-  </div>
-  <figure class="home-terminal" aria-labelledby="home-terminal-caption">
-    <figcaption class="home-terminal-header" id="home-terminal-caption">
-      <span class="home-terminal-lights" aria-hidden="true"><i></i><i></i><i></i></span>
-      <span>main.py</span>
-      <span class="home-terminal-lang">Python</span>
-    </figcaption>
-    <pre tabindex="0"><code class="home-terminal-code"><span class="c"># {{ text('Алғашқы бағдарлама', 'Первая программа') }}</span>
-<span class="k">def</span> <span class="f">{{ text('salem', 'greet') }}</span>({{ text('esim', 'name') }}):
-    <span class="k">return</span> <span class="s">f"{{ text('Сәлем,', 'Привет,') }} {{ text('{esim}', '{name}') }}!"</span>
-
-<span class="f">print</span>({{ text('salem', 'greet') }}(<span class="s">"{{ text('Әлем', 'мир') }}"</span>))</code></pre>
-    <div class="home-terminal-result"><span>{{ text('Нәтиже', 'Результат') }}</span><samp>{{ text('Сәлем, Әлем!', 'Привет, мир!') }}</samp></div>
-  </figure>
+    <div class="studio-exhibit" aria-hidden="true">
+      <div class="exhibit-orbit orbit-wide"></div><div class="exhibit-orbit orbit-near"></div>
+      <div class="exhibit-object"><img class="python-sculpture" src="{{ url_for('static', filename='python-sculpture.webp') }}" alt="" width="816" height="816" fetchpriority="high"></div>
+    </div>
 </section>
 
 <section class="home-resume" id="resume" aria-label="{{ text('Оқу барысы', 'Ваш прогресс') }}" hidden>
@@ -331,18 +45,7 @@
   </div>
 </section>
 
-<nav class="home-activities" aria-label="{{ text('Практиканы таңдау', 'Выбор практики') }}">
-  <a class="home-daily-link" href="{{ url_for('daily') }}">
-    <span class="course-coin" aria-hidden="true">✦</span>
-    <span><strong>{{ text('Күндік тапсырмалар', 'Задания дня') }}</strong><small>{{ text('Бес деңгей. Дұрыс жауаптарға монеталар беріледі.', 'Пять уровней. За правильные ответы начисляются монеты.') }}</small></span>
-    <span aria-hidden="true">→</span>
-  </a>
-  <a class="home-daily-link home-games-link" href="{{ url_for('games') }}">
-    <span aria-hidden="true" class="home-game-mark">✜</span>
-    <span><strong>{{ text('Шағын ойындар', 'Мини-игры') }}</strong><small>{{ text('Қатені түзетіңіз, кодты болжаңыз немесе бағдарлама құрастырыңыз.', 'Исправьте баг, предскажите вывод или соберите программу.') }}</small></span>
-    <span aria-hidden="true">→</span>
-  </a>
-</nav>
+<div class="home-workbench">
 <section class="home-section" id="levels" aria-labelledby="home-levels-title">
   <h2 id="home-levels-title">{{ text('Курс бағдарламасы', 'Программа курса') }}</h2>
   <form class="library-filters" id="lesson-filters" role="search" aria-label="{{ text('Курстан сабақ іздеу', 'Поиск уроков по курсу') }}" hidden>
@@ -363,15 +66,15 @@
   <div class="lv-card" id="course-levels-list">
     {% for level in levels %}
     {% set lvl = loop.index %}
-    <details class="lv" id="level-{{ lvl }}" data-level="{{ loop.index0 }}" style="--c: {{ level.color }}">
+    <details class="lv" id="level-{{ lvl }}" data-level="{{ loop.index0 }}" style="--c: {{ level.color }}"{% if loop.first %} open{% endif %}>
       <summary>
-        <span class="lv-icon" aria-hidden="true">{{ level.icon }}</span>
+        <span class="lv-icon" aria-hidden="true">{{ icon(['terminal','diagram-3','database','braces','boxes'][lvl-1] | default('book')) }}</span>
         <span class="lv-text">
           <span class="lv-title">{{ level.title }}</span>
           <span class="lv-desc">{{ level.desc }}</span>
         </span>
         {% if level.lessons %}<span class="lv-prog" data-prog>{{ level.lessons | length }} {{ text('сабақ', lesson_word(level.lessons | length)) }}</span>{% endif %}
-        <span class="lv-arrow" aria-hidden="true">›</span>
+        <span class="lv-arrow" aria-hidden="true">{{ icon('chevron-down') }}</span>
       </summary>
       {% if level.lessons %}
       <ul class="lv-list">
@@ -392,6 +95,31 @@
   </div>
 </section>
 
+<aside class="home-side" aria-label="{{ text('Практика','Практика') }}">
+  <section class="home-arcade">
+    <div class="section-cap">{{ icon('controller') }}<h2><a href="{{ url_for('games') }}">{{ text('Шағын ойындар','Мини-игры') }}</a></h2></div>
+    <p>{{ text('Қатені түзетіңіз, кодты болжаңыз немесе бағдарлама құрастырыңыз.', 'Исправьте баг, предскажите вывод или соберите программу.') }}</p>
+    <div class="quick-games">
+    {% set game_icons = {'bugs':'bug','predict':'bullseye','build':'boxes','translate':'translate'} %}
+    {% for slug, entry in games.items() %}<a class="quick-game quick-{{ slug }}" href="{{ url_for('mini_game',game=slug) }}"><span class="quick-symbol">{{ icon(game_icons[slug]) }}</span><span>{{ entry[0] }}</span>{{ icon('play-fill') }}</a>{% endfor %}
+    </div>
+  </section>
+  <a class="home-daily-link studio-daily-link" href="{{ url_for('daily') }}"><span class="daily-symbol">{{ icon('calendar2-check') }}</span><span><strong>{{ text('Күндік тапсырмалар','Задания дня') }}</strong><small>{{ text('Бес деңгей. Дұрыс жауаптарға монеталар беріледі.', 'Пять уровней. За правильные ответы начисляются монеты.') }}</small></span></a>
+  <figure class="home-terminal" aria-labelledby="home-terminal-caption">
+    <figcaption class="home-terminal-header" id="home-terminal-caption">
+      <span class="home-terminal-lights" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span>main.py</span>
+      <span class="home-terminal-lang">Python</span>
+    </figcaption>
+    <pre tabindex="0"><code class="home-terminal-code"><span class="c"># {{ text('Алғашқы бағдарлама', 'Первая программа') }}</span>
+<span class="k">def</span> <span class="f">{{ text('salem', 'greet') }}</span>({{ text('esim', 'name') }}):
+    <span class="k">return</span> <span class="s">f"{{ text('Сәлем,', 'Привет,') }} {{ text('{esim}', '{name}') }}!"</span>
+
+<span class="f">print</span>({{ text('salem', 'greet') }}(<span class="s">"{{ text('Әлем', 'мир') }}"</span>))</code></pre>
+    <div class="home-terminal-result"><span>{{ text('Нәтиже', 'Результат') }}</span><samp>{{ text('Сәлем, Әлем!', 'Привет, мир!') }}</samp></div>
+  </figure>
+</aside>
+</div>
 <details id="about" class="library-help">
   <summary>{{ text('Оқу барысы қалай сақталады?', 'Как сохраняется прогресс?') }}</summary>
   <p>{{ text('Аяқталған сабақтар, сақталған сабақтар және код нобайлары осы браузерде сақталады. Сабақты кейін қайталау үшін оның жоғарғы жағындағы «Сақтау» батырмасын басыңыз. Оны курс бағдарламасындағы «Сақталған» сүзгісі арқылы қайта табасыз.', 'Этот браузер хранит отметки о пройденных уроках, закладки и черновики кода. Чтобы вернуться к уроку позже, нажмите «Сохранить» вверху страницы. Потом выберите «Сохранённые» в программе курса.') }}</p>
